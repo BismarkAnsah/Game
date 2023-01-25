@@ -860,7 +860,9 @@ import * as $C from "../js/combinatorics.js";
     }
   
     calcTotalBets()
-    {     let row1 = this.rows.row1;
+    { 
+      console.log(this.rows);
+          let row1 = this.rows.row1;
           let len = row1.length;
           if(len<this.sample1)
             return 0;
@@ -1194,7 +1196,7 @@ class fixed_place extends Royal5utils {
   type = 'fixed place';
   // sample1 = 1;
   // sample2 = 1;
-  labels = ['1st', '6nd', '3rd', '4th', '5th'];
+  labels = ['1st', '2nd', '3rd', '4th', '5th'];
   rows = {
     row1:[], //represents each row seletion
     row2:[],
@@ -1380,6 +1382,7 @@ pushToCart(cart)
   
   
     game.$(classNames.smallBtn).click(function(){
+      game.calcTotalBets();
         let data = [0,1,2,3,4];
         let row = $(this).parent().attr('data-points-to');
         game.selectSmall(`.num-group.${row}>button`);
@@ -1750,7 +1753,8 @@ pushToCart(cart)
       'a5_g10':a5_g10,
       'a5_g5':a5_g5,
       'f4_g24':f4_g24,
-      'f4_g6':f4_g6
+      'f4_g6':f4_g6,
+      'fixed_place':fixed_place,
     }
     return new classes[className](classConstructor);
   }

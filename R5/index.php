@@ -15548,7 +15548,7 @@ window.application = new Application();
 							<li data-points-to="last3">Last 3</li>
 							<li>First 2</li>
 							<li>Last 2</li>
-							<li>Fixed place</li>
+							<li data-points-to="fixed-place">Fixed place</li>
 							<li>Any Place</li>
 							<li>B/S/O/E</li>
 							<li>Fun</li>
@@ -16618,9 +16618,31 @@ window.application = new Application();
 							</div>
 						</div>
 					</div>
+					<!-- fixed place -->
+					<div class="fixed-place game-nav-box">
+						<label for="">Fixed place:</label>
+						<div class="other">
+							<div class="nav-item" data-class="fixed_place">
+								<svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+									<path class="path-outline"
+										d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+									</path>
+								</svg>
+								<svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+									<path class="path-fill"
+										d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+									</path>
+								</svg>
+								<div class="nav-text">
+									<span class="text">Fixed place</span>
+								</div>
+							</div>	
+
+						</div>
+
+					</div>
+					<!-- fixed place -->
 					<div class="row">
-
-
 						<div class="col active-game-box">
 							<span class="active-game">All 5 straight(Joint)</span>
 							<span>Prize: <span class="prize-value" style="color: red">1965.15</span></span>
