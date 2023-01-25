@@ -1018,7 +1018,7 @@ import * as $C from "../js/combinatorics.js";
   
     gameId = 1;
     type = 'All 5 Straight(Joint)';
-    labels = ['1st', '2nd', '3rd', '4th', '5th'];
+    labels = ['1st', '2nd', '3rd', '4th', '5th','all', 'clear'];
     // sample1 = 1;
     // sample2 = 1;
     rows = {

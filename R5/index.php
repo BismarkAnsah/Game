@@ -16831,8 +16831,8 @@ window.application = new Application();
 								} ?>
 							</div>
 						</div>
-						<div class="row6  interface-item">
-							<div class="col num-group row6" data-points-to="row6">
+						<div class="row7  interface-item">
+							<div class="col num-group row7" data-points-to="row7">
 								<label for=""></label>
 								<?php
 								for ($text = 'Clear', $dataValue = 0; $dataValue < 10; $dataValue++) {
