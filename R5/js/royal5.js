@@ -497,6 +497,13 @@ import * as $C from "../js/combinatorics.js";
         else this.rows[row].push(data);
       }
     }
+
+    deleteFromRow(data, row)
+    {
+        this.rows[row] = this.rows[row]||[];
+        let numIndex = this.rows[row].indexOf(data);
+        if (numIndex != -1) this.rows[row].splice(numIndex, 1);
+    }
   
     resetAllData()
     {
@@ -1352,6 +1359,7 @@ pushToCart(cart)
     // $('.cart-items').hide();
   
     game.$(classNames.allBtn).click(function(){
+        
         let data = [0,1,2,3,4,5,6,7,8,9];
         let row = $(this).parent().attr('data-points-to');
         game.selectAll(`.num-group.${row}>button`);
@@ -1363,6 +1371,17 @@ pushToCart(cart)
         game.setTotalBets(totalBets);
         game.setBetAmt(game.calcBetAmt());
         showBetsInfo();
+      });
+
+      game.$('.all-btn-col').click(function(){
+       let value = $(this).attr('data-value');
+       let target = $(`.num[value="${value}"]:visible`);
+       target.addClass('active-btn');
+       let targetLength = target.length;
+       for(let i = 1; i<=targetLength; i++) {
+        game.saveToRow(value,`row${i}`);
+       }
+       showBetsInfo();
       });
   
   
@@ -1464,6 +1483,17 @@ pushToCart(cart)
         showBetsInfo();
       });
   
+      game.$('.clear-btn-col').click(function(){
+        let value = $(this).attr('data-value');
+        let target = $(`.num[value="${value}"]:visible`);
+        target.removeClass('active-btn');
+        let targetLength = target.length;
+        for(let i = 1; i<=targetLength; i++) {
+         game.deleteFromRow(value,`row${i}`);
+        }
+     
+        showBetsInfo();
+       });
       
       game.$(classNames.multiplierSelect).click(function(){
           game.$(classNames.multiplierSelect).removeClass('active-btn');
