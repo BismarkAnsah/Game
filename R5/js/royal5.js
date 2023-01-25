@@ -1713,7 +1713,7 @@ pushToCart(cart)
     if(oldClass != className){
     oldClass = className;
     game.resetAllData();
-    getClass(className, /*`#${pointsTo}`*/'.game-interface');
+    game = getClass(className, /*`#${pointsTo}`*/'.game-interface');
     // ready(className);
     }
   })
