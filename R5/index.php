@@ -16672,7 +16672,7 @@ window.application = new Application();
 								<?php
 								for ($x = 0; $x < 10; $x++) {
 								?>
-								<button class="btn-c num hover-shape row1 btn-circle"><span>
+								<button class="btn-c num hover-shape row1 btn-circle" value="<?= $x ?>"><span>
 										<?= $x ?>
 									</span></button>
 								<?php
@@ -16700,7 +16700,7 @@ window.application = new Application();
 								<?php
 								for ($x = 0; $x < 10; $x++) {
 								?>
-								<button class="btn-c num hover-shape row2 btn-circle"><span>
+								<button class="btn-c num hover-shape row2 btn-circle" value="<?= $x ?>"><span>
 										<?= $x ?>
 									</span></button>
 								<?php
@@ -16731,7 +16731,7 @@ window.application = new Application();
 								<?php
 								for ($x = 0; $x < 10; $x++) {
 								?>
-								<button class="btn-c num hover-shape row3 btn-circle"><span>
+								<button class="btn-c num hover-shape row3 btn-circle" value="<?= $x ?>"><span>
 										<?= $x ?>
 									</span></button>
 								<?php
@@ -16762,7 +16762,7 @@ window.application = new Application();
 								<?php
 								for ($x = 0; $x < 10; $x++) {
 								?>
-								<button class="btn-c num hover-shape row4 btn-circle"><span>
+								<button class="btn-c num hover-shape row4 btn-circle" value="<?= $x ?>"><span>
 										<?= $x ?>
 									</span></button>
 								<?php
@@ -16793,7 +16793,7 @@ window.application = new Application();
 								<?php
 								for ($x = 0; $x < 10; $x++) {
 								?>
-								<button class="btn-c num hover-shape row5 btn-circle"><span>
+								<button class="btn-c num hover-shape row5 btn-circle" value="<?= $x ?>"><span>
 										<?= $x ?>
 									</span></button>
 								<?php
@@ -16818,26 +16818,26 @@ window.application = new Application();
 
 						</div>
 
-						<div class="row5  interface-item">
-							<div class="col num-group row5" data-points-to="row5">
+						<div class="row6  interface-item">
+							<div class="col num-group row6" data-points-to="row6">
 								<label for=""></label>
 								<?php
-								for ($text = 'All', $x = 0; $x < 10; $x++) {
+								for ($text = 'All', $dataValue = 0; $dataValue< 10; $dataValue++) {
 								?>
-								<button class="btn-rec  hover-shape"><span>
+								<button class="btn-rec  hover-shape all-btn-col" data-value="<?= $dataValue ?>"><span>
 										<?= $text ?>
 									</span></button>
 								<?php
 								} ?>
 							</div>
 						</div>
-						<div class="row5  interface-item">
-							<div class="col num-group row5" data-points-to="row5">
+						<div class="row7  interface-item">
+							<div class="col num-group row7" data-points-to="row7">
 								<label for=""></label>
 								<?php
-								for ($text = 'clear', $x = 0; $x < 10; $x++) {
+								for ($text = 'Clear', $dataValue = 0; $dataValue < 10; $dataValue++) {
 								?>
-								<button class="btn-rec  hover-shape"><span>
+								<button class="btn-rec  hover-shape clear-btn-col" data-value="<?= $dataValue ?>"><span>
 										<?= $text ?>
 									</span></button>
 								<?php
