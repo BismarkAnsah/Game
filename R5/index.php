@@ -16817,6 +16817,33 @@ window.application = new Application();
 							</div>
 
 						</div>
+
+						<div class="row5  interface-item">
+							<div class="col num-group row5" data-points-to="row5">
+								<label for=""></label>
+								<?php
+								for ($text = 'All', $x = 0; $x < 10; $x++) {
+								?>
+								<button class="btn-rec  hover-shape"><span>
+										<?= $text ?>
+									</span></button>
+								<?php
+								} ?>
+							</div>
+						</div>
+						<div class="row5  interface-item">
+							<div class="col num-group row5" data-points-to="row5">
+								<label for=""></label>
+								<?php
+								for ($text = 'clear', $x = 0; $x < 10; $x++) {
+								?>
+								<button class="btn-rec  hover-shape"><span>
+										<?= $text ?>
+									</span></button>
+								<?php
+								} ?>
+							</div>
+						</div>
 					</div>
 					<div class="game-interface manual">
 						<textarea name=""
