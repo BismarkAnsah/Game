@@ -1192,6 +1192,7 @@ import * as $C from "../js/combinatorics.js";
   let oldClass = 'a5_joint';
   let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
   let game = new a5_joint('#a5-joint');
+  hideAllExcept('.game-nav-box', '.game-nav-box.all5');
   // let balance = await game.fetchData(balanceUrl) || 500;
   let balance = 500;
   // $('.user-balance').html(JSON.parse(balance).userBalance);
@@ -1577,7 +1578,7 @@ import * as $C from "../js/combinatorics.js";
       let url = '../nav.php';
       console.log(data);
         let req = $.post(url, data, function(response){
-          console.log(response);
+          // console.log(response);
           response = JSON.parse(response);
     if(response.title == 'success'){
       toastr.options.progressBar = true;
@@ -1639,21 +1640,26 @@ import * as $C from "../js/combinatorics.js";
   //menu selections
   $(` ${classNames.navItem}`).click(function(){
     $(`${classNames.gameNavBox} ${classNames.navItem}`).removeClass('active-svg');
+    let navText =  $(this).find('.nav-text').text();
+    $('.active-game').text(navText);
     $(this).addClass('active-svg');
     let className = $(this).attr('data-class');
     if(oldClass != className){
     oldClass = className;
     game.resetAllData();
-    game = getClass(className, /*`#${pointsTo}`*/'.game-interface');
+    getClass(className, /*`#${pointsTo}`*/'.game-interface');
     // ready(className);
     }
   })
   
+  //group selections
   $('.group-nav>li').click(function(){
+    game.resetAllData();
     $('.group-nav>li').removeClass('active-nav');
     $(this).addClass('active-nav');
     let pointsTo = $(this).attr('data-points-to');
     hideAllExcept('.game-nav-box', `.${pointsTo}.game-nav-box`);
+    $(`.${pointsTo} .nav-item:first`).click()
     // game = getClass(className, `#${pointsTo}`);
     // if(oldClass != className){
     // oldClass = className;
@@ -1730,7 +1736,7 @@ import * as $C from "../js/combinatorics.js";
       let req = $.post(url, data, function(response){
         response = JSON.parse(response);
          lastId = response.id;
-        console.log(response);
+        // console.log(response);
         $('.wining_num').each(function(index){
           $(this).html(response.numbers[index]);
        })
