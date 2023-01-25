@@ -1,5 +1,7 @@
 
 import * as $C from "../js/combinatorics.js";
+import fixedPlace from "./components/fixed_place.js";
+
 
 (function () {
   $('.eye, .eye-slash').click(function() {
@@ -1212,13 +1214,49 @@ class fixed_place extends Royal5utils {
   }
 
   calcTotalBets() {
-    console.log(this.rows);
+   
+    fixedPlace.calcTotalBets();
+    let totalBetCount = 0
+    for(const key in this.rows) {
+      totalBetCount += this.rows[key].length;
+    }
+     
+   
     let row1 = this.rows.row1;
     let row2 = this.rows.row2;
+    
     let repeatedNums = row2.filter((element) => row1.includes(element));
     let repeat = repeatedNums.length;
-    return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+
+    //returns total bets
+    //return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+    return totalBetCount
 }
+
+
+getSavedData() {
+  
+    
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier =this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+   
+    const allRows = []
+    for(const key in this.rows) {
+      allRows.push(this.rows[key])
+    }
+
+    
+    readyData.allSelections = allRows   //[[],[],[],[],[]]
+    readyData.userSelections = Object.values(this.rows).join("|");//'1|2,3,8|5||6'
+
+    return readyData;
+}
+
+
 
 pushToCart(cart)
 {
@@ -1233,19 +1271,6 @@ pushToCart(cart)
   this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
   cart[key] = data;
 }
-
-  getSavedData()
-  {
-    let readyData = {};
-    readyData.gameId = this.gameId;
-    readyData.unitStaked = this.unitAmt;
-    readyData.totalBetAmt = this.calcActualAmt();
-    readyData.multiplier =this.multiplier;
-    readyData.totalBets = this.calcTotalBets();
-    //readyData.allSelections = this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
-    readyData.userSelections = Object.values(this.rows).join("|");
-    return readyData;
-  }
 
   
 
@@ -1604,6 +1629,7 @@ pushToCart(cart)
   
     game.$('.bet-now').click(function(){
       game.disableButtons(true, '.cart', 'input.bet-amt');
+      game.getSavedData();
       game.$('.spinner').show();
       // game.alertErrBets();
       let savedData = game.getSavedData();
