@@ -1,4 +1,6 @@
 import * as $C from "../js/combinatorics.js";
+import fixedPlace from "./components/fixed_place.js";
+
 
 (function () {
   $(".eye, .eye-slash").click(function () {
@@ -1136,39 +1138,45 @@ import * as $C from "../js/combinatorics.js";
       this.createGameInterface(this.labels);
     }
 
-    calcTotalBets() {
-      let row1 = this.rows.row1;
-      let row2 = this.rows.row2;
-      let repeatedNums = row2.filter((element) => row1.includes(element));
-      let repeat = repeatedNums.length;
-      return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
-    }
+  calcTotalBets() {
+    console.log(this.rows);
+    let row1 = this.rows.row1;
+    let row2 = this.rows.row2;
+    let repeatedNums = row2.filter((element) => row1.includes(element));
+    let repeat = repeatedNums.length;
+    return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+}
 
-    pushToCart(cart) {
-      let data = this.getSavedData();
-      let key = cart.length;
-      let type = this.type;
-      let detail = data.userSelections;
-      let bets = data.totalBets;
-      let unit = data.unitStaked;
-      let multiplier = `x${data.multiplier}`;
-      let betAmt = `&#8373;${data.totalBetAmt}`;
-      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
-      cart[key] = data;
-    }
+pushToCart(cart)
+{
+  let data = this.getSavedData();
+  let key = cart.length;
+  let type = this.type;
+  let detail = data.userSelections;
+  let bets = data.totalBets;
+  let unit = data.unitStaked;
+  let multiplier = `x${data.multiplier}`;
+  let betAmt = `&#8373;${data.totalBetAmt}`;
+  this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+  cart[key] = data;
+}
 
-    getSavedData() {
-      let readyData = {};
-      readyData.gameId = this.gameId;
-      readyData.unitStaked = this.unitAmt;
-      readyData.totalBetAmt = this.calcActualAmt();
-      readyData.multiplier = this.multiplier;
-      readyData.totalBets = this.calcTotalBets();
-      //readyData.allSelections = this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
-      readyData.userSelections = Object.values(this.rows).join("|");
-      return readyData;
-    }
+  getSavedData()
+  {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier =this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    //readyData.allSelections = this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
   }
+
+  
+
+}
 
   /*--------------------End fixed_place class--------------------------------*/
 
@@ -1557,11 +1565,11 @@ import * as $C from "../js/combinatorics.js";
     game.$(".cart").click(function () {
       game.pushToCart(cart);
       game.resetAllData();
-    });
-
-    game.$(".bet-now").click(function () {
-      game.disableButtons(true, ".cart", "input.bet-amt");
-      game.$(".spinner").show();
+    })
+  
+    game.$('.bet-now').click(function(){
+      game.disableButtons(true, '.cart', 'input.bet-amt');
+      game.$('.spinner').show();
       // game.alertErrBets();
       let savedData = game.getSavedData();
       console.log(savedData);
