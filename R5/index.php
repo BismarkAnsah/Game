@@ -1673,12 +1673,15 @@
 			margin-left: 90px;
 		}
 
-		.hover-shape:hover,
 		.active-btn {
 			background-color: #49556d !important;
 			color: #fff !important;
 		}
-
+		.hover-shape:hover {
+			background-color: #737da5;
+			border-color: #737da5;
+			color: #fff;
+		}
 		.num-group {
 			font-size: 34px;
 

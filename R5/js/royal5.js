@@ -846,7 +846,7 @@ import fixedPlace from "./components/fixed_place.js";
   class a5_joint extends Royal5utils {
     gameId = 1;
     type = "All 5 Straight(Joint)";
-    labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
+    labels = ["1st", "2nd", "3rd", "4th", "5th"];
     // sample1 = 1;
     // sample2 = 1;
     rows = {
@@ -862,7 +862,6 @@ import fixedPlace from "./components/fixed_place.js";
     }
 
     calcTotalBets() {
-      console.log(this.rows);
       let row1 = this.rows.row1.length;
       let row2 = this.rows.row2.length;
       let row3 = this.rows.row3.length;
@@ -1033,7 +1032,6 @@ import fixedPlace from "./components/fixed_place.js";
     }
 
     calcTotalBets() {
-      console.log(this.rows);
       let row1 = this.rows.row1.length;
       let row2 = this.rows.row2.length;
       let row3 = this.rows.row3.length;
@@ -1150,7 +1148,6 @@ import fixedPlace from "./components/fixed_place.js";
       let row2 = this.rows.row2.length;
       let row3 = this.rows.row3.length;
       let row4 = this.rows.row4.length;
-      let row5 = this.rows.row5.length;
       return row1 * row2 * row3 * row4 * 4;
     }
 
@@ -1417,7 +1414,6 @@ import fixedPlace from "./components/fixed_place.js";
     }
 
     calcTotalBets() {
-      console.log(this.rows);
       let row1 = this.rows.row1.length;
       let row2 = this.rows.row2.length;
       let row3 = this.rows.row3.length;
@@ -1520,7 +1516,7 @@ import fixedPlace from "./components/fixed_place.js";
       row1: [],
       row2: [],
       row3: [],
-      row4: [],
+      row4: []
     };
     cart = [];
     readyData = {};
@@ -1534,7 +1530,6 @@ import fixedPlace from "./components/fixed_place.js";
       let row2 = this.rows.row2.length;
       let row3 = this.rows.row3.length;
       let row4 = this.rows.row4.length;
-      let row5 = this.rows.row5.length;
       return row1 * row2 * row3 * row4 * 4;
     }
 
