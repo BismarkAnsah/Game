@@ -16818,7 +16818,7 @@ window.application = new Application();
 
 						</div>
 
-						<div class="row6  interface-item">
+						<div class="row6 lower-btn-controls interface-item">
 							<div class="col num-group row6" data-points-to="row6">
 								<label for=""></label>
 								<?php
@@ -16831,7 +16831,7 @@ window.application = new Application();
 								} ?>
 							</div>
 						</div>
-						<div class="row7  interface-item">
+						<div class="row7  lower-btn-controls interface-item">
 							<div class="col num-group row7" data-points-to="row7">
 								<label for=""></label>
 								<?php

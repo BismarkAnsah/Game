@@ -36,6 +36,20 @@ function getTimeElapsed($time)
 // echo gmdate("H:i:s", $time);
 
 
-$data = generateDrawTimes('00:00:00', '23:00:00', 85);
+$data = generateDrawTimes('00:13:15', '23:00:00', 60);
 $result = array_search(array_pop($data), $data);
-print_r($data);
+echo "<table>
+<tr>
+    <th>ID</th>
+    <th>Drawn Time</th>
+    </tr>";
+foreach($data as $key => $value)
+{
+    echo"
+   
+        <tr>
+            <td style='text-align:center;'>{$key}</td>
+            <td style='text-align:center;'>{$value}</td>
+            </tr>";
+}
+echo "</table>";
