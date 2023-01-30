@@ -1,5 +1,5 @@
 import * as $C from "../js/combinatorics.js";
-import fixedPlace from "./c1`omponents/fixed_place.js";
+// import fixedPlace from "./c1`omponents/fixed_place.js";
 
 (function () {
   $(".eye, .eye-slash").click(function () {
@@ -1785,7 +1785,7 @@ import fixedPlace from "./c1`omponents/fixed_place.js";
     type = "fixed place";
     // sample1 = 1;
     // sample2 = 1;
-    labels = ["1st", "2nd", "3rd", "4th", "5th"];
+    labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
     rows = {
       row1: [], //represents each row seletion
       row2: [],

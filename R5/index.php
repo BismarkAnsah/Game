@@ -12,9 +12,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>Web 1920 – 1</title>
 	<!-- <link rel="stylesheet" href="css/system.css"> -->
-	<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<!-- <script src="lib/slot.js"></script> -->
-	<script src="js/jquery-3.6.3.min.js"></script>
+	<!-- <script src="js/jquery-3.6.3.min.js"></script> -->
 	<!-- <script src="js/jquery-3.3.1.min.js"></script> -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
 		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
