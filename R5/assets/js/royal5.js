@@ -1,4 +1,4 @@
-import * as $C from "../js/combinatorics.js";
+import * as $C from "../libs/combinatorics/combinatorics.js";
 // import fixedPlace from "./c1`omponents/fixed_place.js";
 
 
