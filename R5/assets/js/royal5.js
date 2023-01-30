@@ -1875,7 +1875,7 @@ import * as $C from "../js/combinatorics.js";
     numBtn: ".num",
     modelSelect: ".model-select",
     gameNavBox: ".game-nav-box",
-    navItem: ".nav-item",
+    navItem: ".nav-item-c",
     allRows: ".num-btn-controls",
     gameInterface: ".game-interface",
     interfaceItem: ".interface-item",
@@ -2338,7 +2338,7 @@ import * as $C from "../js/combinatorics.js";
     $(this).addClass("active-nav");
     let pointsTo = $(this).attr("data-points-to");
     hideAllExcept(".game-nav-box", `.${pointsTo}.game-nav-box`);
-    $(`.${pointsTo} .nav-item:first`).click();
+    $(`.${pointsTo} .nav-item-c:first`).click();
     // game = getClass(className, `#${pointsTo}`);
     // if(oldClass != className){
     // oldClass = className;

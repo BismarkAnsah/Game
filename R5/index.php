@@ -11,8 +11,8 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Web 1920 - 1</title>
-    <script src="js/jquery-3.6.3.min.js"></script>
-    <link rel="stylesheet" href="css/cart-area-style.css">
+    <!-- <script src="js/jquery-3.6.3.min.js"></script> -->
+    <link rel="stylesheet" href="assets/css/cart-area-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -22,8 +22,8 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
-        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="assets/js/jquery-3.6.3.min.js"
+        ></script>
     <style type="text/css">
     * {
         font-size: 12px;
@@ -17949,7 +17949,7 @@ margin-left:27px;
         
 
     </div>
-    <div class="modal-content">
+    <div class="modal-content visually-hidden">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Modal Header</h4>
@@ -17962,10 +17962,10 @@ margin-left:27px;
             </div>
         </div>
 
-    <script type="module" src="js/royal5.js"></script>
+    <script type="module" src="assets/js/royal5.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-    <script src="libs/slot.js"></script>
-    <script src="js/tracks-cart.js"></script>
+    <script src="assets/libs/slot_master/slot.js"></script>
+    <script src="assets/js/tracks-cart.js"></script>
 </body>
 
 </html>
