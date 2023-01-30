@@ -12,9 +12,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>Web 1920 – 1</title>
 	<!-- <link rel="stylesheet" href="css/system.css"> -->
-	<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
-	<!-- <script src="assets/libs/slot_master/slot.js"></script> -->
-	<script src="assets/js/jquery-3.6.3.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<!-- <script src="lib/slot.js"></script> -->
+	<!-- <script src="js/jquery-3.6.3.min.js"></script> -->
 	<!-- <script src="js/jquery-3.3.1.min.js"></script> -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
 		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
@@ -1673,12 +1673,15 @@
 			margin-left: 90px;
 		}
 
-		.hover-shape:hover,
 		.active-btn {
 			background-color: #49556d !important;
 			color: #fff !important;
 		}
-
+		.hover-shape:hover {
+			background-color: #737da5;
+			border-color: #737da5;
+			color: #fff;
+		}
 		.num-group {
 			font-size: 34px;
 
@@ -1821,6 +1824,7 @@
 			border-style: solid;
 			border-width: 0px 2px 0px 0px;
 			width: 120px;
+			
 		}
 
 		.unit-amt-select:last-child,
@@ -18763,10 +18767,12 @@ window.application = new Application();
 			<rect id="Rectangle_96" rx="8" ry="8" x="0" y="0" width="74" height="190"></rect>
 		</svg>
 		<img id="arrow" src="arrow.png" srcset="arrow.png 1x, arrow@2x.png 2x" />
+
+		<img id="n_134065" src="n_134065.png" srcset="n_134065.png 1x, n_134065@2x.png 2x" />
 	</div>
 
-	<script type="module" src="assets/js/royal5.js"></script>
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script> -->
+	<script type="module" src="js/royal5.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 	<script src="libs/slot.js"></script>
 </body>
 
