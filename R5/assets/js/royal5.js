@@ -1,6 +1,5 @@
 import * as $C from "../js/combinatorics.js";
-import fixedPlace from "./components/fixed_place.js";
-
+// import fixedPlace from "./c1`omponents/fixed_place.js";
 
 (function () {
   $(".eye, .eye-slash").click(function () {
@@ -447,13 +446,13 @@ import fixedPlace from "./components/fixed_place.js";
       cart.push(this.readyData);
     }
 
-    saveToRow(data, row, ignore=false) {
+    saveToRow(data, row, ignore = false) {
       if (Array.isArray(data)) this.rows[row] = data;
       else {
         this.rows[row] = this.rows[row] || [];
         let numIndex = this.rows[row].indexOf(data);
-          if(numIndex == - 1) this.rows[row].push(data);
-          else if(!ignore) this.rows[row].splice(numIndex, 1);
+        if (numIndex == -1) this.rows[row].push(data);
+        else if (!ignore) this.rows[row].splice(numIndex, 1);
       }
     }
 
@@ -844,111 +843,10 @@ import fixedPlace from "./components/fixed_place.js";
     }
   }
 
-  class f4_g24 extends Royal5utils {
-    gameId = 4;
-    type = "First 4 group 24";
-    sample1 = 4;
-    rows = {
-      row1: [],
-    };
-
-    constructor(pageId) {
-      super(pageId);
-    }
-
-    calcTotalBets() {
-      let row1 = this.rows.row1;
-      let len = row1.length;
-      if (len < this.sample1) return 0;
-      return this.getCombination(len, this.sample1);
-      // return (len * (len - 1) * (len - 2) * (len - 3) * (len - 4)) / 120;
-    }
-
-    pushToCart(cart) {
-      let data = this.getSavedData();
-      let key = cart.length;
-      let type = this.type;
-      let detail = data.userSelections;
-      let bets = data.totalBets;
-      let unit = data.unitStaked;
-      let multiplier = `x${data.multiplier}`;
-      let betAmt = `&#8373;${data.totalBetAmt}`;
-      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
-      cart[key] = data;
-    }
-
-    getSavedData() {
-      let readyData = {};
-      readyData.gameId = this.gameId;
-      readyData.unitStaked = this.unitAmt;
-      readyData.totalBetAmt = this.calcActualAmt();
-      readyData.multiplier = this.multiplier;
-      readyData.totalBets = this.calcTotalBets();
-      readyData.allSelections = this.allSelections(
-        ...Object.values(this.rows),
-        this.sample1,
-        this.sample2
-      );
-      readyData.userSelections = Object.values(this.rows).join("|");
-      return readyData;
-    }
-  }
-
-  class f4_g6 extends Royal5utils {
-    gameId = 4;
-    type = "First 4 group 6";
-    sample1 = 2;
-    rows = {
-      row1: [],
-    };
-
-    constructor(pageId) {
-      super(pageId);
-    }
-
-    calcTotalBets() {
-      let row1 = this.rows.row1;
-      let len = row1.length;
-      if (len < this.sample1) return 0;
-      return this.getCombination(len, this.sample1);
-      // return (len * (len - 1) * (len - 2) * (len - 3) * (len - 4)) / 120;
-    }
-
-    pushToCart(cart) {
-      let data = this.getSavedData();
-      let key = cart.length;
-      let type = this.type;
-      let detail = data.userSelections;
-      let bets = data.totalBets;
-      let unit = data.unitStaked;
-      let multiplier = `x${data.multiplier}`;
-      let betAmt = `&#8373;${data.totalBetAmt}`;
-      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
-      cart[key] = data;
-    }
-
-    getSavedData() {
-      let readyData = {};
-      readyData.gameId = this.gameId;
-      readyData.unitStaked = this.unitAmt;
-      readyData.totalBetAmt = this.calcActualAmt();
-      readyData.multiplier = this.multiplier;
-      readyData.totalBets = this.calcTotalBets();
-
-      readyData.allSelections = this.allSelections(
-        ...Object.values(this.rows),
-        this.sample1,
-        this.sample2
-      );
-      readyData.userSelections = Object.values(this.rows).join("|");
-      return readyData;
-    }
-  }
-
   class a5_joint extends Royal5utils {
     gameId = 1;
     type = "All 5 Straight(Joint)";
-    labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
+    labels = ["1st", "2nd", "3rd", "4th", "5th"];
     // sample1 = 1;
     // sample2 = 1;
     rows = {
@@ -964,7 +862,6 @@ import fixedPlace from "./components/fixed_place.js";
     }
 
     calcTotalBets() {
-      console.log(this.rows)
       let row1 = this.rows.row1.length;
       let row2 = this.rows.row2.length;
       let row3 = this.rows.row3.length;
@@ -1006,8 +903,8 @@ import fixedPlace from "./components/fixed_place.js";
   class a5_manual extends Royal5utils {
     gameId = 2;
     type = "All 5 group Straight(Manual)";
-    sample1 = 1;
-    sample2 = 1;
+    // sample1 = 1;
+    // sample2 = 1;
     rows = {
       row1: [],
       row2: [],
@@ -1117,6 +1014,770 @@ import fixedPlace from "./components/fixed_place.js";
     }
   }
 
+  class f4_joint extends Royal5utils {
+    gameId = 10;
+    type = "First 4 Straight(Joint)";
+    labels = ["1st", "2nd", "3rd", "4th"];
+    // sample1 = 1;
+    // sample2 = 1;
+    rows = {
+      row1: [],
+      row2: [],
+      row3: [],
+      row4: [],
+    };
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1.length;
+      let row2 = this.rows.row2.length;
+      let row3 = this.rows.row3.length;
+      let row4 = this.rows.row4.length;
+      return row1 * row2 * row3 * row4;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class f4_manual extends Royal5utils {
+    gameId = 11;
+    type = "First 4 group Straight(Manual)";
+    // sample1 = 1;
+    // sample2 = 1;
+    rows = {
+      row1: [],
+      row2: [],
+      row3: [],
+      row4: [],
+      row5: [],
+    };
+
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(false, true);
+    }
+
+    calcTotalBets() {
+      return this.allBets.length;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class f4_combo extends Royal5utils {
+    gameId = 12;
+    type = "First 4 Straight(Combo)";
+    // sample1 = 1;
+    // sample2 = 1;
+    multiplier = 1;
+    unitAmt = 1;
+    betAmt = "";
+    labels = ["1st", "2nd", "3rd", "4th"];
+    rows = {
+      row1: [],
+      row2: [],
+      row3: [],
+      row4: [],
+    };
+    cart = [];
+    readyData = {};
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1.length;
+      let row2 = this.rows.row2.length;
+      let row3 = this.rows.row3.length;
+      let row4 = this.rows.row4.length;
+      return row1 * row2 * row3 * row4 * 4;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class f4_g24 extends Royal5utils {
+    gameId = 13;
+    type = "First 4 group 24";
+    // sample1 = 1;
+    // sample2 = 1;
+    sample1 = 4;
+    rows = {
+      row1: [],
+    };
+    cart = [];
+    readyData = {};
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface();
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1;
+      let len = row1.length;
+      if (len < this.sample1) return 0;
+      return this.getCombination(len, this.sample1);
+      // return (len * (len - 1) * (len - 2) * (len - 3) * (len - 4)) / 120;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class f4_g12 extends Royal5utils {
+    gameId = 14;
+    type = "First 4 group 12";
+    sample1 = 1;
+    sample2 = 2;
+    labels = ["One Pair", "One No."];
+    rows = {
+      row1: [],
+      row2: [],
+    };
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1;
+      let row2 = this.rows.row2;
+      let repeatedNums = row2.filter((element) => row1.includes(element));
+      let repeat = repeatedNums.length;
+      return (
+        ((row2.length * (row2.length - 1)) / 2) * (row1.length - repeat) +
+        (repeat * (row2.length - 1) * (row2.length - 2)) / 2
+      );
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+  }
+
+  class f4_g6 extends Royal5utils {
+    gameId = 15;
+    type = "First 4 group 6";
+    sample1 = 2;
+    labels = ["One Pair"];
+    rows = {
+      row1: [],
+    };
+
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface();
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1;
+      let len = row1.length;
+      if (len < this.sample1) return 0;
+      return this.getCombination(len, this.sample1);
+      // return (len * (len - 1) * (len - 2) * (len - 3) * (len - 4)) / 120;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class f4_g4 extends Royal5utils {
+    gameId = 16;
+    type = "First 4 group 4";
+    sample1 = 1;
+    sample2 = 1;
+    labels = ["Three of a Kind", "One No."];
+    rows = {
+      row1: [],
+      row2: [],
+    };
+
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1;
+      let row2 = this.rows.row2;
+      let repeatedNums = row2.filter((element) => row1.includes(element));
+      let repeat = repeatedNums.length;
+      return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class l4_joint extends Royal5utils {
+    gameId = 17;
+    type = "Last 4 Straight(Joint)";
+    labels = ["2nd", "3rd", "4th", "5th"];
+    // sample1 = 1;
+    // sample2 = 1;
+    rows = {
+      row1: [],
+      row2: [],
+      row3: [],
+      row4: [],
+    };
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1.length;
+      let row2 = this.rows.row2.length;
+      let row3 = this.rows.row3.length;
+      let row4 = this.rows.row4.length;
+      return row1 * row2 * row3 * row4;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class l4_manual extends Royal5utils {
+    gameId = 18;
+    type = "All 4 group Straight(Manual)";
+    // sample1 = 1;
+    // sample2 = 1;
+    rows = {
+      row1: [],
+      row2: [],
+      row3: [],
+      row4: [],
+      row5: [],
+    };
+
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(false, true);
+    }
+
+    calcTotalBets() {
+      return this.allBets.length;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class l4_combo extends Royal5utils {
+    gameId = 19;
+    type = "Last 4 Straight(Combo)";
+    // sample1 = 1;
+    // sample2 = 1;
+    multiplier = 1;
+    unitAmt = 1;
+    betAmt = "";
+    labels = ["2nd", "3rd", "4th", "5th"];
+    rows = {
+      row1: [],
+      row2: [],
+      row3: [],
+      row4: []
+    };
+    cart = [];
+    readyData = {};
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1.length;
+      let row2 = this.rows.row2.length;
+      let row3 = this.rows.row3.length;
+      let row4 = this.rows.row4.length;
+      return row1 * row2 * row3 * row4 * 4;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class l4_g24 extends Royal5utils {
+    gameId = 20;
+    type = "Last 4 group 24";
+    // sample1 = 1;
+    // sample2 = 1;
+    sample1 = 4;
+    rows = {
+      row1: [],
+    };
+    cart = [];
+    readyData = {};
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface();
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1;
+      let len = row1.length;
+      if (len < this.sample1) return 0;
+      return this.getCombination(len, this.sample1);
+      // return (len * (len - 1) * (len - 2) * (len - 3) * (len - 4)) / 120;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class l4_g12 extends Royal5utils {
+    gameId = 21;
+    type = "Last 4 group 12";
+    sample1 = 1;
+    sample2 = 2;
+    labels = ["One Pair", "One No."];
+    rows = {
+      row1: [],
+      row2: [],
+    };
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1;
+      let row2 = this.rows.row2;
+      let repeatedNums = row2.filter((element) => row1.includes(element));
+      let repeat = repeatedNums.length;
+      return (
+        ((row2.length * (row2.length - 1)) / 2) * (row1.length - repeat) +
+        (repeat * (row2.length - 1) * (row2.length - 2)) / 2
+      );
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+  }
+
+  class l4_g6 extends Royal5utils {
+    gameId = 22;
+    type = "Last 4 group 6";
+    labels = ["One Pair"];
+    sample1 = 2;
+    rows = {
+      row1: [],
+    };
+
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1;
+      let len = row1.length;
+      if (len < this.sample1) return 0;
+      return this.getCombination(len, this.sample1);
+      // return (len * (len - 1) * (len - 2) * (len - 3) * (len - 4)) / 120;
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
+  class l4_g4 extends Royal5utils {
+    gameId = 23;
+    type = "Last 4 group 4";
+    sample1 = 1;
+    sample2 = 1;
+    labels = ["Three of a Kind", "One No."];
+    rows = {
+      row1: [],
+      row2: [],
+    };
+
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      let row1 = this.rows.row1;
+      let row2 = this.rows.row2;
+      let repeatedNums = row2.filter((element) => row1.includes(element));
+      let repeat = repeatedNums.length;
+      return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      readyData.allSelections = this.allSelections(
+        ...Object.values(this.rows),
+        this.sample1,
+        this.sample2
+      );
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
+  }
+
   /*-------------------Begin fixed_place class----------------------*/
   //gameId
   class fixed_place extends Royal5utils {
@@ -1124,7 +1785,7 @@ import fixedPlace from "./components/fixed_place.js";
     type = "fixed place";
     // sample1 = 1;
     // sample2 = 1;
-    labels = ["1st", "2nd", "3rd", "4th", "5th"];
+    labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
     rows = {
       row1: [], //represents each row seletion
       row2: [],
@@ -1138,45 +1799,40 @@ import fixedPlace from "./components/fixed_place.js";
       this.createGameInterface(this.labels);
     }
 
-  calcTotalBets() {
-    console.log(this.rows);
-    let row1 = this.rows.row1;
-    let row2 = this.rows.row2;
-    let repeatedNums = row2.filter((element) => row1.includes(element));
-    let repeat = repeatedNums.length;
-    return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
-}
+    calcTotalBets() {
+      console.log(this.rows);
+      let row1 = this.rows.row1;
+      let row2 = this.rows.row2;
+      let repeatedNums = row2.filter((element) => row1.includes(element));
+      let repeat = repeatedNums.length;
+      return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+    }
 
-pushToCart(cart)
-{
-  let data = this.getSavedData();
-  let key = cart.length;
-  let type = this.type;
-  let detail = data.userSelections;
-  let bets = data.totalBets;
-  let unit = data.unitStaked;
-  let multiplier = `x${data.multiplier}`;
-  let betAmt = `&#8373;${data.totalBetAmt}`;
-  this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
-  cart[key] = data;
-}
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
 
-  getSavedData()
-  {
-    let readyData = {};
-    readyData.gameId = this.gameId;
-    readyData.unitStaked = this.unitAmt;
-    readyData.totalBetAmt = this.calcActualAmt();
-    readyData.multiplier =this.multiplier;
-    readyData.totalBets = this.calcTotalBets();
-    //readyData.allSelections = this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
-    readyData.userSelections = Object.values(this.rows).join("|");
-    return readyData;
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      //readyData.allSelections = this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
   }
-
-  
-
-}
 
   /*--------------------End fixed_place class--------------------------------*/
 
@@ -1565,11 +2221,11 @@ pushToCart(cart)
     game.$(".cart").click(function () {
       game.pushToCart(cart);
       game.resetAllData();
-    })
-  
-    game.$('.bet-now').click(function(){
-      game.disableButtons(true, '.cart', 'input.bet-amt');
-      game.$('.spinner').show();
+    });
+
+    game.$(".bet-now").click(function () {
+      game.disableButtons(true, ".cart", "input.bet-amt");
+      game.$(".spinner").show();
       // game.alertErrBets();
       let savedData = game.getSavedData();
       console.log(savedData);
@@ -1696,18 +2352,32 @@ pushToCart(cart)
 
   function getClass(className, classConstructor) {
     let classes = {
-      a5_joint: a5_joint,
-      a5_manual: a5_manual,
-      a5_combo: a5_combo,
-      a5_g120: a5_g120,
-      a5_g60: a5_g60,
-      a5_g30: a5_g30,
-      a5_g20: a5_g20,
-      a5_g10: a5_g10,
-      a5_g5: a5_g5,
-      f4_g24: f4_g24,
-      f4_g6: f4_g6,
-      fixed_place: fixed_place,
+      "a5_joint": a5_joint,
+      "a5_manual": a5_manual,
+      "a5_combo": a5_combo,
+      "a5_g120": a5_g120,
+      "a5_g60": a5_g60,
+      "a5_g30": a5_g30,
+      "a5_g20": a5_g20,
+      "a5_g10": a5_g10,
+      "a5_g5": a5_g5,
+      "f4_g24": f4_g24,
+      "f4_g6": f4_g6,
+      "fixed_place": fixed_place,
+      "f4_joint": f4_joint,
+      "f4_manual": f4_manual,
+      "f4_combo": f4_combo,
+      "f4_g24": f4_g24,
+      "f4_g12": f4_g12,
+      "f4_g6": f4_g6,
+      "f4_g4": f4_g4,
+      "l4_joint": l4_joint,
+      "l4_manual": l4_manual,
+      "l4_combo": l4_combo,
+      "l4_g24": l4_g24,
+      "l4_g12": l4_g12,
+      "l4_g6": l4_g6,
+      "l4_g4": l4_g4,
     };
     return new classes[className](classConstructor);
   }
