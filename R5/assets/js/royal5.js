@@ -1,7 +1,7 @@
 import * as $C from "../js/combinatorics.js";
 // import fixedPlace from "./c1`omponents/fixed_place.js";
 
-(function () {
+
   $(".eye, .eye-slash").click(function () {
     $(".balance-box").toggleClass("show-balance");
   });
@@ -2442,5 +2442,5 @@ import * as $C from "../js/combinatorics.js";
       console.log("failed");
     });
   }
-  slotjs([9, 2, 3, 4, 5]);
-})();
+  // slotjs([9, 2, 3, 4, 5]);
+
