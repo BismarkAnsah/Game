@@ -1,5 +1,5 @@
 import * as $C from "../js/combinatorics.js";
-import fixedPlace from "./components/fixed_place.js";
+import fixedPlace from "./c1`omponents/fixed_place.js";
 
 (function () {
   $(".eye, .eye-slash").click(function () {
