@@ -17,7 +17,8 @@
   --fontSmall: 1rem;
   --orangeRed: #fc4b16;
   --red: red;
-  --fontColorBlue: #076696;
+  --activeColorBtn: #49556d;
+  /* --fontColorBlue: #076696; */
   --fontSuperBig: 2rem;
   --fontBig: 1.5rem;
   --fontMed: 1.2rem;
@@ -248,6 +249,18 @@ ul.multibetCounter {
   padding-bottom: 1px !important;
 }
 
+.btn-next-day{
+  background-color: var(--activeColorBtn) !important;
+  color: var(--white) !important;
+  padding: 0.3rem !important;
+  border-radius: 5px;
+  font-weight: bold;
+  width: fit-content;
+  white-space: nowrap;
+  /* padding-bottom: 0.5rem !important; */
+
+}
+
 .btn-current.active{
   /* background-color: #076696 !important; */
 }
@@ -274,9 +287,14 @@ ul.multibetCounter {
 
 }
 
+/* .cart-area .table-body td{
+  width:fit-content;
+} */
 .cart-area .my-ul-el{
-  width: 250px !important;
-  background-color: #e65b35;
+  width: inherit !important;
+  display: flex !important;
+  /* justify-content: ; */
+  /* background-color: #e65b35; */
 }
 
 .tableFixHead thead {
