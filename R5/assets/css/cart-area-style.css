@@ -17,7 +17,9 @@
   --fontSmall: 1rem;
   --orangeRed: #fc4b16;
   --red: red;
+  --silver: #C0C0C0;
   --activeColorBtn: #49556d;
+  --purpleBlue: #6c74eb;
   /* --fontColorBlue: #076696; */
   --fontSuperBig: 2rem;
   --fontBig: 1.5rem;
@@ -148,6 +150,18 @@
   justify-content: space-between;
 }
 
+ /* .m-spacer{
+  width: 10px;
+  display: flex !important;
+  justify-content: space-between !important;
+  width: 100px;
+  background-color: rgb(211, 25, 25) !important;
+} */
+
+.cart-area .form-check-input{
+  width: 1.5rem;
+  height: 1.5rem;
+}
 .cart-area .balance-content table tbody {
   background-color: var(--tabColor);
   height: 180px;
@@ -176,14 +190,16 @@
   background-color: var(--lightGrey);
 }
 
-.btn-bet-now {
+/* .btn-bet-now {
   background-color: var(--orangeRed);
   box-shadow: 2px 2px 10px 0px var(--orangeRed);
   color: var(--white);
-}
+} */
 
-.btn-bet-now:hover {
+
+.m-btn-orange:hover {
   /* background: #fa3600; */
+  box-shadow: 2px 2px 5px 1px var(--orangeRed);
   background-image: linear-gradient(to bottom, #e65b35, #f70000);
   text-decoration: none;
 }
@@ -249,7 +265,7 @@ ul.multibetCounter {
   padding-bottom: 1px !important;
 }
 
-.btn-next-day{
+/* .btn-next-day{
   background-color: var(--activeColorBtn) !important;
   color: var(--white) !important;
   padding: 0.3rem !important;
@@ -257,9 +273,9 @@ ul.multibetCounter {
   font-weight: bold;
   width: fit-content;
   white-space: nowrap;
-  /* padding-bottom: 0.5rem !important; */
+  padding-bottom: 0.5rem !important;
 
-}
+} */
 
 .btn-current.active{
   /* background-color: #076696 !important; */
@@ -341,4 +357,56 @@ ul.multibetCounter {
 } */
 .first-multi-draws-negative-margin{
   margin-left: -3.5rem;
+}
+
+/*--------------------------------------------------------------
+# ModalDialog
+--------------------------------------------------------------*/
+
+
+
+#m-betModal{
+  z-index: 999999;
+}
+
+#m-betModal .modal-dialog-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/*--------------------------------------------------------------
+# Default Buttons
+--------------------------------------------------------------*/
+
+.m-btn-orange {
+  background-color: var(--orangeRed);
+  color: var(--white);
+  border-radius: 0.3rem;
+}
+
+.m-btn-indigo{
+  background-color: var(--activeColorBtn) !important;
+  color: var(--white) !important;
+  padding: 0.3rem !important;
+  border-radius: 5px;
+  font-weight: bold;
+  width: fit-content;
+  white-space: nowrap;
+  /* padding-bottom: 0.5rem !important; */
+
+}
+
+.m-btn-ash{
+  background-color: var(--silver);
+  color: var(--white);
+  border-radius: 0.3rem;
+}
+
+.m-btn-purple-blue{
+  background-color: var(--purpleBlue);
+  color: var(--white);
+  border-radius: 0.3rem;
+
 }
