@@ -240,9 +240,11 @@ class Royal5utils {
           <li class="col-md-7">
             <span class="trackID">${trackJson[i].trackId}</span>
           </li>
-          <li class="col-md-3"><button class="btn-current  btn-bet-now">current</button>
-        <button type="button" class="btn-next-day " data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>
-          </li>
+          <li class="col-md-3">`;
+          output += trackJson[i].current?`<button class="btn-current  btn-bet-now">current</button>`:"";
+          output += trackJson[i].nextDay?`<button type="button" class="btn-next-day" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`:"";
+          output +=
+          `</li>
         </ul>
       </td>
       <td class="d-flex justify-content-center align-content-center">
@@ -258,7 +260,8 @@ class Royal5utils {
       <td class="estimatedDrawTime">${trackJson[i].estimatedDrawTime}</td>
     </tr>`;
       }
-      $('.track-data').html(output);
+      
+      $('.track-data').append(output);
       console.log(output);
   }
 
