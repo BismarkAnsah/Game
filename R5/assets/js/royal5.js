@@ -25,7 +25,7 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
     multiplier = 1;
     unitAmt = 1;
     totalBets = 0;
-
+    
     savepoint = {
       cart: [],
       data: {
@@ -147,6 +147,78 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
       $(".clear-cart").show();
       // $(`del-${index}`).fadeIn('slow', function() { $(this).prepend(cartItem); });
     }
+
+    createTrackJson(firstDrawDate, firstDrawId, totalDraw, firstMultiplier, multiplyAfter, xMultiplier, unitAmt) 
+    {
+      firstDrawId = parseInt(firstDrawId);
+      let currentDrawDate = new Date(firstDrawDate);
+      let nextDrawDate, betAmt;
+      let track = [];
+      let nextDay = false;
+      let trackNo = 0;
+      let multiplier = firstMultiplier;
+      track[0] = {
+        trackNo:++trackNo,
+        trackId:this.getTrackID(currentDrawDate, firstDrawId),
+        multiplier:firstMultiplier,
+        betAmt:firstMultiplier*unitAmt, 
+        estimatedDrawTime:this.getDate(currentDrawDate)+' '+this.getTime(currentDrawDate),
+        nextDay:nextDay,
+        current:true
+      }
+
+      for(let i = 1; i<totalDraw; i++) 
+      {
+        nextDrawDate = new Date(this.addMinutes(currentDrawDate, intervalMinutes));
+        if(!nextDay)
+         {
+           nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
+           firstDrawId = nextDay?0:firstDrawId;
+         }
+        multiplier = trackNo%multiplyAfter==0?multiplier * xMultiplier : multiplier;
+        
+        multiplier = multiplier>=99999?99999:multiplier;
+        betAmt = this.truncate(multiplier*unitAmt, 4);
+        track[i] = {
+          trackNo:++trackNo,
+          trackId:this.getTrackID(nextDrawDate, ++firstDrawId),
+          multiplier:multiplier,
+          betAmt:betAmt, 
+          estimatedDrawTime:this.getDate(nextDrawDate)+' '+this.getTime(nextDrawDate),
+          nextDay:nextDay
+        }
+        currentDrawDate = nextDrawDate;
+      }
+
+      return track;
+    }
+
+   addMinutes(date, minutes) {
+      return new Date(date.getTime() + minutes*60000);
+   }
+
+   getTrackID(date, id)
+   {
+      return date.getFullYear()+String(date.getMonth()+1).padStart(2, '0')+date.getDate()+'-'+String(id).padStart(3, '0');
+   }
+
+   getTime(date)
+   {
+    return String(date.getHours()).padStart(2, '0') + ":" + String(date.getMinutes()).padStart(2, '0') + ":" + String(date.getSeconds()).padStart(2, '0');
+   }
+   getDate(date)
+   {
+    return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2, '0')+'-'+String(date.getDate()).padStart(2, '0');
+   }
+
+   isNextDay(date, checkDate)
+   {
+     const date1 = new Date(date);
+     const date2 = new Date(checkDate);
+     if(date1.getDate() != date2.getDate()) 
+        return true;
+     return false;
+   }
 
     removeRow(id, cart) {
       let key = id.split("-")[1];
@@ -1835,7 +1907,7 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
   }
 
   /*--------------------End fixed_place class--------------------------------*/
-
+  const intervalMinutes = 5;
   let lastId = 0;
   let initializedClasses = [];
   let cart = [];
@@ -2187,7 +2259,12 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
       game.setAllBets();
       showBetsInfo();
     });
+    // console.log(game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002));
+    /**Track Begins */
 
+      
+
+    /**Tranck Ends */
     game.$(".plus").click(function () {
       game.increaseMultiplier(classNames.multiValue);
       $(this).addClass("active-btn");
