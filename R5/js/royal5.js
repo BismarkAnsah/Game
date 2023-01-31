@@ -1785,7 +1785,7 @@ import * as $C from "../js/combinatorics.js";
     type = "fixed place";
     // sample1 = 1;
     // sample2 = 1;
-    labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
+    labels = ["1st", "2nd", "3rd", "4th", "5th"];
     rows = {
       row1: [], //represents each row seletion
       row2: [],
@@ -1803,9 +1803,15 @@ import * as $C from "../js/combinatorics.js";
       console.log(this.rows);
       let row1 = this.rows.row1;
       let row2 = this.rows.row2;
-      let repeatedNums = row2.filter((element) => row1.includes(element));
-      let repeat = repeatedNums.length;
-      return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+      let totalBets = 0
+      for(const key in this.rows){
+        totalBets += this.rows[key].length
+      }
+
+      //let repeatedNums = row2.filter((element) => row1.includes(element));
+      //let repeat = repeatedNums.length;
+      //return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+      return totalBets
     }
 
     pushToCart(cart) {
