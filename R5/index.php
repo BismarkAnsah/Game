@@ -361,8 +361,8 @@
         color: #707070;
     }
 
-    .simple-hover>*:hover {
-        color: #000;
+    .simple-hover>*:hover, .active-nav {
+        color: #000 !important;
     }
 
     /* #All_4 {

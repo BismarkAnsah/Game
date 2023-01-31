@@ -212,21 +212,22 @@ class Royal5utils {
     let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraw,firstMultiplier,multiplyAfter,xMultiplier,unitAmt);
     let entries = this.$(".track-entry");
     let entriesLength = entries.length;
-    let lastIndex = 0;
+    let nextIndex = 0;
+    console.log(entries);
     entries.each(function(index) {
-      entries[index].find('.trackNo').text(trackJson[index].trackNo);
-      entries[index].find('.trackID').text(trackJson[index].trackId);
-      entries[index].find('.betAmt').text(trackJson[index].betAmt);
-      entries[index].find('.estimatedDrawTime').text(trackJson[index].estimatedDrawTime);
-      entries[index].find('.track-multiplier').val(trackJson[index].multiplier);
-      lastIndex = index;
+      $(entries[index]).find('.trackNo').text(trackJson[index].trackNo);
+      $(entries[index]).find('.trackID').text(trackJson[index].trackId);
+      $(entries[index]).find('.betAmt').text(trackJson[index].betAmt);
+      $(entries[index]).find('.estimatedDrawTime').text(trackJson[index].estimatedDrawTime);
+      $(entries[index]).find('.track-multiplier').val(trackJson[index].multiplier);
+      ++nextIndex;
     })
     let remainEntriesLength = totalDraw-entriesLength;
     let output = "";
-    for(let i = ++lastIndex; i<remainEntriesLength; i++) 
+    for(let i = nextIndex; i<remainEntriesLength; i++) 
       {
         output += `<tr class="track-entry">
-      <td="trackNo">${trackJson[i].trackNo}</td>
+      <td class="trackNo">${trackJson[i].trackNo}</td>
       <td>
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
           <li class="col-md-2">
@@ -248,7 +249,7 @@ class Royal5utils {
         </ul>
       </td>
       <td class="d-flex justify-content-center align-content-center">
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           <input 
             type="number"
             min="1"
