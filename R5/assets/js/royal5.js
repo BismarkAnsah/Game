@@ -1836,7 +1836,13 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
       readyData.totalBetAmt = this.calcActualAmt();
       readyData.multiplier = this.multiplier;
       readyData.totalBets = this.calcTotalBets();
-      //readyData.allSelections = this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+      const dataSet = []
+
+      for(const key in this.rows){
+         dataSet.push(this.rows[key])
+      }
+
+      readyData.allSelections = dataSet    //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
       readyData.userSelections = Object.values(this.rows).join("|");
       return readyData;
     }
@@ -2233,6 +2239,7 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
 
     game.$(".bet-now").click(function () {
       game.disableButtons(true, ".cart", "input.bet-amt");
+      game.getSavedData()
       game.$(".spinner").show();
       // game.alertErrBets();
       let savedData = game.getSavedData();
