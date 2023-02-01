@@ -1958,20 +1958,12 @@ class l4_g4 extends Royal5utils {
     }
 
     calcTotalBets() {
-      console.log(this.rows);
-      let row1 = this.rows.row1;
-      let row2 = this.rows.row2;
-
-      let totalBets = 0
-
+      let totalBets = 0;
       for(const key in this.rows){
-        totalBets += this.rows[key].length
+        totalBets += this.rows[key].length;
       }
-
       console.log("total ", totalBets);
-      //let repeatedNums = row2.filter((element) => row1.includes(element));
-      //let repeat = repeatedNums.length;
-      return  totalBets   //row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+      return  totalBets;
     }
 
     pushToCart(cart) {
