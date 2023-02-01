@@ -1970,12 +1970,20 @@ class l4_g4 extends Royal5utils {
     }
 
     calcTotalBets() {
-      let totalBets = 0;
+      console.log(this.rows);
+      let row1 = this.rows.row1;
+      let row2 = this.rows.row2;
+
+      let totalBets = 0
+
       for(const key in this.rows){
-        totalBets += this.rows[key].length;
+        totalBets += this.rows[key].length
       }
+
       console.log("total ", totalBets);
-      return  totalBets;
+      //let repeatedNums = row2.filter((element) => row1.includes(element));
+      //let repeat = repeatedNums.length;
+      return  totalBets   //row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
     }
 
     pushToCart(cart) {
@@ -1999,9 +2007,10 @@ class l4_g4 extends Royal5utils {
       readyData.multiplier = this.multiplier;
       readyData.totalBets = this.calcTotalBets();
       const dataSet = []
+      let rowPosition = 1
 
       for(const key in this.rows){
-         dataSet.push(this.rows[key]);
+         dataSet.push(this.rows[key])
       }
 
       readyData.allSelections = dataSet    //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
