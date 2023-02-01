@@ -2010,7 +2010,7 @@ class l4_g4 extends Royal5utils {
       let rowPosition = 1
 
       for(const key in this.rows){
-         dataSet.push(this.rows[key])
+         dataSet.push([rowPosition ++, this.rows[key]])
       }
 
       readyData.allSelections = dataSet    //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
