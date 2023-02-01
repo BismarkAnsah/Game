@@ -1937,62 +1937,78 @@ class l4_g4 extends Royal5utils {
 }
 
 /*-------------------Begin fixed_place class----------------------*/
-//gameId
-class fixed_place extends Royal5utils {
-  gameId = 99;
-  type = "fixed place";
-  // sample1 = 1;
-  // sample2 = 1;
-  labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
-  rows = {
-    row1: [], //represents each row seletion
-    row2: [],
-    row3: [],
-    row4: [],
-    row5: [],
-  };
+  //gameId
+  class fixed_place extends Royal5utils {
+    gameId = 99;
+    type = "fixed place";
+    // sample1 = 1;
+    // sample2 = 1;
+    labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
+    rows = {
+      row1: [], //represents each row seletion
+      row2: [],
+      row3: [],
+      row4: [],
+      row5: [],
+    };
 
-  constructor(pageId) {
-    super(pageId);
-    this.createGameInterface(this.labels);
+    constructor(pageId) {
+      super(pageId);
+      this.createGameInterface(this.labels);
+    }
+
+    calcTotalBets() {
+      console.log(this.rows);
+      let row1 = this.rows.row1;
+      let row2 = this.rows.row2;
+
+      let totalBets = 0
+
+      for(const key in this.rows){
+        totalBets += this.rows[key].length
+      }
+
+      console.log("total ", totalBets);
+      //let repeatedNums = row2.filter((element) => row1.includes(element));
+      //let repeat = repeatedNums.length;
+      return  totalBets   //row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+    }
+
+    pushToCart(cart) {
+      let data = this.getSavedData();
+      let key = cart.length;
+      let type = this.type;
+      let detail = data.userSelections;
+      let bets = data.totalBets;
+      let unit = data.unitStaked;
+      let multiplier = `x${data.multiplier}`;
+      let betAmt = `&#8373;${data.totalBetAmt}`;
+      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+      cart[key] = data;
+    }
+
+    getSavedData() {
+      let readyData = {};
+      readyData.gameId = this.gameId;
+      readyData.unitStaked = this.unitAmt;
+      readyData.totalBetAmt = this.calcActualAmt();
+      readyData.multiplier = this.multiplier;
+      readyData.totalBets = this.calcTotalBets();
+      const dataSet = []
+
+      for(const key in this.rows){
+         dataSet.push(this.rows[key])
+      }
+
+      readyData.allSelections = dataSet    //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+      readyData.userSelections = Object.values(this.rows).join("|");
+      return readyData;
+    }
   }
 
-  calcTotalBets() {
-    console.log(this.rows);
-    let row1 = this.rows.row1;
-    let row2 = this.rows.row2;
-    let repeatedNums = row2.filter((element) => row1.includes(element));
-    let repeat = repeatedNums.length;
-    return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
-  }
+  /*--------------------End fixed_place class--------------------------------*/
 
-  pushToCart(cart) {
-    let data = this.getSavedData();
-    let key = cart.length;
-    let type = this.type;
-    let detail = data.userSelections;
-    let bets = data.totalBets;
-    let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
-    cart[key] = data;
-  }
-
-  getSavedData() {
-    let readyData = {};
-    readyData.gameId = this.gameId;
-    readyData.unitStaked = this.unitAmt;
-    readyData.totalBetAmt = this.calcActualAmt();
-    readyData.multiplier = this.multiplier;
-    readyData.totalBets = this.calcTotalBets();
-    //readyData.allSelections = this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
-    readyData.userSelections = Object.values(this.rows).join("|");
-    return readyData;
-  }
-}
-
-/*--------------------End fixed_place class--------------------------------*/
+  
 const intervalMinutes = 5;
 let lastId = 0;
 let initializedClasses = [];
