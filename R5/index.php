@@ -22,8 +22,7 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
-    <script src="assets/js/jquery-3.6.3.min.js"
-        ></script>
+    <script src="assets/js/jquery-3.6.3.min.js"></script>
     <style type="text/css">
     * {
         font-size: 12px;
@@ -110,7 +109,7 @@
 
         border: 1px solid #707070;
 
-        width: 1000px;
+        width: 1030px;
 
         z-index: 999;
     }
@@ -361,8 +360,8 @@
         color: #707070;
     }
 
-    .simple-hover>*:hover {
-        color: #000;
+    .simple-hover>*:hover, .active-nav {
+        color: #000 !important;
     }
 
     /* #All_4 {
@@ -1920,7 +1919,7 @@ font-size:11px;
 
     .nav-text {
         position: absolute;
-        z-index: 9999;
+        /* z-index: 9999; */
         left: 2px;
 
         top: 1px;
@@ -17176,12 +17175,10 @@ margin-left:27px;
                         </div>
 
                         <div class="row-c cart-track-bet" id="cart-track-bet">
-                            <div id="Group_3" class="col-c track disabled-svg">
+                            <div id="Group_3" class="col-c track disabled-svg" onclick="showCartArea('track-tab')">
                                 <svg class="Path_3 path" viewBox="2771.25 1959.5 314.75 76.5">
                                     <style>
-                                    .disabled-svg {
-                                        pointer-events: none;
-                                    }
+                                    
                                     </style>
                                     <path id="Path_3" class="text"
                                         d="M 2824 1959.5 L 2805.5 1964.75 L 2783.75 1990 L 2771.25 2019.75 L 2774.25 2024 L 2825 2036 L 3033.5 2036 L 3052.5 2030.75 L 3074.25 2005.75 L 3086 1976 L 3082.5 1971.75 L 3033.5 1960.75 L 2824 1959.5 Z">
@@ -17201,7 +17198,7 @@ margin-left:27px;
                                     <span class="text">Track</span>
                                 </div>
                             </div>
-                            <div id="Group_5" class="col-c cart disabled-svg">
+                            <div id="Group_5" class="col-c cart disabled-svg" onclick="showCartArea('cart-tab')">
                                 <svg class="Path_3_ib" viewBox="2771.25 1959.5 314.75 76.5">
                                     <style>
                                     .disabled-svg {
@@ -17247,7 +17244,7 @@ margin-left:27px;
                                         d="M 2619.666748046875 1959.5 L 2649 1959.5 L 2649.121337890625 1960.485107421875 L 2629.2763671875 1965.4462890625 L 2607.801513671875 1990.576416015625 L 2595.576416015625 2019.91650390625 L 2598.399169921875 2023.390625 L 2603.11572265625 2024.513549804688 L 2649.1162109375 2035.513671875 L 2649 2036.5 L 2607.761962890625 2036.5 L 2607.612060546875 2036.315307617188 L 2597.837158203125 2024.28466796875 L 2581.088623046875 2020.296997070312 L 2581.619873046875 2019.675170898438 L 2606.93896484375 1990.046508789062 L 2619.666748046875 1959.5 Z M 2644.9384765625 1960.5 L 2620.333251953125 1960.5 L 2609.05322265625 1987.572387695312 L 2628.7236328125 1964.5537109375 L 2628.878662109375 1964.514892578125 L 2644.9384765625 1960.5 Z M 2596.801513671875 2023.01025390625 L 2594.423583984375 2020.08349609375 L 2594.53857421875 2019.807739257812 L 2605.687255859375 1993.050415039062 L 2582.911376953125 2019.703002929688 L 2596.801513671875 2023.01025390625 Z M 2644.75927734375 2035.5 L 2602.8837890625 2025.486328125 L 2599.4345703125 2024.6650390625 L 2608.238037109375 2035.5 L 2644.75927734375 2035.5 Z">
                                     </path>
                                 </svg>
-                                <div id="Bet_now">
+                                <div id="Bet_now" onclick="showModal('Bet confirm', 'Track Confirm')">
                                     <span class="text">Bet now</span>
                                 </div>
                             </div>
@@ -17535,12 +17532,12 @@ margin-left:27px;
                                                                 <table class="table table-bordered" aria-describedby>
                                                                     <thead>
                                                                         <tr>
-                                                                            <th scope="col">Current</th>
+                                                                            <th scope="col">Track No.</th>
                                                                             <th scope="col">
                                                                                 <input class="form-check-input"
                                                                                     type="checkbox" name="track_number"
-                                                                                    id="master" />
-                                                                                Track No.
+                                                                                    id="master"/>
+                                                                                Track ID.
                                                                             </th>
                                                                             <th scope="col">Multi.</th>
                                                                             <th scope="col">Bet Amount</th>
@@ -17549,7 +17546,7 @@ margin-left:27px;
                                                                             <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
                                                                         </tr>
                                                                     </thead>
-                                                                    <tbody class="overflow-auto table-body"
+                                                                    <tbody class="overflow-auto table-body track-data"
                                                                         style="max-height: 150px">
                                                                         <tr>
                                                                             <td>All 5 Group 120</td>
@@ -17564,29 +17561,32 @@ margin-left:27px;
                                                                                             id="track_number" />
                                                                                     </li>
                                                                                     <li class="col-md-7">
-                                                                                        <span>20230125-188</span>
+                                                                                        <span>{20230125-188}</span>
                                                                                     </li>
                                                                                     <li class="col-md-3">
                                                                                         <button
-                                                                                            class="btn-current visually-hidde btn-bet-now">
+                                                                                            class="btn-current visually-hidde m-btn-orange btn-bet-now">
                                                                                             current
                                                                                         </button>
-                                                                                        <button type="button"
-                                                                                            class="btn-next-day visually-hidden"
+                                                                                        <!-- <button type="button"
+                                                                                            class="btn-next-day m-btn-indigo visually-hidden"
                                                                                             data-toggle="button"
                                                                                             aria-pressed="false"
                                                                                             autocomplete="off">next
-                                                                                            day</button>
+                                                                                            day</button> -->
                                                                                     </li>
 
                                                                                 </ul>
                                                                             </td>
                                                                             <td
                                                                                 class="d-flex justify-content-center align-content-center">
-                                                                                <div class="col-sm-3">
-                                                                                    <input type="number" min="1"
-                                                                                        class="form-control"
-                                                                                        id="inputPassword" />
+                                                                                <div class="col-md-4">
+                                                                                    <input type="number"
+                                                                                        id="inputPassword"
+                                                                                        class="form-control" min="1"
+                                                                                        oninput="this.value=(parseInt(this.value)||1)"
+                                                                                        placeholder="0-9" autofocus=''
+                                                                                        value='1' />
                                                                                 </div>
                                                                             </td>
                                                                             <td>2</td>
@@ -17609,7 +17609,7 @@ margin-left:27px;
                                                                                     </li>
                                                                                     <li class="col-md-3">
                                                                                         <button type="button"
-                                                                                            class="btn-next-day"
+                                                                                            class="btn-next-day m-btn-indigo"
                                                                                             data-toggle="button"
                                                                                             aria-pressed="false"
                                                                                             autocomplete="off">next
@@ -17620,9 +17620,13 @@ margin-left:27px;
                                                                             <td
                                                                                 class="d-flex justify-content-center align-content-center">
                                                                                 <div class="col-sm-3">
-                                                                                    <input type="number" min="1"
-                                                                                        class="form-control"
-                                                                                        id="inputPassword" />
+                                                                                    <input type="number"
+                                                                                        id="inputPassword"
+                                                                                        class="form-control" min="1"
+                                                                                        oninput="this.value=(parseInt(this.value)||1)"
+                                                                                        placeholder="1-9" autofocus=''
+                                                                                        value='1' />
+
                                                                                 </div>
                                                                             </td>
                                                                             <td>2</td>
@@ -17715,21 +17719,21 @@ margin-left:27px;
                                                     <div class="card p-4 mt-2 bg-light text-dark">
                                                         <div class="d-flex justify-content-end align-content-center">
                                                             <div class="form-check m-2">
-                                                                <input class="form-check-input" type="radio"
+                                                                <input class="form-check-input m-1" type="radio"
                                                                     name="flexRadioDefault" id="flexRadioDefault1" />
                                                                 <label class="form-check-label" for="flexRadioDefault1">
                                                                     Stop if win
                                                                 </label>
                                                             </div>
                                                             <div class="form-check m-2">
-                                                                <input class="form-check-input" type="radio"
+                                                                <input class="form-check-input m-1" type="radio"
                                                                     name="flexRadioDefault" id="flexRadioDefault2"
-                                                                    checked />
+                                                                     />
                                                                 <label class="form-check-label" for="flexRadioDefault2">
                                                                     Stop if not win
                                                                 </label>
                                                             </div>
-                                                            <button type="button" class="btn-bet-now ms-3">
+                                                            <button type="button" class="m-btn-orange btn-bet-now ms-3">
                                                                 Track Confirm
                                                             </button>
                                                         </div>
@@ -17946,21 +17950,55 @@ margin-left:27px;
         </div>
 
 
-        
+
 
     </div>
-    <div class="modal-content visually-hidden">
+
+    <div class="modal fade" id="m-betModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-keyboard="false">
+
+        <div class="modal-dialog modal-dialog-centered" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-keyboard="false">
+        <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Some text in the modal.</p>
+                <div class="game-type">Royal 5</div>
+                <div class="modal-draw-number-container mb-3">
+                    Draw:&nbsp;<span class="modal-draw-number-id">No. 20202020-192 ~ No. 20202020-198</span>
+                </div>
+                <div class="card">
+                    <div class="row gx-0">
+                        <div class="col-sm-6 me-0">
+                            <div class="card-header">Type</div>
+                            <div class="card-body">All 5 Group 120</div>
+                            <div class="card-header">Total track <span class="m-total-num-track-draws">2</span> draws
+                            </div>
+                        </div>
+                        <div class="col-sm-6 ms-0">
+                            <div class="card-header">Detail</div>
+                            <div class="card-body">56789</div>
+                            <div class="card-header">Total Amt: <span class="text-danger">0.0020</span></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="m-btn-ash p-2" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="button" class="m-btn-orange button-type p-2">
+                    Save changes
+                </button>
             </div>
         </div>
+    </div>
+
+    </div>
+
+    
 
     <script type="module" src="assets/js/royal5.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>

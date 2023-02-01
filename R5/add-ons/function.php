@@ -36,7 +36,7 @@ function getTimeElapsed($time)
 // echo gmdate("H:i:s", $time);
 
 
-$data = generateDrawTimes('00:13:15', '23:00:00', 60);
+$data = generateDrawTimes('00:00:00', '24:00:00', 60);
 $result = array_search(array_pop($data), $data);
 echo "<table>
 <tr>
