@@ -1837,9 +1837,10 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
       readyData.multiplier = this.multiplier;
       readyData.totalBets = this.calcTotalBets();
       const dataSet = []
+      let rowPosition = 1
 
       for(const key in this.rows){
-         dataSet.push(this.rows[key])
+         dataSet.push([rowPosition ++, this.rows[key]])
       }
 
       readyData.allSelections = dataSet    //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
