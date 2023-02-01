@@ -270,10 +270,10 @@ class Royal5utils {
       $('.track-data').append(output);
   }
 
-  onlyNums(value, maxValue=9999)
+  onlyNums(value, minValue=1, maxValue=9999)
   {
     let onlyNums = parseInt(value.replace(/\D+/g, ""));
-    onlyNums = onlyNums ? onlyNums : 1;
+    onlyNums = onlyNums ? onlyNums : minValue;
     onlyNums = onlyNums >= maxValue ? maxValue : onlyNums;
     return onlyNums;
   }
@@ -2377,7 +2377,7 @@ function ready(className) {
   /**Edit Track Begins */
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").on('input', function() {
       let thisValue = $(this).val();
-      $('.total-draws').val(onlyNums(thisValue, 120));
+      $('.total-draws').val(game.onlyNums(thisValue, 120));
       $(this).val(game.onlyNums(thisValue));
       let totalDraws = parseInt($('.total-draws').val());
       let firstMultiplier = parseInt($('.first-multiplier').val());
