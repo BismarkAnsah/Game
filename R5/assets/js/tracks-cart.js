@@ -69,5 +69,3 @@ const showCartArea = (id) => {
   }, 500);
 };
 
-
-  
