@@ -24,7 +24,10 @@ class Royal5utils {
   multiplier = 1;
   unitAmt = 1;
   totalBets = 0;
-
+  totalDraws = 10; 
+  firstMultiplier = 1;
+  multiplyAfterEvery = 1;
+  multiplyBy = 1;  
   savepoint = {
     cart: [],
     data: {
@@ -148,10 +151,10 @@ class Royal5utils {
   createTrackJson(
     firstDrawDate,
     firstDrawId,
-    totalDraw,
+    totalDraws,
     firstMultiplier,
-    multiplyAfter,
-    xMultiplier,
+    multiplyAfterEvery,
+    multiplyBy,
     unitAmt
   ) {
     firstDrawId = parseInt(firstDrawId);
@@ -172,7 +175,7 @@ class Royal5utils {
       current: true,
     };
 
-    for (let i = 1; i < totalDraw; i++) {
+    for (let i = 1; i < totalDraws; i++) {
       nextDrawDate = new Date(
         this.addMinutes(currentDrawDate, intervalMinutes)
       );
@@ -181,10 +184,11 @@ class Royal5utils {
         firstDrawId = nextDay ? 0 : firstDrawId;
       }
       multiplier =
-        trackNo % multiplyAfter == 0 ? multiplier * xMultiplier : multiplier;
+        trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
 
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.truncate(multiplier * unitAmt, 4);
+      // betAmt = (multiplier * unitAmt).toFixed(4);
       track[i] = {
         trackNo: ++trackNo,
         trackId: this.getTrackID(nextDrawDate, ++firstDrawId),
@@ -203,17 +207,17 @@ class Royal5utils {
   createTrackInterface(
     firstDrawDate,
     firstDrawId,
-    totalDraw,
+    totalDraws,
     firstMultiplier,
-    multiplyAfter,
-    xMultiplier,
+    multiplyAfterEvery,
+    multiplyBy,
     unitAmt
   ) {
-    let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraw,firstMultiplier,multiplyAfter,xMultiplier,unitAmt);
-    let entries = this.$(".track-entry");
+    let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
+    let entries = this.$(".track-entry:visible");
     let entriesLength = entries.length;
     let nextIndex = 0;
-    console.log(entries);
+    console.log('already there', entriesLength);
     entries.each(function(index) {
       $(entries[index]).find('.trackNo').text(trackJson[index].trackNo);
       $(entries[index]).find('.trackID').text(trackJson[index].trackId);
@@ -222,12 +226,13 @@ class Royal5utils {
       $(entries[index]).find('.track-multiplier').val(trackJson[index].multiplier);
       ++nextIndex;
     })
-    let remainEntriesLength = totalDraw-entriesLength;
+    let remainEntriesLength = totalDraws-entriesLength;
     let output = "";
-    for(let i = nextIndex; i<remainEntriesLength; i++) 
+    console.log("remaining entries", remainEntriesLength);
+    for(let i = 0; i<remainEntriesLength; i++, nextIndex++) 
       {
         output += `<tr class="track-entry">
-      <td class="trackNo">${trackJson[i].trackNo}</td>
+      <td class="trackNo">${trackJson[nextIndex].trackNo}</td>
       <td>
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
           <li class="col-md-2">
@@ -239,11 +244,11 @@ class Royal5utils {
             />
           </li>
           <li class="col-md-7">
-            <span class="trackID">${trackJson[i].trackId}</span>
+            <span class="trackID">${trackJson[nextIndex].trackId}</span>
           </li>
           <li class="col-md-3">`;
-          output += trackJson[i].current?`<button class="btn-current  btn-bet-now">current</button>`:"";
-          output += trackJson[i].nextDay?`<button type="button" class="btn-next-day" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`:"";
+          output += trackJson[nextIndex].current?`<button class=" m-btn-orange p-2">current</button>`:"";
+          output += trackJson[nextIndex].nextDay?`<button type="button" class="btn-next-day m-btn-indigo p-2" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`:"";
           output +=
           `</li>
         </ul>
@@ -254,16 +259,23 @@ class Royal5utils {
             type="number"
             min="1"
             class="form-control track-multiplier"
-          value="${trackJson[i].multiplier}"/>
+          value="${trackJson[nextIndex].multiplier}"/>
         </div>
       </td>
-      <td class="betAmt">${trackJson[i].betAmt}</td>
-      <td class="estimatedDrawTime">${trackJson[i].estimatedDrawTime}</td>
+      <td class="betAmt">${trackJson[nextIndex].betAmt}</td>
+      <td class="estimatedDrawTime">${trackJson[nextIndex].estimatedDrawTime}</td>
     </tr>`;
       }
       
       $('.track-data').append(output);
-      console.log(output);
+  }
+
+  onlyNums(value, maxValue=9999)
+  {
+    let onlyNums = parseInt(value.replace(/\D+/g, ""));
+    onlyNums = onlyNums ? onlyNums : 1;
+    onlyNums = onlyNums >= maxValue ? maxValue : onlyNums;
+    return onlyNums;
   }
 
   addMinutes(date, minutes) {
@@ -2001,7 +2013,8 @@ class l4_g4 extends Royal5utils {
   /*--------------------End fixed_place class--------------------------------*/
 
   
-const intervalMinutes = 5;
+const intervalMinutes = 5; // Royal5 draw number intervals
+const maxEntryValue = 9999; //maximum value allowed for input fields
 let lastId = 0;
 let initializedClasses = [];
 let cart = [];
@@ -2359,6 +2372,25 @@ function ready(className) {
    });
 
   /**Tranck Ends */
+
+
+  /**Edit Track Begins */
+   game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").on('input', function() {
+      let thisValue = $(this).val();
+      $('.total-draws').val(onlyNums(thisValue, 120));
+      $(this).val(game.onlyNums(thisValue));
+      let totalDraws = parseInt($('.total-draws').val());
+      let firstMultiplier = parseInt($('.first-multiplier').val());
+      let multiplyAfterEvery = parseInt($('.multiplyAfterEvery').val());
+      let multiplyBy = parseInt($('.multiplyBy').val());
+      $('.track-data').children().hide();
+      $('.track-data').children().slice(0,totalDraws).show();
+      game.createTrackInterface("2023-01-31 20:24:55", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getUnitAmt()); 
+   });
+
+  /**Edit Track Ends */
+
+
   game.$(".plus").click(function () {
     game.increaseMultiplier(classNames.multiValue);
     $(this).addClass("active-btn");
