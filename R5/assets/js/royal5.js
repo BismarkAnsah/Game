@@ -1989,7 +1989,7 @@ class l4_g4 extends Royal5utils {
       const dataSet = []
 
       for(const key in this.rows){
-         dataSet.push(this.rows[key])
+         dataSet.push(this.rows[key]);
       }
 
       readyData.allSelections = dataSet    //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
