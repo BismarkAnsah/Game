@@ -13,7 +13,7 @@ function countdown(seconds) {
     let hours = Math.floor(seconds / 3600);
     let minutes = Math.floor((seconds % 3600) / 60);
     let myseconds = seconds % 60;
-    console.log(`${hours} hours, ${minutes} minutes, ${myseconds} seconds`);
+    // console.log(`${hours} hours, ${minutes} minutes, ${myseconds} seconds`);
     seconds--;
     updateProgressBar(seconds, 300, 1);
 

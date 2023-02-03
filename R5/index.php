@@ -1275,7 +1275,7 @@
                             </div>
 
                             <div class="solo-play">
-                                <button id="how-to-play">How to play</button>
+                                <button id="how-to-play"><a href="#" data-bs-toggle="tooltip" data-bs-title="Another one here too">How to play</a></button>
                                 <button id="What_is_solo">What is solo?</button>
                             </div>
 
@@ -2466,6 +2466,7 @@
     <script src="assets/libs/slot_master/slot.js"></script>
     <script src="assets/js/tracks-cart.js"></script>
     <script src="assets/js/timer.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 
 </html>

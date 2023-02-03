@@ -1848,7 +1848,8 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
   let balance = 500;
   // $('.user-balance').html(JSON.parse(balance).userBalance);
 
-  var classNames = {
+  /** selects all class names  */
+  let classNames = {
     selectionCtrl: "selection-ctr",
     allBtn: ".all-btn",
     bigBtn: ".big-btn",
