@@ -23,11 +23,12 @@ class Royal5utils {
   units = [2, 1, 0.2, 0.1, 0.02, 0.01, 0.002, 0.001];
   multiplier = 1;
   unitAmt = 1;
+  betType = "";
   totalBets = 0;
-  totalDraws = 10; 
+  totalDraws = 10;
   firstMultiplier = 1;
   multiplyAfterEvery = 1;
-  multiplyBy = 1;  
+  multiplyBy = 1;
   savepoint = {
     cart: [],
     data: {
@@ -52,6 +53,20 @@ class Royal5utils {
   $(element = "") {
     // return element ? $(this.pageId).find(element) : this.$(this.pageId);
     return $(element);
+  }
+
+  /** gets current bet type */
+  getBetType() {
+    // this.$("nav-item-c active-svg")
+    //get svg object, like a jquery object
+    let svg = $(".nav-item-c:visible.active-svg");
+    //use jquery functions to do some thing
+    let currentBetType = svg.find(".nav-text").text();
+    //  console.log(findd)
+    //  console.log(svg)
+    //  console.log(svg.find(".nav-text").html())
+
+    return currentBetType;
   }
 
   getPageId() {
@@ -184,7 +199,9 @@ class Royal5utils {
         firstDrawId = nextDay ? 0 : firstDrawId;
       }
       multiplier =
-        trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
+        trackNo % multiplyAfterEvery == 0
+          ? multiplier * multiplyBy
+          : multiplier;
 
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.truncate(multiplier * unitAmt, 4);
@@ -213,25 +230,41 @@ class Royal5utils {
     multiplyBy,
     unitAmt
   ) {
-    let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
+    let trackJson = this.createTrackJson(
+      firstDrawDate,
+      firstDrawId,
+      totalDraws,
+      firstMultiplier,
+      multiplyAfterEvery,
+      multiplyBy,
+      unitAmt
+    );
     let entries = this.$(".track-entry:visible");
     let entriesLength = entries.length;
     let nextIndex = 0;
-    console.log('already there', entriesLength);
-    entries.each(function(index) {
-      $(entries[index]).find('.trackNo').text(trackJson[index].trackNo);
-      $(entries[index]).find('.trackID').text(trackJson[index].trackId);
-      $(entries[index]).find('.betAmt').text(trackJson[index].betAmt);
-      $(entries[index]).find('.estimatedDrawTime').text(trackJson[index].estimatedDrawTime);
-      $(entries[index]).find('.track-multiplier').val(trackJson[index].multiplier);
+    let selectTrackIds = [];
+    console.log("already there", entriesLength);
+    entries.each(function (index) {
+      $(entries[index]).find(".trackNo").text(trackJson[index].trackNo);
+      $(entries[index]).find(".trackID").text(trackJson[index].trackId);
+      $(entries[index]).find(".betAmt").text(trackJson[index].betAmt);
+      $(entries[index])
+        .find(".estimatedDrawTime")
+        .text(trackJson[index].estimatedDrawTime);
+      $(entries[index])
+        .find(".track-multiplier")
+        .val(trackJson[index].multiplier);
       ++nextIndex;
-    })
-    let remainEntriesLength = totalDraws-entriesLength;
+    });
+    let remainEntriesLength = totalDraws - entriesLength;
     let output = "";
     console.log("remaining entries", remainEntriesLength);
-    for(let i = 0; i<remainEntriesLength; i++, nextIndex++) 
-      {
-        output += `<tr class="track-entry">
+    for (let i = 0; i < remainEntriesLength; i++, nextIndex++) {
+      selectTrackIds.push(trackJson[nextIndex].trackId);
+      $('select[name="first_draw"]').append(
+        `<option value="${trackJson[nextIndex].trackId}">${trackJson[nextIndex].trackId}</option>`
+      );
+      output += `<tr class="track-entry">
       <td class="trackNo">${trackJson[nextIndex].trackNo}</td>
       <td>
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
@@ -247,10 +280,13 @@ class Royal5utils {
             <span class="trackID">${trackJson[nextIndex].trackId}</span>
           </li>
           <li class="col-md-3">`;
-          output += trackJson[nextIndex].current?`<button class=" m-btn-orange p-2">current</button>`:"";
-          output += trackJson[nextIndex].nextDay?`<button type="button" class="btn-next-day m-btn-indigo p-2" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`:"";
-          output +=
-          `</li>
+      output += trackJson[nextIndex].current
+        ? `<button class=" m-btn-orange p-2">current</button>`
+        : "";
+      output += trackJson[nextIndex].nextDay
+        ? `<button type="button" class="btn-next-day m-btn-indigo p-2" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`
+        : "";
+      output += `</li>
         </ul>
       </td>
       <td class="d-flex justify-content-center align-content-center">
@@ -265,13 +301,17 @@ class Royal5utils {
       <td class="betAmt">${trackJson[nextIndex].betAmt}</td>
       <td class="estimatedDrawTime">${trackJson[nextIndex].estimatedDrawTime}</td>
     </tr>`;
-      }
-      
-      $('.track-data').append(output);
+    }
+
+    $(".track-data").append(output);
+    console.log(selectTrackIds);
+    // for (const trackIds of selectTrackIds) {
+
+    //   $('select[name="first_draw"]').append(`<option value="${trackIds}">${trackIds}</option>`);
+    // }
   }
 
-  onlyNums(value, minValue=1, maxValue=9999)
-  {
+  onlyNums(value, minValue = 1, maxValue = 9999) {
     let onlyNums = parseInt(value.replace(/\D+/g, ""));
     onlyNums = onlyNums ? onlyNums : minValue;
     onlyNums = onlyNums >= maxValue ? maxValue : onlyNums;
@@ -539,7 +579,7 @@ class Royal5utils {
     return this.pageId;
   }
   /****validations */
-  validateMoney() { }
+  validateMoney() {}
 
   gameId = 9;
   type = "All 5 group 5";
@@ -637,9 +677,9 @@ class Royal5utils {
     this.unitAmt = 2;
     this.betAmt = "";
     this.readyData = {};
-    this.$(".clear-btn").click();
-    this.$("input.bet-amt").val("");
-    this.$(".multiplier-input").val(1);
+    this.$(".clear-btn:visible").click();
+    this.$("input.bet-amt").empty();
+    this.$(".multiplier-input").empty();
     this.$(".multiplier-select").removeClass("active-btn");
     this.$('.multiplier-select[value="1"]').addClass("active-btn");
     this.$(".unit-amt-select").removeClass("active-btn");
@@ -928,7 +968,7 @@ class a5_g60 extends Royal5utils {
     let repeat = repeatedNums.length;
     return (
       ((row2.length * (row2.length - 1) * (row2.length - 2)) / 6) *
-      (row1.length - repeat) +
+        (row1.length - repeat) +
       (repeat * (row2.length - 1) * (row2.length - 2) * (row2.length - 3)) / 6
     );
   }
@@ -1060,11 +1100,19 @@ class a5_joint extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
-    readyData.allSelections = this.allSelections(
-      ...Object.values(this.rows),
-      this.sample1,
-      this.sample2
-    );
+    // readyData.allSelections = this.allSelections(
+    //   ...Object.values(this.rows),
+    //   this.sample1,
+    //   this.sample2
+    // );
+    const dataSet = [];
+    let rowPosition = 1;
+
+    for (const key in this.rows) {
+      dataSet.push([rowPosition++, this.rows[key]]);
+    }
+
+    readyData.allSelections = dataSet;
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
@@ -1949,79 +1997,78 @@ class l4_g4 extends Royal5utils {
 }
 
 /*-------------------Begin fixed_place class----------------------*/
-  //gameId
-  class fixed_place extends Royal5utils {
-    gameId = 99;
-    type = "fixed place";
-    // sample1 = 1;
-    // sample2 = 1;
-    labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
-    rows = {
-      row1: [], //represents each row seletion
-      row2: [],
-      row3: [],
-      row4: [],
-      row5: [],
-    };
+//gameId
+class fixed_place extends Royal5utils {
+  gameId = 99;
+  type = "fixed place";
+  // sample1 = 1;
+  // sample2 = 1;
+  labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
+  rows = {
+    row1: [], //represents each row seletion
+    row2: [],
+    row3: [],
+    row4: [],
+    row5: [],
+  };
 
-    constructor(pageId) {
-      super(pageId);
-      this.createGameInterface(this.labels);
-    }
-
-    calcTotalBets() {
-      console.log(this.rows);
-      let row1 = this.rows.row1;
-      let row2 = this.rows.row2;
-
-      let totalBets = 0
-
-      for(const key in this.rows){
-        totalBets += this.rows[key].length
-      }
-
-      console.log("total ", totalBets);
-      //let repeatedNums = row2.filter((element) => row1.includes(element));
-      //let repeat = repeatedNums.length;
-      return  totalBets   //row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
-    }
-
-    pushToCart(cart) {
-      let data = this.getSavedData();
-      let key = cart.length;
-      let type = this.type;
-      let detail = data.userSelections;
-      let bets = data.totalBets;
-      let unit = data.unitStaked;
-      let multiplier = `x${data.multiplier}`;
-      let betAmt = `&#8373;${data.totalBetAmt}`;
-      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
-      cart[key] = data;
-    }
-
-    getSavedData() {
-      let readyData = {};
-      readyData.gameId = this.gameId;
-      readyData.unitStaked = this.unitAmt;
-      readyData.totalBetAmt = this.calcActualAmt();
-      readyData.multiplier = this.multiplier;
-      readyData.totalBets = this.calcTotalBets();
-      const dataSet = []
-      let rowPosition = 1
-
-      for(const key in this.rows){
-         dataSet.push([rowPosition ++, this.rows[key]])
-      }
-
-      readyData.allSelections = dataSet    //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
-      readyData.userSelections = Object.values(this.rows).join("|");
-      return readyData;
-    }
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
   }
 
-  /*--------------------End fixed_place class--------------------------------*/
+  calcTotalBets() {
+    console.log(this.rows);
+    let row1 = this.rows.row1;
+    let row2 = this.rows.row2;
 
-  
+    let totalBets = 0;
+
+    for (const key in this.rows) {
+      totalBets += this.rows[key].length;
+    }
+
+    console.log("total ", totalBets);
+    //let repeatedNums = row2.filter((element) => row1.includes(element));
+    //let repeat = repeatedNums.length;
+    return totalBets; //row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    const dataSet = [];
+    let rowPosition = 1;
+
+    for (const key in this.rows) {
+      dataSet.push([rowPosition++, this.rows[key]]);
+    }
+
+    readyData.allSelections = dataSet; //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+
+/*--------------------End fixed_place class--------------------------------*/
+
 const intervalMinutes = 5; // Royal5 draw number intervals
 const maxEntryValue = 9999; //maximum value allowed for input fields
 let lastId = 0;
@@ -2035,7 +2082,8 @@ hideAllExcept(".game-nav-box", ".game-nav-box.all5");
 let balance = 500;
 // $('.user-balance').html(JSON.parse(balance).userBalance);
 
-var classNames = {
+/** selects all class names  */
+let classNames = {
   selectionCtrl: "selection-ctr",
   allBtn: ".all-btn",
   bigBtn: ".big-btn",
@@ -2377,28 +2425,46 @@ function ready(className) {
 
   game.$(".track").click(function () {
     // alert('click')
+    //TODO ========= get user bet data======================
+    console.log(game.getSavedData());
+    console.log(game.getBetType());
+    $();
     game.createTrackInterface("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
-   });
+  });
 
-  /**Tranck Ends */
-
+  /**Track Ends */
 
   /**Edit Track Begins */
-   game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").on('input', function() {
-      let thisValue = parseInt($(this).val());
-      let totalDraws = parseInt($('.total-draws').val());
-      $('.total-draws').val(game.onlyNums(totalDraws, 1, 120));
-      // $(this).val(game.onlyNums(thisValue));
-      let firstMultiplier = parseInt($('.first-multiplier').val());
-      let multiplyAfterEvery = parseInt($('.multiplyAfterEvery').val());
-      let multiplyBy = parseInt($('.multiplyBy').val());
-      $('.track-data').children().hide();
-      $('.track-data').children().slice(0,totalDraws).show();
-      game.createTrackInterface("2023-01-31 20:24:55", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getUnitAmt()); 
-   });
+  game
+    .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
+    .on("input", function () {
+      let thisValue = $(this).val();
+      let totalDraws = $(".total-draws").val();
+      $(this).val(game.onlyNums(thisValue));
+      $(".total-draws").val(game.onlyNums(totalDraws, "", 120));
+      totalDraws = parseInt($(".total-draws").val());
+      let firstMultiplier = parseInt($(".first-multiplier").val());
+      let multiplyAfterEvery = parseInt($(".multiplyAfterEvery").val());
+      let multiplyBy = parseInt($(".multiplyBy").val());
+      $(".track-data").children().hide();
+      $(".track-data").children().slice(0, totalDraws).show();
+      game.createTrackInterface(
+        "2023-01-31 20:24:55",
+        154,
+        totalDraws,
+        firstMultiplier,
+        multiplyAfterEvery,
+        multiplyBy,
+        game.getUnitAmt()
+      );
+    });
 
+  game
+    .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
+    .click(function () {
+      $(this).select();
+    });
   /**Edit Track Ends */
-
 
   game.$(".plus").click(function () {
     game.increaseMultiplier(classNames.multiValue);
