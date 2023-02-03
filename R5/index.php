@@ -1787,7 +1787,7 @@
                                                         <tr>
                                                             <th scope="row">1</th>
                                                             <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
+                                                            <td style="display: block;  width: 100px !important;" class="text-truncate"><span  >0 1 2 3 4 5 6 7 8 9</span></td>
                                                             <td>252</td>
                                                             <td>2</td>
 
@@ -1830,11 +1830,7 @@
                                                                 First draw:&nbsp;&nbsp;
                                                             </label>
                                                             <select name="first_draw" class="form-select draw-ids" id="">
-                                                                <option value="1234567">1234567</option>
-                                                                <option value="1234567">1234567</option>
-                                                                <option value="1234567">1234567</option>
-                                                                <option value="1234567">1234567</option>
-                                                                <option value="1234567">1234567</option>
+                                                                
                                                             </select>
                                                         </div>
                                                         <!-- <div class="track-container">
