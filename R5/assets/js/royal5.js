@@ -2385,10 +2385,10 @@ function ready(className) {
 
   /**Edit Track Begins */
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").on('input', function() {
-      let thisValue = $(this).val();
-      $('.total-draws').val(game.onlyNums(thisValue, 120));
-      $(this).val(game.onlyNums(thisValue));
+      let thisValue = parseInt($(this).val());
       let totalDraws = parseInt($('.total-draws').val());
+      $('.total-draws').val(game.onlyNums(totalDraws, 1, 120));
+      // $(this).val(game.onlyNums(thisValue));
       let firstMultiplier = parseInt($('.first-multiplier').val());
       let multiplyAfterEvery = parseInt($('.multiplyAfterEvery').val());
       let multiplyBy = parseInt($('.multiplyBy').val());
@@ -2423,7 +2423,7 @@ function ready(className) {
       $(".minus").removeClass("active-btn");
     }, 50);
     game.setMultiplier(value);
-    game.setBetAmt(game.calcBetAmt());
+    game.setBetAmt(game.calcBetAmt());  ``
     game.$("input.bet-amt").val("");
     game.$(".multiplier-select").removeClass("active-btn");
     game.$(`.multiplier-select[value='${value}']`).addClass("active-btn");
