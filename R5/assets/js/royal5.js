@@ -39,74 +39,130 @@ class Royal5utils {
       // eachBet
     },
   };
+
   constructor(pageId) {
     // this.pageId = pageId;
     // this.page = $(pageId);
   }
 
+  /**
+   * used to hide and show elements with multiple classes. Useful in switching tabs and interfaces.
+   * @param {string} hideAll elements with this class is hidden. eg. '.test-page' hides all elements with this class
+   * @param {string} except  unhides all elements with this class.
+   */
   hideAllExcept(hideAll, except) {
     $(hideAll).hide();
     $(except).show();
   }
 
+  /**
+   * selects element in jQuery style
+   * @param {string} element jQuery element selector 
+   * @returns jQuery element
+   */
   $(element = "") {
     // return element ? $(this.pageId).find(element) : this.$(this.pageId);
     return $(element);
   }
 
+  /**
+   * 
+   * @returns the page id of the active class. eg '#all5', '#all4'
+   */
   getPageId() {
     return this.pageId;
   }
-  selectAll(row = this.classNames.row1Nums, effects = "active-btn") {
+
+  /**
+   * applies colors to all target elements [0-9] after selection.
+   * @param {string} row target row. eg row1, row2
+   */
+  selectAll(row, effects) {
     this.$(row).addClass(effects);
   }
 
-  selectBig(row = this.classNames.row1Nums, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [0-5] after selection.
+   * @param {string} row target row. eg row1, row2
+   * a
+   */
+  selectBig(row, effects="active-btn") {
     this.$(row).removeClass(effects);
-    this.$(`${row}:nth-child(n+7)`).addClass(effects);
+    this.$(`${row}:nth-child(n+7)`).addClass(effects="active-btn");
   }
 
-  selectSmall(row = this.classNames.row1Nums, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [0-5] after selection.
+   * @param {string} row target row. eg row1, row2
+   */
+  selectSmall(row, effects="active-btn") {
     this.$(row).removeClass(effects);
     this.$(`${row}:nth-child(-n+6)`).addClass(effects);
   }
 
-  selectEven(row = this.classNames.row1Nums, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [0,2,4,6,8] after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class containing the styles to apply
+   */
+  selectEven(row, effects="active-btn") {
     this.$(row).removeClass(effects);
     this.$(`${row}:nth-child(even)`).addClass(effects);
   }
 
-  selectOdd(row, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [1,3,5,7,9] after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class containing the styles to apply
+   */
+  selectOdd(row, effects="active-btn") {
     this.$(row).removeClass(effects);
     this.$(`${row}:nth-child(odd)`).addClass(effects);
   }
 
-  clear(row, effects = "active-btn") {
+  /**
+   * removes colors from target elements [0-9] after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class to remove
+   */
+  clear(row, effects="active-btn") {
     this.$(row).removeClass(effects);
   }
 
-  selectAmount(row, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [2,1,0.2,0.1,0.002...] after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class containing the styles to apply
+   */
+  selectAmount(row, effects="active-btn") {
     this.$(row).removeClass(effects);
     this.$(row).addClass(effects);
   }
 
-  selectElement(target, effects = "active-btn") {
+  /**
+   * applies colors to all target number button after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class containing the styles to apply
+   */
+  selectElement(target, effects="active-btn") {
     this.$(target).removeClass(effects);
     console.log(this.$(this));
     this.$(this).addClass(effects);
   }
 
-  toggleBetsDisplay(totalBets) {
-    if (totalBets) {
-      this.$(".least-bet-info").hide();
-    } else this.$(".total-bets-info").hide();
-  }
 
-  applyEffects(effectsClass, elementSelector) {
-    this.$(elementSelector).addClass(effectsClass);
-  }
+  // toggleBetsDisplay(totalBets) {
+  //   if (totalBets) {
+  //     this.$(".least-bet-info").hide();
+  //   } else this.$(".total-bets-info").hide();
+  // }
+
+  // applyEffects(effectsClass, elementSelector) {
+  //   this.$(elementSelector).addClass(effectsClass);
+  // }
+
   /**
-   *
+   * displays the selected game interface. something like switching tabs.
    * @param label {,boolean, array}  the label names to display for each button row. specify false when no label is present. default is false
    * @param manual {,boolean}  whether game interface is manual or not. default is false
    */
@@ -132,6 +188,16 @@ class Royal5utils {
     }
   }
 
+  /**
+   * append to cart by adding to HTML DOM.  
+   * @param {string} type the selected game type. eg. All 5 Group 120
+   * @param {string} detail the selections made by the user eg 0,1,2|2,3 for two rows selectors 7||5 for three rows selectors
+   * @param {string} bets total number of bets
+   * @param {string} unit each bet unit
+   * @param {string} multiplier bet multiplier
+   * @param {string} betAmt total amount for selected bet
+   * @param {number} index 
+   */
   appendRow(type, detail, bets, unit, multiplier, betAmt, index) {
     let cartItem = `<tr id="cart-row${index}">
       <th scope="row">${type}</th>
@@ -148,6 +214,17 @@ class Royal5utils {
     // $(`del-${index}`).fadeIn('slow', function() { $(this).prepend(cartItem); });
   }
 
+  /**
+   * creates a json object of the data in track
+   * @param {*} firstDrawDate
+   * @param {*} firstDrawId 
+   * @param {*} totalDraws 
+   * @param {*} firstMultiplier 
+   * @param {*} multiplyAfterEvery 
+   * @param {*} multiplyBy 
+   * @param {*} unitAmt 
+   * @returns 
+   */
   createTrackJson(
     firstDrawDate,
     firstDrawId,
@@ -1024,7 +1101,7 @@ class a5_joint extends Royal5utils {
     row2: [],
     row3: [],
     row4: [],
-    row5: [],
+    row5: []
   };
   constructor(pageId) {
     super(pageId);
@@ -2115,7 +2192,7 @@ function ready(className) {
   game.$(classNames.allBtn).click(function () {
     let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let row = $(this).parent().attr("data-points-to");
-    game.selectAll(`.num-group.${row}>button`);
+    $(`.num-group.${row}>button`).addClass('active-btn');
     game.saveToRow(data, row);
     game.$("input.bet-amt").val("");
     let totalBets = game.calcTotalBets();
