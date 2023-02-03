@@ -14,6 +14,7 @@
     <!-- <script src="js/jquery-3.6.3.min.js"></script> -->
     <link rel="stylesheet" href="assets/css/cart-area-style.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -1631,12 +1632,10 @@
                         </div>
 
                         <div class="row-c cart-track-bet" id="cart-track-bet">
-                            <div id="Group_3" class="col-c track disabled-svg" onclick="showCartArea('track-tab')">
+                            <div id="Group_3" class="col-c track " onclick="showCartArea('track-tab')">
                                 <svg class="Path_3 path" viewBox="2771.25 1959.5 314.75 76.5">
                                     <style>
-                                    .disabled-svg {
-                                        pointer-events: none;
-                                    }
+                                    
                                     </style>
                                     <path id="Path_3" class="text"
                                         d="M 2824 1959.5 L 2805.5 1964.75 L 2783.75 1990 L 2771.25 2019.75 L 2774.25 2024 L 2825 2036 L 3033.5 2036 L 3052.5 2030.75 L 3074.25 2005.75 L 3086 1976 L 3082.5 1971.75 L 3033.5 1960.75 L 2824 1959.5 Z">
@@ -1771,7 +1770,7 @@
                                     aria-labelledby="track-tab" tabindex="0">
                                     <div class="table-content track-table-content">
                                         <div class="card mb-2">
-                                            <div class="table-responsive tableFixHead">
+                                            <div class="table-responsive">
                                                 <table class="table table-borderless" aria-describedby>
                                                     <thead>
                                                         <tr>
@@ -1781,7 +1780,6 @@
                                                             <th scope="col">Bets</th>
                                                             <th scope="col">Unit</th>
                                                             <th scope="col">Bet Amount</th>
-                                                            <th scope="col">Clear</th>
                                                             <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
                                                         </tr>
                                                     </thead>
@@ -1794,93 +1792,8 @@
                                                             <td>2</td>
 
                                                             <td>
-                                                                <span class="currency">$</span>&nbsp;&nbsp;234
+                                                                <span class="currency">&yen;</span>&nbsp;234
                                                             </td>
-                                                            <td><span class="bi bi-trash3"></span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                            <td>252</td>
-                                                            <td>2</td>
-
-                                                            <td>
-                                                                <span class="currency">$</span>&nbsp;&nbsp;234
-                                                            </td>
-                                                            <td><span class="bi bi-trash3"></span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                            <td>252</td>
-                                                            <td>2</td>
-
-                                                            <td>
-                                                                <span class="currency">$</span>&nbsp;&nbsp;234
-                                                            </td>
-                                                            <td><span class="bi bi-trash3"></span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                            <td>252</td>
-                                                            <td>2</td>
-
-                                                            <td>
-                                                                <span class="currency">$</span>&nbsp;&nbsp;234
-                                                            </td>
-                                                            <td><span class="bi bi-trash3"></span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                            <td>252</td>
-                                                            <td>2</td>
-
-                                                            <td>
-                                                                <span class="currency">$</span>&nbsp;&nbsp;234
-                                                            </td>
-                                                            <td><span class="bi bi-trash3"></span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                            <td>252</td>
-                                                            <td>2</td>
-
-                                                            <td>
-                                                                <span class="currency">$</span>&nbsp;&nbsp;234
-                                                            </td>
-                                                            <td><span class="bi bi-trash3"></span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                            <td>252</td>
-                                                            <td>2</td>
-
-                                                            <td>
-                                                                <span class="currency">$</span>&nbsp;&nbsp;234
-                                                            </td>
-                                                            <td><span class="bi bi-trash3"></span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                            <td>252</td>
-                                                            <td>2</td>
-
-                                                            <td>
-                                                                <span class="currency">$</span>&nbsp;&nbsp;234
-                                                            </td>
-                                                            <td><span class="bi bi-trash3"></span></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -1916,7 +1829,7 @@
                                                             <label for="first_draw" class="form-label">
                                                                 First draw:&nbsp;&nbsp;
                                                             </label>
-                                                            <select name="first_draw" class="form-select" id="">
+                                                            <select name="first_draw" class="form-select draw-ids" id="">
                                                                 <option value="1234567">1234567</option>
                                                                 <option value="1234567">1234567</option>
                                                                 <option value="1234567">1234567</option>
@@ -1935,7 +1848,7 @@
                                                             </label>
                                                             <div class="col-sm-3">
                                                                 <input type="number" min="1" max="120"
-                                                                    class="form-control" id="inputPassword" />
+                                                                    class="form-control total-draws" id="inputPassword" value="10"/>
                                                             </div>
                                                             <label for="inputPassword"
                                                                 class="current-draw col-md-7 col-form-label text-danger">
@@ -1950,8 +1863,8 @@
                                                                 class="col-sm-4 col-form-label">First Multi:
                                                             </label>
                                                             <div class="col-sm-4">
-                                                                <input type="number" min="1" class="form-control"
-                                                                    id="firstMulti" />
+                                                                <input type="number" min="1" class="form-control first-multiplier"
+                                                                    id="firstMulti" value="1"/>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -1959,8 +1872,8 @@
                                                                 class="col-sm-2 col-form-label">Every:
                                                             </label>
                                                             <div class="col-sm-4">
-                                                                <input type="number" min="1" class="form-control"
-                                                                    id="inputPassword" />
+                                                                <input type="number" min="1" class="form-control multiplyAfterEvery"
+                                                                    id="inputPassword" value="1"/>
                                                             </div>
                                                             <label for="inputPassword"
                                                                 class="current-draw col-sm-2 col-form-label">draw(s)</label>
@@ -1970,8 +1883,8 @@
                                                                 class="col-sm-2 col-form-label text-danger">Multi x:
                                                             </label>
                                                             <div class="col-sm-2">
-                                                                <input type="number" min="1" class="form-control"
-                                                                    id="inputPassword" />
+                                                                <input type="number" min="1" class="form-control multiplyBy"
+                                                                    id="inputPassword" value="1"/>
                                                             </div>
                                                             <label for="inputPassword"
                                                                 class="current-draw col-sm-7 col-form-label text-danger">Hint:
@@ -1990,15 +1903,12 @@
                                                                 <table class="table table-bordered" aria-describedby>
                                                                     <thead>
                                                                         <tr>
-                                                                            <th scope="col">Current</th>
-                                                                            <th scope="col"
-                                                                                style="display: flex; justify-content: space-between; border-bottom: none;">
-                                                                                <input
-                                                                                    class="form-check-input ms-3 col-sm-6"
+                                                                            <th scope="col">Track No.</th>
+                                                                            <th scope="col">
+                                                                                <input class="form-check-input"
                                                                                     type="checkbox" name="track_number"
-                                                                                    id="master" />
-                                                                                Track No.
-                                                                                <div class=""></div>
+                                                                                    id="master"/>
+                                                                                Track ID.
                                                                             </th>
                                                                             <th scope="col">Multi.</th>
                                                                             <th scope="col">Bet Amount</th>
@@ -2007,150 +1917,9 @@
                                                                             <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
                                                                         </tr>
                                                                     </thead>
-                                                                    <tbody class="overflow-auto table-body"
+                                                                    <tbody class="overflow-auto table-body track-data"
                                                                         style="max-height: 150px">
-                                                                        <tr>
-                                                                            <td>All 5 Group 120</td>
-                                                                            <td>
-                                                                                <ul
-                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
-                                                                                    <li class="col-md-2">
-                                                                                        <input
-                                                                                            class="form-check-input slave"
-                                                                                            type="checkbox"
-                                                                                            name="track_number"
-                                                                                            id="track_number" />
-                                                                                    </li>
-                                                                                    <li class="col-md-7">
-                                                                                        <span>{20230125-188}</span>
-                                                                                    </li>
-                                                                                    <li class="col-md-3">
-                                                                                        <button
-                                                                                            class="btn-current visually-hidde m-btn-orange btn-bet-now">
-                                                                                            current
-                                                                                        </button>
-                                                                                        <!-- <button type="button"
-                                                                                            class="btn-next-day m-btn-indigo visually-hidden"
-                                                                                            data-toggle="button"
-                                                                                            aria-pressed="false"
-                                                                                            autocomplete="off">next
-                                                                                            day</button> -->
-                                                                                    </li>
-
-                                                                                </ul>
-                                                                            </td>
-                                                                            <td
-                                                                                class="d-flex justify-content-center align-content-center">
-                                                                                <div class="col-md-4">
-                                                                                    <input type="number"
-                                                                                        id="inputPassword"
-                                                                                        class="form-control" min="1"
-                                                                                        oninput="this.value=(parseInt(this.value)||1)"
-                                                                                        placeholder="0-9" autofocus=''
-                                                                                        value='1' />
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>2</td>
-                                                                            <td>2023/1/25 12:00</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>All 5 Group 120</td>
-                                                                            <td>
-                                                                                <ul
-                                                                                    class="list-unstyled my-ul-el row justify-content-between">
-                                                                                    <li class="col-md-2">
-                                                                                        <input
-                                                                                            class="form-check-input col-sm-2 slave"
-                                                                                            type="checkbox"
-                                                                                            name="track_number"
-                                                                                            id="track_number" />
-                                                                                    </li>
-                                                                                    <li class="col-md-7">
-                                                                                        <span>20230125-188</span>
-                                                                                    </li>
-                                                                                    <li class="col-md-3">
-                                                                                        <button type="button"
-                                                                                            class="btn-next-day m-btn-indigo"
-                                                                                            data-toggle="button"
-                                                                                            aria-pressed="false"
-                                                                                            autocomplete="off">next
-                                                                                            day</button>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </td>
-                                                                            <td
-                                                                                class="d-flex justify-content-center align-content-center">
-                                                                                <div class="col-sm-3">
-                                                                                    <input type="number"
-                                                                                        id="inputPassword"
-                                                                                        class="form-control" min="1"
-                                                                                        oninput="this.value=(parseInt(this.value)||1)"
-                                                                                        placeholder="1-9" autofocus=''
-                                                                                        value='1' />
-
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>2</td>
-                                                                            <td>2023/1/25 12:00</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>All 5 Group 120</td>
-                                                                            <td>
-                                                                                <ul
-                                                                                    class="list-unstyled my-ul-el justify-content-between align-items-center g-2">
-                                                                                    <li class="col-sm-2">
-                                                                                        <input
-                                                                                            class="form-check-input col-sm-2 slave"
-                                                                                            type="checkbox"
-                                                                                            name="track_number"
-                                                                                            id="track_number" />
-                                                                                    </li>
-                                                                                    <li class="col-sm-6">
-                                                                                        <span>20230125-188</span>
-                                                                                    </li>
-                                                                                    <li class="col-sm-5">Item</li>
-                                                                                </ul>
-                                                                            </td>
-                                                                            <td
-                                                                                class="d-flex justify-content-center align-content-center">
-                                                                                <div class="col-sm-3">
-                                                                                    <input type="number" min="1"
-                                                                                        class="form-control"
-                                                                                        id="inputPassword" />
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>2</td>
-                                                                            <td>2023/1/25 12:00</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>All 5 Group 120</td>
-                                                                            <td>
-                                                                                <ul
-                                                                                    class="list-unstyled my-ul-el justify-content-between align-items-center g-2">
-                                                                                    <li class="col-sm-2">
-                                                                                        <input
-                                                                                            class="form-check-input col-sm-2 slave"
-                                                                                            type="checkbox"
-                                                                                            name="track_number"
-                                                                                            id="track_number" />
-                                                                                    </li>
-                                                                                    <li class="col-sm-6">
-                                                                                        <span>20230125-188</span>
-                                                                                    </li>
-                                                                                    <li class="col-sm-5">Item</li>
-                                                                                </ul>
-                                                                            </td>
-                                                                            <td
-                                                                                class="d-flex justify-content-center align-content-center">
-                                                                                <div class="col-sm-3">
-                                                                                    <input type="number" min="1"
-                                                                                        class="form-control"
-                                                                                        id="inputPassword" />
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>2</td>
-                                                                            <td>2023/1/25 12:00</td>
-                                                                        </tr>
+                                                                      
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -2461,6 +2230,7 @@
 
     
 
+    <script type="module" src="assets/js/demo.js"></script>
     <script type="module" src="assets/js/royal5.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="assets/libs/slot_master/slot.js"></script>
