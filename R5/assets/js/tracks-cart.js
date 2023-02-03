@@ -50,7 +50,7 @@ master.addEventListener("change", function () {
 
 const showModal = (title, button_type) => {
   // showModal()
-  var myModal = new bootstrap.Modal(document.getElementById("m-betModal"));
+  // var myModal = new bootstrap.Modal(document.getElementById("m-betModal"));
   document.querySelector(".modal-title").innerText = title;
   document.querySelector(".button-type").innertext = button_type;
   // myModal.closest(".modal-title").innerHTML = "title.innerHTML";
