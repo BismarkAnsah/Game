@@ -2386,9 +2386,10 @@ function ready(className) {
   /**Edit Track Begins */
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").on('input', function() {
       let thisValue = $(this).val();
-      $('.total-draws').val(game.onlyNums(thisValue, 120));
+      let totalDraws = $('.total-draws').val();
       $(this).val(game.onlyNums(thisValue));
-      let totalDraws = parseInt($('.total-draws').val());
+      $('.total-draws').val(game.onlyNums(totalDraws, '', 120));
+      totalDraws = parseInt($('.total-draws').val());
       let firstMultiplier = parseInt($('.first-multiplier').val());
       let multiplyAfterEvery = parseInt($('.multiplyAfterEvery').val());
       let multiplyBy = parseInt($('.multiplyBy').val());
@@ -2397,6 +2398,9 @@ function ready(className) {
       game.createTrackInterface("2023-01-31 20:24:55", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getUnitAmt()); 
    });
 
+   game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").click(function () {
+    $(this).select();
+   })
   /**Edit Track Ends */
 
 
