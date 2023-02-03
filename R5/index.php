@@ -1786,13 +1786,16 @@
                                                     <tbody>
                                                         <tr>
                                                             <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
+                                                            <!-- <td>All 5 Group 120</td>
                                                             <td style="display: block;  width: 100px !important;" class="text-truncate"><span  >0 1 2 3 4 5 6 7 8 9</span></td>
                                                             <td>252</td>
-                                                            <td>2</td>
-
+                                                            <td>2</td> -->
+                                                            <td class="m-group-type">All 5 Group 120</td>
+                                                            <td class="text-truncate  text-center"><span style="max-width: 80px" class="m-detail" >0 1 2 3 4 5 6 7 8 9</span></td>
+                                                            <td class="m-bet">252</td>
+                                                            <td class="m-units">2</td>
                                                             <td>
-                                                                <span class="currency">&yen;</span>&nbsp;234
+                                                                <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency"></span>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -2232,7 +2235,7 @@
     <script src="assets/libs/slot_master/slot.js"></script>
     <script src="assets/js/tracks-cart.js"></script>
     <script src="assets/js/timer.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
 </body>
 
 </html>

@@ -39,10 +39,10 @@ function updateProgressBar(startTime, duration, reduceAfter) {
 
   let elapsedTime = duration - startTime;
 
-  let percent = ((duration - elapsedTime) / duration) * 100;
+  let percent = Math.round(((duration - elapsedTime) / duration) * 100);
   progressBar.style.width = percent + "%";
   if (percent > 0) {
-    //   requestAnimationFrame(updateProgressBar);
+      // requestAnimationFrame(()=>{updateProgressBar(startTime, duration, reduceAfter)});
     setTimeout(function () {
       updateProgressBar(startTime, duration, reduceAfter);
     }, reduceAfter * 1000);

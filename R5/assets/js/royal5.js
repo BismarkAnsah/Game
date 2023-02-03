@@ -1,5 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 // import fixedPlace from "./c1`omponents/fixed_place.js";
+import { truncate } from "./main.js";
 
 $(".eye, .eye-slash").click(function () {
   $(".balance-box").toggleClass("show-balance");
@@ -16,13 +17,26 @@ class Royal5utils {
    * 'effects' adds the class to the 'target'
    *
    */
+  // gameId = 9;
+  // type = "All 5 group 5";
+  // sample1 = 1;
+  // sample2 = 1;
+  // multiplier = 1;
+  // unitAmt = 1;
+  // errorBets = 0;
+  // allBets = [];
+  // betAmt = "";
+  // rows = {};
+  // cart = [];
+  // readyData = {};
+
 
   decimalPlaces = 3;
   page;
   groupName = ".group-joint";
   units = [2, 1, 0.2, 0.1, 0.02, 0.01, 0.002, 0.001];
   multiplier = 1;
-  unitAmt = 1;
+  unitAmt = 2;
   betType = "";
   totalBets = 0;
   totalDraws = 10;
@@ -581,18 +595,7 @@ class Royal5utils {
   /****validations */
   validateMoney() {}
 
-  gameId = 9;
-  type = "All 5 group 5";
-  sample1 = 1;
-  sample2 = 1;
-  multiplier = 1;
-  unitAmt = 1;
-  errorBets = 0;
-  allBets = [];
-  betAmt = "";
-  rows = {};
-  cart = [];
-  readyData = {};
+  
 
   setAllBets() {
     this.allBets = this.getBets();
@@ -1175,8 +1178,8 @@ class a5_combo extends Royal5utils {
   type = "All 5 Straight(Combo)";
   // sample1 = 1;
   // sample2 = 1;
-  multiplier = 1;
-  unitAmt = 1;
+  // multiplier = 1;
+  // unitAmt = 1;
   betAmt = "";
   labels = ["1st", "2nd", "3rd", "4th", "5th"];
   rows = {
@@ -1344,8 +1347,8 @@ class f4_combo extends Royal5utils {
   type = "First 4 Straight(Combo)";
   // sample1 = 1;
   // sample2 = 1;
-  multiplier = 1;
-  unitAmt = 1;
+  // multiplier = 1;
+  // unitAmt = 1;
   betAmt = "";
   labels = ["1st", "2nd", "3rd", "4th"];
   rows = {
@@ -1726,8 +1729,8 @@ class l4_combo extends Royal5utils {
   type = "Last 4 Straight(Combo)";
   // sample1 = 1;
   // sample2 = 1;
-  multiplier = 1;
-  unitAmt = 1;
+  // multiplier = 1;
+  // unitAmt = 1;
   betAmt = "";
   labels = ["2nd", "3rd", "4th", "5th"];
   rows = {
@@ -2334,7 +2337,7 @@ function ready(className) {
     game.$(classNames.unitAmt).removeClass("active-btn");
     game.$(this).addClass("active-btn");
     let value = $(this).val();
-    game.setUnitAmt(value);
+    game.setUnitAmt(Number(value));
     game.setBetAmt(game.calcBetAmt());
     game.$(classNames.modelSelect).removeClass("active-btn");
     game.$("input.bet-amt").val("");
@@ -2424,11 +2427,19 @@ function ready(className) {
   /**Track Begins */
 
   game.$(".track").click(function () {
-    // alert('click')
+    // alert('click')m-group-type
+// m-group
+// m-bet
+// m-units
     //TODO ========= get user bet data======================
-    console.log(game.getSavedData());
-    console.log(game.getBetType());
-    $();
+    // console.log(game.getSavedData());
+    // console.log(game.getBetType());
+    $(".m-group-type").text(game.getBetType());
+    $(".m-detail").text(truncate(game.getSavedData().userSelections.split(",").join(" "), 19));
+    $(".m-bet").text(game.getSavedData().totalBets);
+    $(".m-units").text(game.getSavedData().unitStaked);
+    $(".m-currency").text(game.getSavedData().totalBetAmt);
+
     game.createTrackInterface("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
   });
 
