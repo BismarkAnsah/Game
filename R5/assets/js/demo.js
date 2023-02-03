@@ -1,1 +1,0 @@
-console.log(_.multiply( 0.356, 10 ))
