@@ -521,7 +521,7 @@ class Royal5utils {
     return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
   }
   /**
-   * the factorial of a number
+   * the factorial of a number 
    * @param {number} num what is the factorial of 'num'? the 'num' what is supplied to the function
    * @returns the factorial of a number
    */
@@ -533,7 +533,7 @@ class Royal5utils {
     return result;
   }
 
-  
+
   calcPseudoUnit() {
     return this.truncate(this.betAmt / this.totalBets);
   }
