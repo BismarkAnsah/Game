@@ -617,7 +617,13 @@ class Royal5utils {
   //   return actualAmt;
   // }
 
-  
+  /**
+   * gets unit amount when user selects a particular model. Unit amount when user enters amount is different (it is calculated and selected from a predifined list ie 2, 1, 0.2, 0.1 ...)
+   * from unit amount when user selects a particular model.
+   * @param {number} balance your remaining money for betting.
+   * @param {number} modelValue selected model. value can be 1/4, 1/3, 1/2 or 1 (All in) (of your remaining balance)
+   * @returns unit amount when a model is selected. 'model can be 1/4, 1/3, 1/2 or 1 (All in)' of your remaining balance.
+   */
   calcUnitFromModel(balance, modelValue) {
     if (!this.totalBets) return 1;
     let unitAmt = (balance * modelValue) / this.totalBets;
