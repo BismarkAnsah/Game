@@ -30,7 +30,8 @@ class Royal5utils {
   totalDraws = 10; 
   firstMultiplier = 1;
   multiplyAfterEvery = 1;
-  multiplyBy = 1;  
+  multiplyBy = 1; 
+  trackJson; 
   savepoint = {
     cart: [],
     data: {
@@ -298,15 +299,10 @@ class Royal5utils {
    * @param {number} unitAmt unit amount of each track.
    */
   createTrackInterface(
-    firstDrawDate,
-    firstDrawId,
-    totalDraws,
-    firstMultiplier,
-    multiplyAfterEvery,
-    multiplyBy,
-    unitAmt
+   trackJson,
+    totalDraws
   ) {
-    let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
+    // let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
     let entries = this.$(".track-entry:visible");
     let entriesLength = entries.length;
     let nextIndex = 0;
@@ -856,6 +852,14 @@ class Royal5utils {
     let numIndex = this.rows[row].indexOf(data);
     if (numIndex != -1) this.rows[row].splice(numIndex, 1);
   }
+/**
+ * flags the index of that element as deleted
+ * @param {*} trackIndex 
+ */
+  // toggleSetDeleteTrack(trackIndex)
+  // {
+  //   this.trackJson.deleted = 
+  // }
 
   resetAllData() {
     this.multiplier = 1;
@@ -871,11 +875,15 @@ class Royal5utils {
     this.$('.unit-amt-select[value="2"]').addClass("active-btn");
   }
 
-  /**Getters */
+  /**Getters Begin */
   getCart() {
     return this.cart;
   }
 
+  /**
+   * 
+   * @returns all values stored in all rows.eg. [[1,2,3],[4,5,6],[6,7,8]]
+   */
   getAllRows() {
     return this.rows;
   }
@@ -892,6 +900,10 @@ class Royal5utils {
     return this.totalBets;
   }
 
+  /**Getters End */
+  
+
+  /**Setters Begin */
   setMultiplier(multiplier) {
     this.multiplier = multiplier;
   }
@@ -903,14 +915,60 @@ class Royal5utils {
     this.betAmt = amt;
   }
 
+  /**Setters End */
+
+  /**
+   * 
+   * @param {number} amt 
+   */
   setUnitAmt(amt) {
     this.unitAmt = amt;
   }
 
+  /**
+   * sets the trackdata
+   * @param {array} trackJsonData the track data as JSON array. 
+   * [{
+   *    trackNo: number; 
+        betId: string;
+        multiplier: number;
+        betAmt: number;
+        estimatedDrawTime: string;
+        nextDay: boolean;
+        current: boolean;
+   * },{...}]
+   */
+  setTrackJson(trackJsonData)
+  {
+    this.trackJson = trackJsonData;
+  }
+
+  /**
+   * changes the trackJson property
+   * 
+   * @param {string} property the trackJson property.
+   * @param {any} value data to set.
+   * @param {number} index location of the data to edit.
+   */
+  editTrackElement(property, value, index)
+  {
+    this.trackJson[index][property] = value;
+  }
+
+  /**
+   * gets the unit amount
+   * @returns the stored unit amount
+   */
   getUnitAmt() {
     return this.unitAmt;
   }
 
+
+  /**
+   * gets value stored in a particular row
+   * @param {string} row the row name. eg. 'row1', 'row2'
+   * @returns the value stored in the row.
+   */
   getRow(row) {
     return this.rows[row];
   }
@@ -2602,7 +2660,10 @@ function ready(className) {
 
   game.$(".track").click(function () {
     // alert('click')
-    game.createTrackInterface("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
+    let trackJson = game.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
+    game.setTrackJson(trackJson);
+
+    game.createTrackInterface(trackJson, totalDraws);
    });
 
   /**Tranck Ends */
