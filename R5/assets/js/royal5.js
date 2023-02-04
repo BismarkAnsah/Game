@@ -661,11 +661,12 @@ class Royal5utils {
     let amt = +(this.totalBets * unitAmt).toFixed(8);
     return amt;
   }
-
+  
+////////////////////////////////todo: comment this method
   /**
-   * 
-   * @param  {...,number, array} rowsAndSamples 
-   * @returns 
+   * all bets generated from user selections. (works for only two rows and one row games eg. all 5 group120, all 5 group5, all 5 group60 and not all 5 combo)
+   * @param  {...,number, array} rowsAndSamples (row1, row2, sample1, sample2) or (row1, sample1, row2, sample2)
+   * @returns all possible combinations of bets.
    */
   allSelections(...rowsAndSamples) {
     let rows = [],
