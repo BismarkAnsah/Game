@@ -547,13 +547,18 @@ class Royal5utils {
   }
 
   /**
-   * 
+   * fixes some rounding off multiplications in javascript. eg. 0.356 *10 gives 3.5599999999999996 in javascript. function returns 3.56 in such case.
    * @param {number} value data to fix
-   * @returns 
+   * @returns correct value after javascript multiplication.
    */
   fixArithmetic(value) {
     return +value.toFixed(8);
   }
+
+  /**
+   * 
+   * @returns a unit amount in the list 2, 1, 0.2, 0.1, 0.02, 0.01, 0.002 or 0.001
+   */
   calcUnitAmt() {
     /**Old Implementation */
     //   let multiplier, unitAmt;
