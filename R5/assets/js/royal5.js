@@ -533,11 +533,24 @@ class Royal5utils {
     return result;
   }
 
-
+  /**
+   * when bet amount is divided by total bets, the resulting value is what I call 'pseudoUnit'.
+   * unit amount is always selected from the default unit list ie  2, 1, 0.2, 0.1, 0.02, 0.01, 0.002 and 0.001
+   * 'pseudoUnit' however sometimes gives a different value from the default unit list. 'pseudoUnit' is therefore used to calculate a unit
+   * amount to give give a unit amount in the default list. This manipulation is done by increasing the multiplier.
+   * 
+   * 
+   * @returns a unit amount influenced by a multiplier of 1.
+   */
   calcPseudoUnit() {
     return this.truncate(this.betAmt / this.totalBets);
   }
 
+  /**
+   * 
+   * @param {number} value data to fix
+   * @returns 
+   */
   fixArithmetic(value) {
     return +value.toFixed(8);
   }
