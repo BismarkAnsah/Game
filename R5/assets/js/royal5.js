@@ -581,13 +581,19 @@ class Royal5utils {
   }
 
   /**
-   * 
-   * @returns bet amount
+   * gets bet amount when unit amount and multiplier are selected. There are different ways of getting bet amount.
+   * can be entered manually(don't use this method in such cases, get from input, 
+   * and set it using setBetAmt()), can be select from model (use @calcBetAmtFromModel())
+   * @returns bet amount.
    */
   calcBetAmt() {
     return this.totalBets * this.multiplier * this.unitAmt;
   }
 
+  /**
+   * gets the actual bet amount when user enters it manually. total bets multiplied by unit amount should always give you this value.
+   * @returns rounded bet amount.
+   */
   calcActualAmt() {
     let actualAmt =
       this.totalBets * this.truncate(this.betAmt / this.totalBets);
