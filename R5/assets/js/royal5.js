@@ -244,7 +244,7 @@ class Royal5utils {
     let track = [];
     let nextDay = false;
     let trackNo = 0;
-    let multiplier = firstMultiplier;
+    let multiplier  = firstMultiplier;
     let firstBetAmt = firstMultiplier * unitAmt;
     let totalBetAmt = firstBetAmt;
     track[0] = {
@@ -298,10 +298,8 @@ class Royal5utils {
    * @param {number} multiplyBy multipliers multiplier by this value after every "multiplyAfterEvery"
    * @param {number} unitAmt unit amount of each track.
    */
-  createTrackInterface(
-   trackJson,
-    totalDraws
-  ) {
+  createTrackInterface(trackJson, totalDraws) 
+  {
     // let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
     let entries = this.$(".track-entry:visible");
     let entriesLength = entries.length;
@@ -397,9 +395,7 @@ class Royal5utils {
     return (
       date.getFullYear() +
       String(date.getMonth() + 1).padStart(2, "0") +
-      date.getDate() +
-      "-" +
-      String(id).padStart(3, "0")
+      date.getDate() + String(id).padStart(4, "0")
     );
   }
 
@@ -416,6 +412,22 @@ class Royal5utils {
       ":" +
       String(date.getSeconds()).padStart(2, "0")
     );
+  }
+
+
+  /**
+   * gets the next bet id from the current one. Bet id is of the form '202501260002'(YYYYMMDD+IDDD)
+   * @param {string} currentBetId the current bet id eg '202501260002'
+   * @param {string} idDateTime the date time '@currentBetId' was generated
+   * @param {number} intervalMinutes interval of generation. useful in restarting bet generation on next day
+   * @returns next bet id
+   */
+  generateNextBetId(currentBetId, idDateTime, intervalMinutes){
+    let startId = '0001';
+    let appendedId = String(currentBetId).slice(-4);
+    let nextGenerationDateTime = this.addMinutes(idDateTime, intervalMinutes);
+    let id = this.isNextDay(idDateTime, nextGenerationDateTime)?startId:+appendedId+1;
+    return geBetId(id, nextGenerationDateTime);
   }
 
   /**
@@ -2669,7 +2681,7 @@ function ready(className) {
   game.$(".track").click(function () {
     // alert('click')
     let trackJson = game.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
-    game.setTrackJson(trackJson);
+    game.setTrackJson(trackJson, totalDraws);
 
     game.createTrackInterface(trackJson, totalDraws);
    });
