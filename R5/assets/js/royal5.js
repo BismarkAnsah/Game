@@ -881,17 +881,25 @@ class Royal5utils {
   }
 
   /**
-   * 
+   * getter:
    * @returns all values stored in all rows.eg. [[1,2,3],[4,5,6],[6,7,8]]
    */
   getAllRows() {
     return this.rows;
   }
 
+  /**
+   * getter:
+   * @returns active multiplier stored
+   */
   getMultiplier() {
     return this.multiplier;
   }
 
+  /**
+   * getter:
+   * @returns stored betAmt
+   */
   getBetAmt() {
     return this.betAmt;
   }
@@ -901,7 +909,7 @@ class Royal5utils {
   }
 
   /**Getters End */
-  
+
 
   /**Setters Begin */
   setMultiplier(multiplier) {
