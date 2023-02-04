@@ -630,12 +630,24 @@ class Royal5utils {
     return this.truncate(unitAmt);
   }
 
+  /**
+   * gets the amount of money from user's account that should be used for betting after selecting a particular model. 
+   * model can be 1/4, 1/3, 1/2 or 1 (All in).
+   * @param {number} balance your remaining money for betting.
+   * @param {number} modelValue selected model. value can be 1/4, 1/3, 1/2 or 1 (All in) (of your remaining balance)
+   * @returns amount used for betting.
+   */
   calcAmtFromModel(balance, modelValue) {
     let unitAmt = this.calcUnitFromModel(balance, modelValue);
     let amt = +(this.totalBets * unitAmt).toFixed(8);
     return amt;
   }
 
+  /**
+   * 
+   * @param  {...,number, array} rowsAndSamples 
+   * @returns 
+   */
   allSelections(...rowsAndSamples) {
     let rows = [],
       samples = [],
