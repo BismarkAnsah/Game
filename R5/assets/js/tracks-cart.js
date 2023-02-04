@@ -38,15 +38,16 @@ button.addEventListener("click", function () {
   }
 });
 
-const master = document.getElementById("master");
-const slaves = document.querySelectorAll(".slave");
-
-// console.log(master);
-master.addEventListener("change", function () {
-  for (let slave of slaves) {
-    slave.checked = master.checked;
+/** check and unchecks track id checkboxes */
+$(document).on("change", "#mmaster",function(e) {
+  if ($(this).is(":checked")) {
+    $('.slave').prop("checked", true);
+  } else {
+    $('.slave').prop("checked", false);
   }
 });
+
+
 
 const showModal = (title, button_type) => {
   // showModal()

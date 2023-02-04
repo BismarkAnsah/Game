@@ -1,6 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 // import fixedPlace from "./c1`omponents/fixed_place.js";
-import { truncate } from "./main.js";
+import { truncate, checkRemainingSelectOptions } from "./main.js";
 
 $(".eye, .eye-slash").click(function () {
   $(".balance-box").toggleClass("show-balance");
@@ -284,6 +284,7 @@ class Royal5utils {
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
           <li class="col-md-2">
             <input
+            checked
               class="form-check-input slave"
               type="checkbox"
               name="track_number"
@@ -2162,7 +2163,12 @@ function ready(className) {
 
   // $('.cart').hide();
   // $('.cart-items').hide();
-
+  $("#first__draw__select").on("change", function () {
+    console.log("changed")
+    // checkRemainingSelectOptions("#first__draw__select")
+    let drawSelect =  checkRemainingSelectOptions("#first__draw__select");
+    console.log(drawSelect)
+  })
   game.$(classNames.allBtn).click(function () {
     let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let row = $(this).parent().attr("data-points-to");
@@ -2440,7 +2446,7 @@ function ready(className) {
     $(".m-units").text(game.getSavedData().unitStaked);
     $(".m-currency").text(game.getSavedData().totalBetAmt);
 
-    game.createTrackInterface("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
+    game.createTrackInterface("2023-01-31 20:24:55", 161, 10, 3, 4, 3, 0.002);
   });
 
   /**Track Ends */

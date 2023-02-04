@@ -1832,7 +1832,7 @@
                                                             <label for="first_draw" class="form-label">
                                                                 First draw:&nbsp;&nbsp;
                                                             </label>
-                                                            <select name="first_draw" class="form-select draw-ids" id="">
+                                                            <select name="first_draw" class="form-select draw-ids" id="first__draw__select">
                                                                 
                                                             </select>
                                                         </div>
@@ -1906,7 +1906,7 @@
                                                                             <th scope="col">
                                                                                 <input class="form-check-input"
                                                                                     type="checkbox" name="track_number"
-                                                                                    id="master"/>
+                                                                                    id="mmaster" checked/>
                                                                                 Track ID.
                                                                             </th>
                                                                             <th scope="col">Multi.</th>
@@ -1928,20 +1928,20 @@
                                                             <div class="total__bar col-sm-5">
                                                                 <span class="track__total me-3">
                                                                     Total track
-                                                                    <strong class="text-danger">10</strong> draw(s)
+                                                                    <strong class="text-danger track__total__draws">10</strong> draw(s)
                                                                 </span>
                                                                 <span class="total__bets">
                                                                     Total.
-                                                                    <strong class="text-danger">2345</strong> bet(s)
+                                                                    <strong class="text-danger track__total__bets">2345</strong> bet(s)
                                                                 </span>
                                                             </div>
                                                             <div class="total__track__bets col-sm-4">
                                                                 <span class="total__amount">Total Amt.
-                                                                    <strong class="text-danger">2345</strong></span>
+                                                                    <strong class="text-danger track__total__amt">2345</strong></span>
                                                             </div>
                                                             <div class="total__amount__balance col-sm-3">
                                                                 <span class="total__balance">Balance:
-                                                                    <strong class="text-danger">2345</strong></span>
+                                                                    <strong class="text-danger track__total__balance">2345</strong></span>
                                                             </div>
                                                         </div>
                                                     </div>
