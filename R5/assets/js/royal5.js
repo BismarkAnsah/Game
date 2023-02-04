@@ -435,8 +435,8 @@ class Royal5utils {
 
   /**
    * checks whether dates provided happens on different date
-   * @param {*} date control date. date to be compared to 
-   * @param {*} checkDate does this date happens on the next day?
+   * @param {string} date control date. date to be compared to 
+   * @param {string} checkDate does this date happens on the next day?
    * @returns true or false. true if nextDay
    */
   isNextDay(date, checkDate) {
