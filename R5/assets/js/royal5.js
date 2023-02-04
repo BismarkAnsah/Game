@@ -556,7 +556,7 @@ class Royal5utils {
   }
 
   /**
-   * 
+   * Algorithm that returns a unit amount from the defined list 2, 1, 0.2, 0.1, 0.02, 0.01, 0.002 or 0.001 no matter number of bets selected.
    * @returns a unit amount in the list 2, 1, 0.2, 0.1, 0.02, 0.01, 0.002 or 0.001
    */
   calcUnitAmt() {
@@ -617,6 +617,7 @@ class Royal5utils {
   //   return actualAmt;
   // }
 
+  
   calcUnitFromModel(balance, modelValue) {
     if (!this.totalBets) return 1;
     let unitAmt = (balance * modelValue) / this.totalBets;
