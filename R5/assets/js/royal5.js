@@ -600,14 +600,23 @@ class Royal5utils {
     return parseFloat(actualAmt.toFixed(3));
   }
 
+  /**
+   * gets multiplier when actual amount and unit amount are set.
+   * @returns multiplier.
+   */
   calcMultiplier() {
     let actualAmt = this.calcActualAmt();
     let unitAmt = this.calcUnitAmt();
     return +(actualAmt / (this.totalBets * unitAmt)).toFixed(8);
   }
 
-  calcPrize(prize) {
-    let winAmt = this.multiplier * this.unitAmt * prize;
+  /**
+   * gets the potential win of user.
+   * @param {number} odds odds for a particular bet.
+   * @returns the potential win
+   */
+  calcPrize(odds) {
+    let winAmt = this.multiplier * this.unitAmt * odds;
     return this.truncate(winAmt);
   }
   /***model functions */
