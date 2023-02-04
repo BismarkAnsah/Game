@@ -580,6 +580,10 @@ class Royal5utils {
     return realUnit;
   }
 
+  /**
+   * 
+   * @returns bet amount
+   */
   calcBetAmt() {
     return this.totalBets * this.multiplier * this.unitAmt;
   }
