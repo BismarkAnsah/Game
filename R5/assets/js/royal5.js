@@ -244,11 +244,13 @@ class Royal5utils {
     let nextDay = false;
     let trackNo = 0;
     let multiplier = firstMultiplier;
+    let firstBetAmt = firstMultiplier * unitAmt;
+    let totalBetAmt = firstBetAmt;
     track[0] = {
       trackNo: ++trackNo,
       betId: this.geBetId(currentDrawDate, firstDrawId),
       multiplier: firstMultiplier,
-      betAmt: firstMultiplier * unitAmt,
+      betAmt: firstBetAmt,
       estimatedDrawTime:
         this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
       nextDay: nextDay,
@@ -269,6 +271,7 @@ class Royal5utils {
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.truncate(multiplier * unitAmt, 4);
       // betAmt = (multiplier * unitAmt).toFixed(4);
+      totalBetAmt += betAmt;
       track[i] = {
         trackNo: ++trackNo,
         betId: this.geBetId(nextDrawDate, ++firstDrawId),
@@ -280,7 +283,7 @@ class Royal5utils {
       };
       currentDrawDate = nextDrawDate;
     }
-
+    track.trackInfo.totalBetAmt = totalBetAmt;
     return track;
   }
 
@@ -661,7 +664,7 @@ class Royal5utils {
     let amt = +(this.totalBets * unitAmt).toFixed(8);
     return amt;
   }
-  
+
 ////////////////////////////////todo: comment this method
   /**
    * all bets generated from user selections. (works for only two rows and one row games eg. all 5 group120, all 5 group5, all 5 group60 and not all 5 combo)
