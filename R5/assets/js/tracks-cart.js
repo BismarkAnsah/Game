@@ -70,3 +70,7 @@ const showCartArea = (id) => {
   }, 500);
 };
 
+
+$(document).on("load click", ".nav-item-c:visible", function (e) {
+  console.log($(this).data())
+})
