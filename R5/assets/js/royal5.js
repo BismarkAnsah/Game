@@ -2782,7 +2782,8 @@ function ready(className) {
     // console.log((game.calcTotalBets())*10);
     $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
     $(".track__total__draws").text(trackJson.trackInfo.totalDraws)
-    $(".track__total__bets").text((game.calcTotalBets()) * 10)
+    $(".track__total__bets").text((game.calcTotalBets()) * trackJson.trackInfo.totalDraws);
+   
     $(".track__total__balance").text(balance)
    
   }
