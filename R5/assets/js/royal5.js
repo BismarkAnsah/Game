@@ -314,10 +314,10 @@ class Royal5utils {
     firstMultiplier,
     multiplyAfterEvery,
     multiplyBy,
-    firstBetAmt
+    eachBetAmt
   ) {
     // firstDrawId = parseInt(firstDrawId);
-    firstBetAmt = this.fixArithmetic(firstBetAmt*firstMultiplier);
+    let firstBetAmt = this.fixArithmetic(eachBetAmt*firstMultiplier);
     let nextDrawDate, nextBetId, betAmt;
     let track = [];
     let nextDay = false;
@@ -346,7 +346,8 @@ class Royal5utils {
       multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
       currentBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
-      betAmt = this.fixArithmetic(multiplier * firstBetAmt);
+      console.log(multiplier, firstBetAmt);
+      betAmt = this.fixArithmetic(multiplier * eachBetAmt);
       console.log(betAmt);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
