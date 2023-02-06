@@ -269,14 +269,14 @@ class Royal5utils {
       if(!nextDay)
         nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
       multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
-      nextBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
+      currentBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.fixArithmetic(multiplier * unitAmt, 4);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
       track[i] = {
         trackNo: ++trackNo,
-        betId: nextBetId,
+        betId: currentBetId,
         multiplier: multiplier,
         betAmt: betAmt,
         estimatedDrawTime: this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
@@ -301,6 +301,9 @@ class Royal5utils {
     let totalDraws = trackJson.trackInfo.totalDraws;
     let nextIndex = 0;
     console.log('already there', entriesLength);
+    let btn = this.$('button.current:not(button.current.visually-hidden)').addClass('visually-hidden');
+    console.log(btn);
+    $(entries[0]).find('button.current').removeClass('visually-hidden');
     entries.each(function(index) {
       $(entries[index]).find('.trackNo').text(trackJson[index].trackNo);
       $(entries[index]).find('.betId').text(trackJson[index].betId);
@@ -332,7 +335,7 @@ class Royal5utils {
           </li>
           <li class="col-md-3">`;
           hidden = trackJson[nextIndex].current?'':'visually-hidden';
-          output += `<button class=" m-btn-orange p-2  ${hidden}">current</button>`;
+          output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
           hidden  = trackJson[nextIndex].nextDay && !trackJson[nextIndex].current?'':'visually-hidden'; // makes sure 'next day' and 'current' don't appear simultaneously.
           console.log(trackJson[nextIndex].nextDay);
           output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`
@@ -385,12 +388,12 @@ class Royal5utils {
 
   /**
    * appends bet id to datetime provided.
-   * @param {string} date draw date time
+   * @param {string} dateInput draw date time
    * @param {string} id the id of the draw. counted from '1' at the beginning of the day. 
    * @returns formatted bet id
    */
-  getBetId(date, id) {
-    date = new Date(date);
+  getBetId(dateInput, id) {
+    let date = new Date(dateInput);
     return (
       date.getFullYear() +
       String(date.getMonth() + 1).padStart(2, "0") +
@@ -2679,16 +2682,19 @@ function ready(className) {
 
   game.$(".track").click(function () {
     // alert('click')
-    let trackJson = game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
+    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 120, 3, 4, 3, 0.002);
     game.setTrackJson(trackJson);
     console.log(trackJson);
     game.createTrackInterface(trackJson);
    });
 
-  /**Tranck Ends */
+  /**Track Ends */
 
 
   /**Edit Track Begins */
+  /**
+   *  listens to inputs that changes the track
+   */
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").on('input', function() {
       let thisValue = $(this).val();
       let totalDraws = $('.total-draws').val();
@@ -2700,7 +2706,8 @@ function ready(className) {
       let multiplyBy = parseInt($('.multiplyBy').val());
       $('.track-data').children().hide();
       $('.track-data').children().slice(0,totalDraws).show();
-      game.createTrackInterface("2023-01-31 20:24:55", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getUnitAmt()); 
+      let trackJson = game.createTrackJson("2023-01-31 20:24:00", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getUnitAmt())
+      game.createTrackInterface(trackJson); 
    });
 
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").click(function () {
@@ -2852,6 +2859,8 @@ $(` ${classNames.navItem}`).click(function () {
 
 //group selections
 $(".group-nav>li").click(function () {
+  let nextDate = game.addMinutes('2023-12-01 21:01:05', intervalMinutes);
+  let nextBetId = game.generateNextBetId(currentBetId, nextDate);
   game.resetAllData();
   $(".group-nav>li").removeClass("active-nav");
   $(this).addClass("active-nav");
