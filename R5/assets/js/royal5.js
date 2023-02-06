@@ -309,7 +309,7 @@ class Royal5utils {
     let firstBetAmt = this.fixArithmetic(firstMultiplier * unitAmt);
     let totalBetAmt = firstBetAmt;
     let currentBetId = this.generateNextBetId(betId, firstDrawDate, intervalMinutes);
-    let currentDrawDate = new Date(this.addMinutes(new Date(firstDrawDate), intervalMinutes));
+    let currentDrawDate = new Date(this.addMinutes(firstDrawDate, intervalMinutes));
     track["trackInfo"] = {};
     track[0] = {
       trackNo: ++trackNo,
@@ -324,20 +324,20 @@ class Royal5utils {
 
     for (let i = 1; i < totalDraws; i++) {
       nextDrawDate = new Date(
-        this.addMinutes(new Date(currentDrawDate), intervalMinutes)
+        this.addMinutes(currentDrawDate, intervalMinutes)
       );
       
       if(!nextDay)
         nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
       multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
-      nextBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
+      currentBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.fixArithmetic(multiplier * unitAmt, 4);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
       track[i] = {
         trackNo: ++trackNo,
-        betId: nextBetId,
+        betId: currentBetId,
         multiplier: multiplier,
         betAmt: betAmt,
         estimatedDrawTime: this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
@@ -345,7 +345,7 @@ class Royal5utils {
       };
       currentDrawDate = nextDrawDate;
     }
-    track["trackInfo"]["totalBetAmt"] = this.fixArithmetic(totalBetAmt);
+    track["trackInfo"]["totalBetAmt"] = this.fixArithmetic(this.fixArithmetic(totalBetAmt));
     track["trackInfo"]["totalDraws"]  = totalDraws;
     return track;
   }
@@ -362,6 +362,9 @@ class Royal5utils {
     let totalDraws = trackJson.trackInfo.totalDraws;
     let nextIndex = 0;
     console.log('already there', entriesLength);
+    let btn = this.$('button.current:not(button.current.visually-hidden)').addClass('visually-hidden');
+    console.log(btn);
+    $(entries[0]).find('button.current').removeClass('visually-hidden');
     entries.each(function(index) {
       $(entries[index]).find('.trackNo').text(trackJson[index].trackNo);
       $(entries[index]).find('.betId').text(trackJson[index].betId);
@@ -394,7 +397,7 @@ class Royal5utils {
           </li>
           <li class="col-md-3">`;
           hidden = trackJson[nextIndex].current?'':'visually-hidden';
-          output += `<button class=" m-btn-orange p-2  ${hidden}">current</button>`;
+          output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
           hidden  = trackJson[nextIndex].nextDay && !trackJson[nextIndex].current?'':'visually-hidden'; // makes sure 'next day' and 'current' don't appear simultaneously.
           console.log(trackJson[nextIndex].nextDay);
           output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`
@@ -447,11 +450,12 @@ class Royal5utils {
 
   /**
    * appends bet id to datetime provided.
-   * @param {string} date draw date time
+   * @param {string} dateInput draw date time
    * @param {string} id the id of the draw. counted from '1' at the beginning of the day. 
    * @returns formatted bet id
    */
-  getBetId(date, id) {
+  getBetId(dateInput, id) {
+    let date = new Date(dateInput);
     return (
       date.getFullYear() +
       String(date.getMonth() + 1).padStart(2, "0") +
@@ -461,10 +465,11 @@ class Royal5utils {
 
   /**
    * gets time in HH:MM:SS format
-   * @param {string} date datetime to return time from
+   * @param {string} dateInput datetime to return time from
    * @returns time in HH:MM:SS format
    */
-  getTime(date) {
+  getTime(dateInput) {
+    let date = new Date(dateInput);
     return (
       String(date.getHours()).padStart(2, "0") +
       ":" +
@@ -485,9 +490,9 @@ class Royal5utils {
   generateNextBetId(currentBetId, idDateTime, intervalMinutes){
     let startId = '0001';
     let appendedId = String(currentBetId).slice(-4);
-    let nextGenerationDateTime = this.addMinutes(new Date(idDateTime), intervalMinutes);
+    let nextGenerationDateTime = this.addMinutes(idDateTime, intervalMinutes);
     let id = this.isNextDay(idDateTime, nextGenerationDateTime)?startId:+appendedId+1;
-    return this.getBetId(new Date(nextGenerationDateTime), id);
+    return this.getBetId(nextGenerationDateTime, id);
   }
 
   /**
@@ -1757,8 +1762,7 @@ class f4_g24 extends Royal5utils {
     readyData.totalBets = this.calcTotalBets();
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
-      this.sample1,
-      this.sample2
+      this.sample1
     );
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
@@ -2752,7 +2756,7 @@ function ready(className) {
     // console.log(selectTrackIds);
     let current = "20230131000";
     let inc = 1;
-    let trackJson = game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
+    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 120, 3, 4, 3, 0.002);
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
     setInterval(() => {
@@ -2764,6 +2768,7 @@ function ready(className) {
     setTrackContents(trackJson)
     
     game.setTrackJson(trackJson);
+    console.log(trackJson);
     game.createTrackInterface(trackJson);
   });
 
@@ -2787,9 +2792,10 @@ function ready(className) {
   
 
   /**Edit Track Begins */
-  game
-    .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
-    .on("input", function () {
+  /**
+   *  listens to inputs that changes the track
+   */
+   game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").on('input', function() {
       let thisValue = $(this).val();
       let totalDraws = $(".total-draws").val();
       $(this).val(game.onlyNums(thisValue));
@@ -2961,6 +2967,8 @@ $(` ${classNames.navItem}`).click(function () {
 
 //group selections
 $(".group-nav>li").click(function () {
+  let nextDate = game.addMinutes('2023-12-01 21:01:05', intervalMinutes);
+  let nextBetId = game.generateNextBetId(currentBetId, nextDate);
   game.resetAllData();
   $(".group-nav>li").removeClass("active-nav");
   $(this).addClass("active-nav");
