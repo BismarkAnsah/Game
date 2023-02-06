@@ -1700,8 +1700,7 @@ class f4_g24 extends Royal5utils {
     readyData.totalBets = this.calcTotalBets();
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
-      this.sample1,
-      this.sample2
+      this.sample1
     );
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
