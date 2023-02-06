@@ -331,8 +331,9 @@ class Royal5utils {
           <li class="col-md-3">`;
           hidden = trackJson[nextIndex].current?'':'visually-hidden';
           output += `<button class=" m-btn-orange p-2  ${hidden}">current</button>`;
-          hidden  = trackJson[nextIndex].nextDay && !current?'':'visually-hidden'; // makes sure 'next day' and 'current' don't appear simultaneously.
-          output += `<button type="button" class="btn-next-day m-btn-indigo p-2" data-toggle="button ${hidden}" aria-pressed="false" autocomplete="off">next day</button>`
+          hidden  = trackJson[nextIndex].nextDay && !trackJson[nextIndex].current?'':'visually-hidden'; // makes sure 'next day' and 'current' don't appear simultaneously.
+          console.log(hidden);
+          output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`
           output +=
           `</li>
         </ul>
