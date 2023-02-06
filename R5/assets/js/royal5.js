@@ -236,16 +236,16 @@ class Royal5utils {
     firstMultiplier,
     multiplyAfterEvery,
     multiplyBy,
-    betAmt
+    firstBetAmt
   ) {
     // firstDrawId = parseInt(firstDrawId);
     
-    let nextDrawDate, nextBetId;
+    let nextDrawDate, nextBetId, betAmt;
     let track = [];
     let nextDay = false;
     let trackNo = 0;
     let multiplier  = firstMultiplier;
-    let totalBetAmt = betAmt;
+    let totalBetAmt = firstBetAmt;
     let currentBetId = this.generateNextBetId(betId, firstDrawDate, intervalMinutes);
     let currentDrawDate = new Date(this.addMinutes(firstDrawDate, intervalMinutes));
     track["trackInfo"] = {};
@@ -253,7 +253,7 @@ class Royal5utils {
       trackNo: ++trackNo,
       betId: currentBetId,
       multiplier: firstMultiplier,
-      betAmt: betAmt,
+      betAmt: firstBetAmt,
       estimatedDrawTime:
         this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
       nextDay: nextDay,
@@ -268,7 +268,8 @@ class Royal5utils {
       multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
       currentBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
-      betAmt = this.fixArithmetic(multiplier * betAmt);
+      betAmt = this.fixArithmetic(multiplier * firstBetAmt);
+      console.log(betAmt);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
       track[i] = {
@@ -366,7 +367,7 @@ class Royal5utils {
    * @param {number} maxValue maximum acceptable integer value
    * @returns only numbers from passed data.the number returned exists between a range provided by 'minValue' and 'maxValue'
    */
-  onlyNums(value, minValue=1, maxValue=9999)
+  onlyNums(value, minValue=1, maxValue=99999)
   {
     let onlyNums = parseInt(value.replace(/\D+/g, ""));
     onlyNums = onlyNums ? onlyNums : minValue;
