@@ -683,7 +683,7 @@ class Royal5utils {
    * @returns bet amount.
    */
   calcBetAmt() {
-    return this.totalBets * this.multiplier * this.unitAmt;
+    return this.fixArithmetic(this.totalBets * this.multiplier * this.unitAmt);
   }
 
   /**
@@ -2774,7 +2774,8 @@ function ready(className) {
     let current = "20230131000";
     let inc = 1;
 
-    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 120, 3, 4, 3, 0.252);
+    let betAmt = game.fixArithmetic(game.getMultiplier() * game.getUnitAmt() * game.getTotalBets());
+    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 10, 1, 1, 1, betAmt);
 
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
