@@ -49,6 +49,12 @@ $(document).on("change", "#mmaster",function(e) {
 
 
 
+/**
+ *
+ *
+ * @param {*} title
+ * @param {*} button_type
+ */
 const showModal = (title, button_type) => {
   // showModal()
   // var myModal = new bootstrap.Modal(document.getElementById("m-betModal"));
@@ -60,6 +66,11 @@ const showModal = (title, button_type) => {
   myModal.show();
 };
 
+/**
+ *
+ *
+ * @param {*} id
+ */
 const showCartArea = (id) => {
   let triggerEl = document.getElementById(id)
   let tabTrigger = new bootstrap.Tab(triggerEl)

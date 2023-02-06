@@ -246,21 +246,37 @@ class Royal5utils {
   }
 
 
+
   generateSelectOptions(currentBetId = "202301310001", idDateTime = "2023-01-31 23:20:45") {
-    // let currentBetId = currentBetId
-    // let idDateTime = idDateTime;
-    // let selectTrackIds = []
-    // let nextBetId = "";
-    
+    let selectTrackIds = "";
     for (let i = 0; i < 120; i++) {
       currentBetId = game.generateNextBetId(currentBetId, idDateTime, intervalMinutes);
       idDateTime = game.addMinutes(idDateTime, intervalMinutes);
-      // selectTrackIds.push(currentBetId)
-          $('select[name="first_draw"]').append(
-              `<option value="${currentBetId}">${currentBetId} ${i === 0 ? "Current" : ""}</option>`
-          );
+       selectTrackIds += `<option value="${currentBetId}">${currentBetId} ${i === 0 ? "Current" : ""}</option>`; 
     }
+    
+    $('select[name="first_draw"]').html(
+        selectTrackIds
+    );
+    
 
+    let mid = $('table tbody.track-data tr.track-entry:first-child');
+    console.log(mid)
+    
+  }
+
+  /**
+   *
+   * changes the position of the current button in the track table.
+   * @memberof Royal5utils
+   * 
+   */
+  changeCurrentButton(){
+    $(document).find('table tbody.track-data tr.track-entry:nth-child(2) .m-btn-orange').removeClass("visually-hidden");
+    let timeOut = setTimeout(() => {
+      $(document).find('table tbody.track-data tr.track-entry:first-child .m-btn-orange').addClass("visually-hidden");
+      clearTimeout(timeOut)
+    }, 500);
   }
 
   /**
@@ -329,7 +345,7 @@ class Royal5utils {
       };
       currentDrawDate = nextDrawDate;
     }
-    track["trackInfo"]["totalBetAmt"] = totalBetAmt;
+    track["trackInfo"]["totalBetAmt"] = this.fixArithmetic(totalBetAmt);
     track["trackInfo"]["totalDraws"]  = totalDraws;
     return track;
   }
@@ -2733,23 +2749,42 @@ function ready(className) {
     // console.log(game.getSavedData());
     // console.log(game.getBetType());
     
-    game.generateSelectOptions();
     // console.log(selectTrackIds);
+    let current = "20230131000";
+    let inc = 1;
+    let trackJson = game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
+    game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
+    setInterval(() => {
+      // game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
+      inc++;
+      
+    }, 5000);
+
+    setTrackContents(trackJson)
+    
+    game.setTrackJson(trackJson);
+    game.createTrackInterface(trackJson);
+  });
+
+  function setTrackContents(trackJson) {
     $(".m-group-type").text(game.getBetType());
     $(".m-detail").text(truncateEllipsis(game.getSavedData().userSelections.replace(/[^\d]/g, ' ').split(",").join(" "), 19));
     $(".m-bet").text(game.getSavedData().totalBets);
     $(".m-units").text(game.getSavedData().unitStaked);
     $(".m-currency").text(game.getSavedData().totalBetAmt);
     
-    let trackJson = game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
-    console.log(trackJson);
-
-    game.setTrackJson(trackJson);
-    game.createTrackInterface(trackJson);
-  });
+    // console.log((game.calcTotalBets())*10);
+    $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
+    $(".track__total__draws").text(trackJson.trackInfo.totalDraws)
+    $(".track__total__bets").text((game.calcTotalBets()) * 10)
+    $(".track__total__balance").text(balance)
+   
+  }
+  
 
   /**Track Ends */
+  
 
   /**Edit Track Begins */
   game

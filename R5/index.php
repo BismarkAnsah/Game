@@ -1937,7 +1937,7 @@
                                                             </div>
                                                             <div class="total__track__bets col-sm-4">
                                                                 <span class="total__amount">Total Amt.
-                                                                    <strong class="text-danger track__total__amt">2345</strong></span>
+                                                                    <strong class="text-danger track__total__amt__to_pay">2345</strong></span>
                                                             </div>
                                                             <div class="total__amount__balance col-sm-3">
                                                                 <span class="total__balance">Balance:
