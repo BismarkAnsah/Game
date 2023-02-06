@@ -317,7 +317,7 @@ class Royal5utils {
     firstBetAmt
   ) {
     // firstDrawId = parseInt(firstDrawId);
-    
+    firstBetAmt = this.fixArithmetic(firstBetAmt*firstMultiplier);
     let nextDrawDate, nextBetId, betAmt;
     let track = [];
     let nextDay = false;
