@@ -278,7 +278,6 @@ class Royal5utils {
     
 
     let mid = $('table tbody.track-data tr.track-entry:first-child');
-    console.log(mid)
     
   }
 
@@ -346,9 +345,7 @@ class Royal5utils {
       multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
       currentBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
-      console.log(multiplier, firstBetAmt);
       betAmt = this.fixArithmetic(multiplier * eachBetAmt);
-      console.log(betAmt);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
       track[i] = {
@@ -379,9 +376,7 @@ class Royal5utils {
     let entriesLength = entries.length;
     let totalDraws = trackJson.trackInfo.totalDraws;
     let nextIndex = 0;
-    console.log('already there', entriesLength);
-    let btn = this.$('button.current:not(button.current.visually-hidden)').addClass('visually-hidden');
-    console.log(btn);
+    this.$('button.current:not(button.current.visually-hidden)').addClass('visually-hidden');
     $(entries[0]).find('button.current').removeClass('visually-hidden');
     entries.each(function(index) {
       $(entries[index]).find('.trackNo').text(trackJson[index].trackNo);
@@ -394,16 +389,16 @@ class Royal5utils {
     let remainEntriesLength = totalDraws-entriesLength;
     let output = "";
     let hidden;
-    console.log("remaining entries", remainEntriesLength);
     for(let i = 0; i<remainEntriesLength; i++, nextIndex++) 
       {
-        output += `<tr class="track-entry">
+        output += `<tr data-index="${nextIndex}" class="track-entry">
       <td class="trackNo">${trackJson[nextIndex].trackNo}</td>
       <td>
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
           <li class="col-md-2">
             <input
-              class="form-check-input slave"
+              data-index="${nextIndex}"
+              class="form-check-input slave track-check"
               type="checkbox"
               name="track_number"
               id="track_number"
@@ -417,7 +412,6 @@ class Royal5utils {
           hidden = trackJson[nextIndex].current?'':'visually-hidden';
           output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
           hidden  = trackJson[nextIndex].nextDay && !trackJson[nextIndex].current?'':'visually-hidden'; // makes sure 'next day' and 'current' don't appear simultaneously.
-          console.log(trackJson[nextIndex].nextDay);
           output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`
           output +=
           `</li>
@@ -429,6 +423,7 @@ class Royal5utils {
             type="number"
             min="1"
             class="form-control track-multiplier"
+            data-index="${nextIndex}"
           value="${trackJson[nextIndex].multiplier}"/>
         </div>
       </td>
@@ -1032,6 +1027,7 @@ class Royal5utils {
    */
   setTrackJson(trackJsonData)
   {
+    trackJsonData.deleted = []; //this will hold the index of the track data that will be unchecked (deleted).
     this.trackJson = trackJsonData;
   }
 
@@ -1055,8 +1051,62 @@ class Royal5utils {
    */
   getTrackElement(index, property)
   {
-    return this.trackJson[index][property];
+    return !property?this.trackJson[index]:this.trackJson[index][property];
   }
+
+
+  /**
+   * gets the trackJson property
+   * @returns the trackJson property
+   */
+  getTrackJson()
+  {
+    return this.trackJson;
+  }
+
+  /**
+   * updates the trackJson multiplier. used when user manually changes a particular track multiplier.
+   * It also updates the trackJson betAmt and totalBetAmt after multiplier has been updated.
+   * @param {number} multiplier the multiplier value to be stored.
+   * @param {number} index location of the particular track element in the trackJson array.
+   */
+  updateTrackMultiplier(multiplier, index, element)
+  {
+    let previousBetAmt = this.trackJson[index]['betAmt'];
+    let previousMultiplier = this.trackJson[index]['multiplier'];
+    let unitBetAmt = this.fixArithmetic(previousBetAmt/previousMultiplier);
+    let previousTotalBetAmt = this.trackJson['trackInfo']['totalBetAmt'];
+    let newBetAmt = this.fixArithmetic(multiplier * unitBetAmt);
+    let newTotalBetAmt = this.fixArithmetic(previousTotalBetAmt - previousBetAmt + newBetAmt);
+    this.trackJson['trackInfo']['totalBetAmt'] = newTotalBetAmt;
+    this.trackJson[index]['multiplier'] = multiplier;
+    this.trackJson[index]['betAmt'] = newBetAmt;
+  }
+
+
+  /**
+   * stores the index of the deleted track element in a 'deleted' array in trackJson if not already present.
+   * the actual data is deleted when the readyTrack() method is called.
+   * @param {number} index the index-location of the track to be deleted. (in the trackJson property)
+   */
+  toggleDeleteTrackElement(index)
+  {
+    let elementLocation = this.trackJson['deleted'].indexOf(index);
+    if (elementLocation == -1)  this.trackJson['deleted'].push(index);
+    else this.trackJson['deleted'].splice(elementLocation, 1);
+  }
+
+
+  /**
+   * 
+   * @returns a formatted Json of the track that can be received by the server.
+   */
+  readyTrackJson()
+  {
+    'deleted'
+    return [];
+  }
+
 
   /**
    * gets the unit amount
@@ -2800,7 +2850,7 @@ function ready(className) {
     game.setTrackContents(trackJson)
     
     game.setTrackJson(trackJson);
-    console.log(trackJson);
+    game.setTrackJson(trackJson);
     game.createTrackInterface(trackJson);
   });
 
@@ -2826,25 +2876,37 @@ function ready(className) {
       $('.track-data').children().hide();
       $('.track-data').children().slice(0,totalDraws).show();
       let betAmt = game.calcBetAmt();
-      let trackJson = game.createTrackJson("2023-01-31 20:24:00", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, betAmt)
+      let trackJson = game.createTrackJson("2023-01-31 20:24:00", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, betAmt);
+      game.setTrackJson(trackJson);
       game.createTrackInterface(trackJson); 
       game.setTrackContents(trackJson)
    });
 
-   game.$(".track-multiplier").on("input",function() {
-    let thisValue =  $(this).val();
-    let filteredValue = game.onlyNums(thisValue, 0);
-    $(this).val(filteredValue);
-    let trackMultiplier = parseInt($(this).val());
-    let previousBetAmt = game.getTrackElement(index, 'betAtmt');
-    let previousMultiplier = game.getTrackElement(index, 'multiplier');
-    let unitBetAmt = game.fixArithmetic(previousBetAmt/previousMultiplier);
-    let previousTotalBetAmt = game.getTrackElement('trackInfo', 'totalBetAmt');
-    let newBetAmt = game.fixArithmetic(trackMultiplier * unitBetAmt);
-    let newTotalBetAmt = previousTotalBetAmt - previousBetAmt;
+   /**
+    * listens to multiplier inputs from individual tracks.
+    * changes the total bet amount, multiplier and the corresponding bet amount.
+    */
+   game.$(document).on("input", ".track-multiplier", function() {
+    let thisMultiplier =  +game.onlyNums($(this).val());
+    let location = $(this).attr('data-index');
+    game.updateTrackMultiplier(thisMultiplier, location);
+    $(this).val(thisMultiplier);
+    let totalBetAmt = game.getTrackElement('trackInfo', 'totalBetAmt');
+    let betAmt = game.getTrackElement(location, 'betAmt');
+    let tr = $(this).closest('tr');
+    $(tr).find('.betAmt').text(betAmt);
+    $('.track__total__amt__to_pay').text(totalBetAmt);
+    // console.log(game.getTrackJson());
+   })
 
-    let index = $(this).attr('data-index');
-    game.editTrackElement('multiplier', index, trackMultiplier);
+   /**
+    * listens to checking and unchecking of particular track data.
+    * adds track number to 'deleted' array in trackJson.
+    * this data will be deleted when user clicks on 'track confirm'.
+    */
+   game.$(document).on('change', '.track-check', function(){
+      let index = +$(this).attr('data-index');
+      game.toggleDeleteTrackElement(index);
    })
 
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").click(function () {
@@ -2995,8 +3057,6 @@ $(` ${classNames.navItem}`).click(function () {
 
 //group selections
 $(".group-nav>li").click(function () {
-  let nextDate = game.addMinutes('2023-12-01 21:01:05', intervalMinutes);
-  let nextBetId = game.generateNextBetId(currentBetId, nextDate);
   game.resetAllData();
   $(".group-nav>li").removeClass("active-nav");
   $(this).addClass("active-nav");
@@ -3025,8 +3085,6 @@ function getClass(className, classConstructor) {
     a5_g20: a5_g20,
     a5_g10: a5_g10,
     a5_g5: a5_g5,
-    f4_g24: f4_g24,
-    f4_g6: f4_g6,
     fixed_place: fixed_place,
     f4_joint: f4_joint,
     f4_manual: f4_manual,
