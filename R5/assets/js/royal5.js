@@ -284,7 +284,7 @@ class Royal5utils {
       };
       currentDrawDate = nextDrawDate;
     }
-    track["trackInfo"]["totalBetAmt"] = totalBetAmt;
+    track["trackInfo"]["totalBetAmt"] = this.fixArithmetic(totalBetAmt);
     track["trackInfo"]["totalDraws"]  = totalDraws;
     return track;
   }
@@ -374,12 +374,12 @@ class Royal5utils {
 
   /**
    * add some minutes to datetime provided.
-   * @param {string} date datetime to add minutes to
+   * @param {string} dateInput datetime to add minutes to
    * @param {number} minutes minutes to add. can be negative or positive.
    * @returns new datetime with minutes added. format 'YYYY-MM-DD HH:MM:SS'
    */
-  addMinutes(date, minutes) {
-    date = new Date(date);
+  addMinutes(dateInput, minutes) {
+    let date = new Date(dateInput);
     return new Date(date.getTime() + minutes * 60000);
   }
 
@@ -400,10 +400,11 @@ class Royal5utils {
 
   /**
    * gets time in HH:MM:SS format
-   * @param {string} date datetime to return time from
+   * @param {string} dateInput datetime to return time from
    * @returns time in HH:MM:SS format
    */
-  getTime(date) {
+  getTime(dateInput) {
+    let date = new Date(dateInput);
     return (
       String(date.getHours()).padStart(2, "0") +
       ":" +
@@ -2681,6 +2682,7 @@ function ready(className) {
     // alert('click')
     let trackJson = game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
     game.setTrackJson(trackJson);
+    console.log(trackJson);
     game.createTrackInterface(trackJson);
    });
 
