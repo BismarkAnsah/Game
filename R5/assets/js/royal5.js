@@ -1,6 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 // import fixedPlace from "./c1`omponents/fixed_place.js";
-import { truncate, checkRemainingSelectOptions } from "./main.js";
+import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 
 $(".eye, .eye-slash").click(function () {
   $(".balance-box").toggleClass("show-balance");
@@ -2441,7 +2441,7 @@ function ready(className) {
     // console.log(game.getSavedData());
     // console.log(game.getBetType());
     $(".m-group-type").text(game.getBetType());
-    $(".m-detail").text(truncate(game.getSavedData().userSelections.split(",").join(" "), 19));
+    $(".m-detail").text(truncateEllipsis(game.getSavedData().userSelections.replace(/[^\d]/g, ' ').split(",").join(" "), 19));
     $(".m-bet").text(game.getSavedData().totalBets);
     $(".m-units").text(game.getSavedData().unitStaked);
     $(".m-currency").text(game.getSavedData().totalBetAmt);
