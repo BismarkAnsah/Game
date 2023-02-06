@@ -1,7 +1,7 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 
-
+//todo: test next day.
 /**hides and shows balance */
 $(".eye, .eye-slash").click(function () {
   $(".balance-box").toggleClass("show-balance");
@@ -1045,6 +1045,17 @@ class Royal5utils {
   editTrackElement(property, value, index)
   {
     this.trackJson[index][property] = value;
+  }
+
+  /**
+   * gets the trackJson property
+   * 
+   * @param {string} property the trackJson property.
+   * @param {number} index location of the data to get.
+   */
+  getTrackElement(index, property)
+  {
+    return this.trackJson[index][property];
   }
 
   /**
@@ -2819,6 +2830,22 @@ function ready(className) {
       game.createTrackInterface(trackJson); 
       game.setTrackContents(trackJson)
    });
+
+   game.$(".track-multiplier").on("input",function() {
+    let thisValue =  $(this).val();
+    let filteredValue = game.onlyNums(thisValue, 0);
+    $(this).val(filteredValue);
+    let trackMultiplier = parseInt($(this).val());
+    let previousBetAmt = game.getTrackElement(index, 'betAtmt');
+    let previousMultiplier = game.getTrackElement(index, 'multiplier');
+    let unitBetAmt = game.fixArithmetic(previousBetAmt/previousMultiplier);
+    let previousTotalBetAmt = game.getTrackElement('trackInfo', 'totalBetAmt');
+    let newBetAmt = game.fixArithmetic(trackMultiplier * unitBetAmt);
+    let newTotalBetAmt = previousTotalBetAmt - previousBetAmt;
+
+    let index = $(this).attr('data-index');
+    game.editTrackElement('multiplier', index, trackMultiplier);
+   })
 
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").click(function () {
     $(this).select();
