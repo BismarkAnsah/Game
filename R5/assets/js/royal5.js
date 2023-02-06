@@ -248,7 +248,7 @@ class Royal5utils {
     let firstBetAmt = this.fixArithmetic(firstMultiplier * unitAmt);
     let totalBetAmt = firstBetAmt;
     let currentBetId = this.generateNextBetId(betId, firstDrawDate, intervalMinutes);
-    let currentDrawDate = new Date(this.addMinutes(new Date(firstDrawDate), intervalMinutes));
+    let currentDrawDate = new Date(this.addMinutes(firstDrawDate, intervalMinutes));
     track["trackInfo"] = {};
     track[0] = {
       trackNo: ++trackNo,
@@ -263,7 +263,7 @@ class Royal5utils {
 
     for (let i = 1; i < totalDraws; i++) {
       nextDrawDate = new Date(
-        this.addMinutes(new Date(currentDrawDate), intervalMinutes)
+        this.addMinutes(currentDrawDate, intervalMinutes)
       );
       
       if(!nextDay)
@@ -389,6 +389,7 @@ class Royal5utils {
    * @returns formatted bet id
    */
   getBetId(date, id) {
+    date = new Date(date);
     return (
       date.getFullYear() +
       String(date.getMonth() + 1).padStart(2, "0") +
@@ -422,9 +423,9 @@ class Royal5utils {
   generateNextBetId(currentBetId, idDateTime, intervalMinutes){
     let startId = '0001';
     let appendedId = String(currentBetId).slice(-4);
-    let nextGenerationDateTime = this.addMinutes(new Date(idDateTime), intervalMinutes);
+    let nextGenerationDateTime = this.addMinutes(idDateTime, intervalMinutes);
     let id = this.isNextDay(idDateTime, nextGenerationDateTime)?startId:+appendedId+1;
-    return this.getBetId(new Date(nextGenerationDateTime), id);
+    return this.getBetId(nextGenerationDateTime, id);
   }
 
   /**
