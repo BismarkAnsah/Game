@@ -379,6 +379,7 @@ class Royal5utils {
    * @returns new datetime with minutes added. format 'YYYY-MM-DD HH:MM:SS'
    */
   addMinutes(date, minutes) {
+    date = new Date(date);
     return new Date(date.getTime() + minutes * 60000);
   }
 
