@@ -335,23 +335,19 @@ class Royal5utils {
       $(entries[index]).find('.estimatedDrawTime').text(trackJson[index].estimatedDrawTime);
       $(entries[index]).find('.track-multiplier').val(trackJson[index].multiplier);
       ++nextIndex;
-    });
-    let remainEntriesLength = totalDraws - entriesLength;
+    })
+    let remainEntriesLength = totalDraws-entriesLength;
     let output = "";
     let hidden;
     console.log("remaining entries", remainEntriesLength);
-    for (let i = 0; i < remainEntriesLength; i++, nextIndex++) {
-      selectTrackIds.push(trackJson[nextIndex].trackId);
-      $('select[name="first_draw"]').append(
-        `<option value="${trackJson[nextIndex].trackId}">${trackJson[nextIndex].trackId}</option>`
-      );
-      output += `<tr class="track-entry">
+    for(let i = 0; i<remainEntriesLength; i++, nextIndex++) 
+      {
+        output += `<tr class="track-entry">
       <td class="trackNo">${trackJson[nextIndex].trackNo}</td>
       <td>
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
           <li class="col-md-2">
             <input
-            checked
               class="form-check-input slave"
               type="checkbox"
               name="track_number"
@@ -383,14 +379,9 @@ class Royal5utils {
       <td class="betAmt">${trackJson[nextIndex].betAmt}</td>
       <td class="estimatedDrawTime">${trackJson[nextIndex].estimatedDrawTime}</td>
     </tr>`;
-    }
-
-    $(".track-data").append(output);
-    console.log(selectTrackIds);
-    // for (const trackIds of selectTrackIds) {
-
-    //   $('select[name="first_draw"]').append(`<option value="${trackIds}">${trackIds}</option>`);
-    // }
+      }
+      
+      $('.track-data').append(output);
   }
 
   /**
@@ -2727,7 +2718,9 @@ function ready(className) {
     $(".m-units").text(game.getSavedData().unitStaked);
     $(".m-currency").text(game.getSavedData().totalBetAmt);
 
-    game.createTrackInterface("2023-01-31 20:24:55", 161, 10, 3, 4, 3, 0.002);
+    let trackJson = game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
+    game.setTrackJson(trackJson);
+    game.createTrackInterface(trackJson);
   });
 
   /**Track Ends */
