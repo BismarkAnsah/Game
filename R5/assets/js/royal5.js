@@ -96,6 +96,23 @@ class Royal5utils {
 
     return currentBetType;
   }
+
+   setTrackContents(trackJson) {
+    $(".m-group-type").text(game.getBetType());
+    $(".m-detail").text(truncateEllipsis(game.getSavedData().userSelections.replace(/[^\d]/g, ' ').split(",").join(" "), 19));
+    $(".m-bet").text(game.getSavedData().totalBets);
+    $(".m-units").text(game.getSavedData().unitStaked);
+    $(".m-currency").text(game.getSavedData().totalBetAmt);
+    
+    // console.log((game.calcTotalBets())*10);
+    $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
+    $(".track__total__draws").text(trackJson.trackInfo.totalDraws)
+    $(".track__total__bets").text((game.calcTotalBets()) * trackJson.trackInfo.totalDraws);
+   
+    $(".track__total__balance").text(balance)
+   
+  }
+
    /**
    * 
    * @returns the page id of the active class. eg '#all5', '#all4'
@@ -297,7 +314,7 @@ class Royal5utils {
     firstMultiplier,
     multiplyAfterEvery,
     multiplyBy,
-    unitAmt
+    unitAmt, totalBets
   ) {
     // firstDrawId = parseInt(firstDrawId);
     
@@ -332,7 +349,7 @@ class Royal5utils {
       multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
       currentBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
-      betAmt = this.fixArithmetic(multiplier * unitAmt, 4);
+      betAmt = this.fixArithmetic(multiplier * unitAmt);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
       track[i] = {
@@ -2746,9 +2763,9 @@ function ready(className) {
 
   game.$(".track").click(function () {
     // alert('click')m-group-type
-// m-group
-// m-bet
-// m-units
+    // m-group
+    // m-bet
+    // m-units
     //TODO ========= get user bet data======================
     // console.log(game.getSavedData());
     // console.log(game.getBetType());
@@ -2756,7 +2773,8 @@ function ready(className) {
     // console.log(selectTrackIds);
     let current = "20230131000";
     let inc = 1;
-    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 120, 3, 4, 3, 0.002);
+
+    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 120, 3, 4, 3, 0.002, game.calcTotalBets());
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
     setInterval(() => {
@@ -2765,28 +2783,14 @@ function ready(className) {
       
     }, 5000);
 
-    setTrackContents(trackJson)
+    game.setTrackContents(trackJson)
     
     game.setTrackJson(trackJson);
     console.log(trackJson);
     game.createTrackInterface(trackJson);
   });
 
-  function setTrackContents(trackJson) {
-    $(".m-group-type").text(game.getBetType());
-    $(".m-detail").text(truncateEllipsis(game.getSavedData().userSelections.replace(/[^\d]/g, ' ').split(",").join(" "), 19));
-    $(".m-bet").text(game.getSavedData().totalBets);
-    $(".m-units").text(game.getSavedData().unitStaked);
-    $(".m-currency").text(game.getSavedData().totalBetAmt);
-    
-    // console.log((game.calcTotalBets())*10);
-    $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
-    $(".track__total__draws").text(trackJson.trackInfo.totalDraws)
-    $(".track__total__bets").text((game.calcTotalBets()) * trackJson.trackInfo.totalDraws);
-   
-    $(".track__total__balance").text(balance)
-   
-  }
+  
   
 
   /**Track Ends */
@@ -2798,31 +2802,23 @@ function ready(className) {
    */
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").on('input', function() {
       let thisValue = $(this).val();
-      let totalDraws = $(".total-draws").val();
+      let totalDraws = $('.total-draws').val();
       $(this).val(game.onlyNums(thisValue));
-      $(".total-draws").val(game.onlyNums(totalDraws, "", 120));
-      totalDraws = parseInt($(".total-draws").val());
-      let firstMultiplier = parseInt($(".first-multiplier").val());
-      let multiplyAfterEvery = parseInt($(".multiplyAfterEvery").val());
-      let multiplyBy = parseInt($(".multiplyBy").val());
-      $(".track-data").children().hide();
-      $(".track-data").children().slice(0, totalDraws).show();
-      game.createTrackInterface(
-        "2023-01-31 20:24:55",
-        154,
-        totalDraws,
-        firstMultiplier,
-        multiplyAfterEvery,
-        multiplyBy,
-        game.getUnitAmt()
-      );
-    });
+      $('.total-draws').val(game.onlyNums(totalDraws, '', 120));
+      totalDraws = parseInt($('.total-draws').val());
+      let firstMultiplier = parseInt($('.first-multiplier').val());
+      let multiplyAfterEvery = parseInt($('.multiplyAfterEvery').val());
+      let multiplyBy = parseInt($('.multiplyBy').val());
+      $('.track-data').children().hide();
+      $('.track-data').children().slice(0,totalDraws).show();
+      let trackJson = game.createTrackJson("2023-01-31 20:24:00", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getUnitAmt())
+      game.createTrackInterface(trackJson); 
+      game.setTrackContents(trackJson)
+   });
 
-  game
-    .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
-    .click(function () {
-      $(this).select();
-    });
+   game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").click(function () {
+    $(this).select();
+   })
   /**Edit Track Ends */
 
   game.$(".plus").click(function () {
