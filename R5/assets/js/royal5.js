@@ -231,25 +231,26 @@ class Royal5utils {
    */
   createTrackJson(
     firstDrawDate,
-    firstDrawId,
+    currentBetId,
     totalDraws,
     firstMultiplier,
     multiplyAfterEvery,
     multiplyBy,
     unitAmt
   ) {
-    firstDrawId = parseInt(firstDrawId);
-    let currentDrawDate = new Date(firstDrawDate);
-    let nextDrawDate, betAmt;
+    // firstDrawId = parseInt(firstDrawId);
+    
+    let nextDrawDate, nextBetId, betAmt;
     let track = [];
     let nextDay = false;
     let trackNo = 0;
     let multiplier  = firstMultiplier;
-    let firstBetAmt = firstMultiplier * unitAmt;
+    let firstBetAmt = this.fixArithmetic(firstMultiplier * unitAmt);
     let totalBetAmt = firstBetAmt;
+    let currentBetId = this.generateNextBetId(currentBetId, firstDrawDate, intervalMinutes);
     track[0] = {
       trackNo: ++trackNo,
-      betId: this.geBetId(currentDrawDate, firstDrawId),
+      betId: currentBetId,
       multiplier: firstMultiplier,
       betAmt: firstBetAmt,
       estimatedDrawTime:
@@ -258,28 +259,24 @@ class Royal5utils {
       current: true,
     };
 
+    let currentDrawDate = new Date(this.addMinutes(firstDrawDate, intervalMinutes));
     for (let i = 1; i < totalDraws; i++) {
       nextDrawDate = new Date(
         this.addMinutes(currentDrawDate, intervalMinutes)
       );
-      if (!nextDay) {
-        nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
-        firstDrawId = nextDay ? 0 : firstDrawId;
-      }
-      multiplier =
-        trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
 
+      multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
+      nextBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.truncate(multiplier * unitAmt, 4);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
       track[i] = {
         trackNo: ++trackNo,
-        betId: this.geBetId(nextDrawDate, ++firstDrawId),
+        betId: nextBetId,
         multiplier: multiplier,
         betAmt: betAmt,
-        estimatedDrawTime:
-          this.getDate(nextDrawDate) + " " + this.getTime(nextDrawDate),
+        estimatedDrawTime: this.getDate(nextDrawDate) + " " + this.getTime(nextDrawDate),
         nextDay: nextDay,
       };
       currentDrawDate = nextDrawDate;
@@ -379,7 +376,7 @@ class Royal5utils {
    * add some minutes to datetime provided.
    * @param {string} date datetime to add minutes to
    * @param {number} minutes minutes to add. can be negative or positive.
-   * @returns new datetime with minutes added.
+   * @returns new datetime with minutes added. format 'YYYY-MM-DD HH:MM:SS'
    */
   addMinutes(date, minutes) {
     return new Date(date.getTime() + minutes * 60000);
@@ -446,7 +443,7 @@ class Royal5utils {
   }
 
   /**
-   * checks whether dates provided happens on different date
+   * checks whether dates provided happens on different dates
    * @param {string} date control date. date to be compared to 
    * @param {string} checkDate does this date happens on the next day?
    * @returns true or false. true if nextDay
@@ -561,7 +558,7 @@ class Royal5utils {
   }
 
   /**
-   * fixes some rounding off multiplications in javascript. eg. 0.356 *10 gives 3.5599999999999996 in javascript. function returns 3.56 in such case.
+   * fixes some rounding off multiplication errors in javascript. eg. 0.356 *10 gives 3.5599999999999996 in javascript. function returns 3.56 in such case.
    * @param {number} value data to fix
    * @returns correct value after javascript multiplication.
    */
@@ -2682,7 +2679,6 @@ function ready(className) {
     // alert('click')
     let trackJson = game.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
     game.setTrackJson(trackJson, totalDraws);
-
     game.createTrackInterface(trackJson, totalDraws);
    });
 
