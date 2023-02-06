@@ -292,7 +292,9 @@ class Royal5utils {
       nextDrawDate = new Date(
         this.addMinutes(new Date(currentDrawDate), intervalMinutes)
       );
-
+      
+      if(!nextDay)
+        nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
       multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
       nextBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
@@ -363,7 +365,7 @@ class Royal5utils {
           hidden = trackJson[nextIndex].current?'':'visually-hidden';
           output += `<button class=" m-btn-orange p-2  ${hidden}">current</button>`;
           hidden  = trackJson[nextIndex].nextDay && !trackJson[nextIndex].current?'':'visually-hidden'; // makes sure 'next day' and 'current' don't appear simultaneously.
-          console.log(hidden);
+          console.log(trackJson[nextIndex].nextDay);
           output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`
           output +=
           `</li>
