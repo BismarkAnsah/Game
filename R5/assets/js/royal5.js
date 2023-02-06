@@ -1,11 +1,14 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
-// import fixedPlace from "./c1`omponents/fixed_place.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 
+
+/**hides and shows balance */
 $(".eye, .eye-slash").click(function () {
   $(".balance-box").toggleClass("show-balance");
 });
-// import { animateDraw } from "../lib/slot-master/slot.js";
+
+
+
 class Royal5utils {
   /***
    *
@@ -42,7 +45,8 @@ class Royal5utils {
   totalDraws = 10;
   firstMultiplier = 1;
   multiplyAfterEvery = 1;
-  multiplyBy = 1;
+  multiplyBy = 1; 
+  trackJson; 
   savepoint = {
     cart: [],
     data: {
@@ -54,21 +58,31 @@ class Royal5utils {
       // eachBet
     },
   };
+
   constructor(pageId) {
     // this.pageId = pageId;
     // this.page = $(pageId);
   }
 
+  /**
+   * used to hide and show elements with multiple classes. Useful in switching tabs and interfaces.
+   * @param {string} hideAll elements with this class is hidden. eg. '.test-page' hides all elements with this class
+   * @param {string} except  unhides all elements with this class.
+   */
   hideAllExcept(hideAll, except) {
     $(hideAll).hide();
     $(except).show();
   }
 
+  /**
+   * selects element in jQuery style
+   * @param {string} element jQuery element selector 
+   * @returns jQuery element
+   */
   $(element = "") {
     // return element ? $(this.pageId).find(element) : this.$(this.pageId);
     return $(element);
   }
-
   /** gets current bet type */
   getBetType() {
     // this.$("nav-item-c active-svg")
@@ -82,60 +96,104 @@ class Royal5utils {
 
     return currentBetType;
   }
-
+   /**
+   * 
+   * @returns the page id of the active class. eg '#all5', '#all4'
+   */
   getPageId() {
     return this.pageId;
   }
-  selectAll(row = this.classNames.row1Nums, effects = "active-btn") {
+
+  /**
+   * applies colors to all target elements [0-9] after selection.
+   * @param {string} row target row. eg row1, row2
+   */
+  selectAll(row, effects) {
     this.$(row).addClass(effects);
   }
 
-  selectBig(row = this.classNames.row1Nums, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [0-5] after selection.
+   * @param {string} row target row. eg row1, row2
+   * a
+   */
+  selectBig(row, effects="active-btn") {
     this.$(row).removeClass(effects);
-    this.$(`${row}:nth-child(n+7)`).addClass(effects);
+    this.$(`${row}:nth-child(n+7)`).addClass(effects="active-btn");
   }
 
-  selectSmall(row = this.classNames.row1Nums, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [0-5] after selection.
+   * @param {string} row target row. eg row1, row2
+   */
+  selectSmall(row, effects="active-btn") {
     this.$(row).removeClass(effects);
     this.$(`${row}:nth-child(-n+6)`).addClass(effects);
   }
 
-  selectEven(row = this.classNames.row1Nums, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [0,2,4,6,8] after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class containing the styles to apply
+   */
+  selectEven(row, effects="active-btn") {
     this.$(row).removeClass(effects);
     this.$(`${row}:nth-child(even)`).addClass(effects);
   }
 
-  selectOdd(row, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [1,3,5,7,9] after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class containing the styles to apply
+   */
+  selectOdd(row, effects="active-btn") {
     this.$(row).removeClass(effects);
     this.$(`${row}:nth-child(odd)`).addClass(effects);
   }
 
-  clear(row, effects = "active-btn") {
+  /**
+   * removes colors from target elements [0-9] after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class to remove
+   */
+  clear(row, effects="active-btn") {
     this.$(row).removeClass(effects);
   }
 
-  selectAmount(row, effects = "active-btn") {
+  /**
+   * applies colors to all target elements [2,1,0.2,0.1,0.002...] after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class containing the styles to apply
+   */
+  selectAmount(row, effects="active-btn") {
     this.$(row).removeClass(effects);
     this.$(row).addClass(effects);
   }
 
-  selectElement(target, effects = "active-btn") {
+  /**
+   * applies colors to all target number button after selection.
+   * @param {string} row target row. eg row1, row2
+   * @param {string} effects the css class containing the styles to apply
+   */
+  selectElement(target, effects="active-btn") {
     this.$(target).removeClass(effects);
     console.log(this.$(this));
     this.$(this).addClass(effects);
   }
 
-  toggleBetsDisplay(totalBets) {
-    if (totalBets) {
-      this.$(".least-bet-info").hide();
-    } else this.$(".total-bets-info").hide();
-  }
 
-  applyEffects(effectsClass, elementSelector) {
-    this.$(elementSelector).addClass(effectsClass);
-  }
+  // toggleBetsDisplay(totalBets) {
+  //   if (totalBets) {
+  //     this.$(".least-bet-info").hide();
+  //   } else this.$(".total-bets-info").hide();
+  // }
+
+  // applyEffects(effectsClass, elementSelector) {
+  //   this.$(elementSelector).addClass(effectsClass);
+  // }
+
   /**
-   *
+   * displays the selected game interface. something like switching tabs.
    * @param label {,boolean, array}  the label names to display for each button row. specify false when no label is present. default is false
    * @param manual {,boolean}  whether game interface is manual or not. default is false
    */
@@ -161,6 +219,16 @@ class Royal5utils {
     }
   }
 
+  /**
+   * append to cart by adding to HTML DOM.  
+   * @param {string} type the selected game type. eg. All 5 Group 120
+   * @param {string} detail the selections made by the user eg 0,1,2|2,3 for two rows selectors 7||5 for three rows selectors
+   * @param {number} bets total number of bets
+   * @param {number} unit each bet unit
+   * @param {number} multiplier bet multiplier
+   * @param {number} betAmt total amount for selected bet
+   * @param {number} index used to identify particular item in cart
+   */
   appendRow(type, detail, bets, unit, multiplier, betAmt, index) {
     let cartItem = `<tr id="cart-row${index}">
       <th scope="row">${type}</th>
@@ -177,27 +245,43 @@ class Royal5utils {
     // $(`del-${index}`).fadeIn('slow', function() { $(this).prepend(cartItem); });
   }
 
+  /**
+   * creates a json object of the data in track
+   * @param {string} firstDrawDate draw date time of the first bet in track. eg '2025-01-01 00:02:55'
+   * @param {string} firstDrawId draw id of the first bet in track. eg '201501010005'
+   * @param {number} totalDraws total bets in track.
+   * @param {number} firstMultiplier draw multiplier of the first bet in track.
+   * @param {number} multiplyAfterEvery multiplier changes after every "multiplyAfterEvery" in track. eg if multiplyAfterEvery = 2, multiplier changes after every two datasets in track.
+   * @param {number} multiplyBy multipliers multiplier by this value after every "multiplyAfterEvery"
+   * @param {number} unitAmt unit amount of each track.
+   * @returns json data of all elements in track
+   */
   createTrackJson(
     firstDrawDate,
-    firstDrawId,
+    betId,
     totalDraws,
     firstMultiplier,
     multiplyAfterEvery,
     multiplyBy,
     unitAmt
   ) {
-    firstDrawId = parseInt(firstDrawId);
-    let currentDrawDate = new Date(firstDrawDate);
-    let nextDrawDate, betAmt;
+    // firstDrawId = parseInt(firstDrawId);
+    
+    let nextDrawDate, nextBetId, betAmt;
     let track = [];
     let nextDay = false;
     let trackNo = 0;
-    let multiplier = firstMultiplier;
+    let multiplier  = firstMultiplier;
+    let firstBetAmt = this.fixArithmetic(firstMultiplier * unitAmt);
+    let totalBetAmt = firstBetAmt;
+    let currentBetId = this.generateNextBetId(betId, firstDrawDate, intervalMinutes);
+    let currentDrawDate = new Date(this.addMinutes(new Date(firstDrawDate), intervalMinutes));
+    track["trackInfo"] = {};
     track[0] = {
       trackNo: ++trackNo,
-      trackId: this.getTrackID(currentDrawDate, firstDrawId),
+      betId: currentBetId,
       multiplier: firstMultiplier,
-      betAmt: firstMultiplier * unitAmt,
+      betAmt: firstBetAmt,
       estimatedDrawTime:
         this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
       nextDay: nextDay,
@@ -206,72 +290,53 @@ class Royal5utils {
 
     for (let i = 1; i < totalDraws; i++) {
       nextDrawDate = new Date(
-        this.addMinutes(currentDrawDate, intervalMinutes)
+        this.addMinutes(new Date(currentDrawDate), intervalMinutes)
       );
-      if (!nextDay) {
-        nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
-        firstDrawId = nextDay ? 0 : firstDrawId;
-      }
-      multiplier =
-        trackNo % multiplyAfterEvery == 0
-          ? multiplier * multiplyBy
-          : multiplier;
 
+      multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
+      nextBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
-      betAmt = this.truncate(multiplier * unitAmt, 4);
+      betAmt = this.fixArithmetic(multiplier * unitAmt, 4);
       // betAmt = (multiplier * unitAmt).toFixed(4);
+      totalBetAmt += betAmt;
       track[i] = {
         trackNo: ++trackNo,
-        trackId: this.getTrackID(nextDrawDate, ++firstDrawId),
+        betId: nextBetId,
         multiplier: multiplier,
         betAmt: betAmt,
-        estimatedDrawTime:
-          this.getDate(nextDrawDate) + " " + this.getTime(nextDrawDate),
+        estimatedDrawTime: this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
         nextDay: nextDay,
       };
       currentDrawDate = nextDrawDate;
     }
-
+    track["trackInfo"]["totalBetAmt"] = totalBetAmt;
+    track["trackInfo"]["totalDraws"]  = totalDraws;
     return track;
   }
 
-  createTrackInterface(
-    firstDrawDate,
-    firstDrawId,
-    totalDraws,
-    firstMultiplier,
-    multiplyAfterEvery,
-    multiplyBy,
-    unitAmt
-  ) {
-    let trackJson = this.createTrackJson(
-      firstDrawDate,
-      firstDrawId,
-      totalDraws,
-      firstMultiplier,
-      multiplyAfterEvery,
-      multiplyBy,
-      unitAmt
-    );
+  /**
+   * creates a track interface by appending elements to HTML DOM.
+   * @param {array} trackJson Json array containing all track data
+   */
+  createTrackInterface(trackJson) 
+  {
+    // let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
     let entries = this.$(".track-entry:visible");
     let entriesLength = entries.length;
+    let totalDraws = trackJson.trackInfo.totalDraws;
     let nextIndex = 0;
-    let selectTrackIds = [];
-    console.log("already there", entriesLength);
-    entries.each(function (index) {
-      $(entries[index]).find(".trackNo").text(trackJson[index].trackNo);
-      $(entries[index]).find(".trackID").text(trackJson[index].trackId);
-      $(entries[index]).find(".betAmt").text(trackJson[index].betAmt);
-      $(entries[index])
-        .find(".estimatedDrawTime")
-        .text(trackJson[index].estimatedDrawTime);
-      $(entries[index])
-        .find(".track-multiplier")
-        .val(trackJson[index].multiplier);
+    console.log('already there', entriesLength);
+    entries.each(function(index) {
+      $(entries[index]).find('.trackNo').text(trackJson[index].trackNo);
+      $(entries[index]).find('.betId').text(trackJson[index].betId);
+      $(entries[index]).find('.betAmt').text(trackJson[index].betAmt);
+      $(entries[index]).find('.estimatedDrawTime').text(trackJson[index].estimatedDrawTime);
+      $(entries[index]).find('.track-multiplier').val(trackJson[index].multiplier);
       ++nextIndex;
     });
     let remainEntriesLength = totalDraws - entriesLength;
     let output = "";
+    let hidden;
     console.log("remaining entries", remainEntriesLength);
     for (let i = 0; i < remainEntriesLength; i++, nextIndex++) {
       selectTrackIds.push(trackJson[nextIndex].trackId);
@@ -292,16 +357,15 @@ class Royal5utils {
             />
           </li>
           <li class="col-md-7">
-            <span class="trackID">${trackJson[nextIndex].trackId}</span>
+            <span class="betId">${trackJson[nextIndex].betId}</span>
           </li>
           <li class="col-md-3">`;
-      output += trackJson[nextIndex].current
-        ? `<button class=" m-btn-orange p-2">current</button>`
-        : "";
-      output += trackJson[nextIndex].nextDay
-        ? `<button type="button" class="btn-next-day m-btn-indigo p-2" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`
-        : "";
-      output += `</li>
+          hidden = trackJson[nextIndex].current?'':'visually-hidden';
+          output += `<button class=" m-btn-orange p-2  ${hidden}">current</button>`;
+          hidden  = trackJson[nextIndex].nextDay && !current?'':'visually-hidden'; // makes sure 'next day' and 'current' don't appear simultaneously.
+          output += `<button type="button" class="btn-next-day m-btn-indigo p-2" data-toggle="button ${hidden}" aria-pressed="false" autocomplete="off">next day</button>`
+          output +=
+          `</li>
         </ul>
       </td>
       <td class="d-flex justify-content-center align-content-center">
@@ -326,27 +390,50 @@ class Royal5utils {
     // }
   }
 
-  onlyNums(value, minValue = 1, maxValue = 9999) {
+  /**
+   * filters non-integer characters from data provided.
+   * @param {number} value the value to be filtered
+   * @param {number} minValue minimum acceptable integer value
+   * @param {number} maxValue maximum acceptable integer value
+   * @returns only numbers from passed data.the number returned exists between a range provided by 'minValue' and 'maxValue'
+   */
+  onlyNums(value, minValue=1, maxValue=9999)
+  {
     let onlyNums = parseInt(value.replace(/\D+/g, ""));
     onlyNums = onlyNums ? onlyNums : minValue;
     onlyNums = onlyNums >= maxValue ? maxValue : onlyNums;
     return onlyNums;
   }
 
+  /**
+   * add some minutes to datetime provided.
+   * @param {string} date datetime to add minutes to
+   * @param {number} minutes minutes to add. can be negative or positive.
+   * @returns new datetime with minutes added. format 'YYYY-MM-DD HH:MM:SS'
+   */
   addMinutes(date, minutes) {
     return new Date(date.getTime() + minutes * 60000);
   }
 
-  getTrackID(date, id) {
+  /**
+   * appends bet id to datetime provided.
+   * @param {string} date draw date time
+   * @param {string} id the id of the draw. counted from '1' at the beginning of the day. 
+   * @returns formatted bet id
+   */
+  getBetId(date, id) {
     return (
       date.getFullYear() +
       String(date.getMonth() + 1).padStart(2, "0") +
-      date.getDate() +
-      "-" +
-      String(id).padStart(3, "0")
+      date.getDate() + String(id).padStart(4, "0")
     );
   }
 
+  /**
+   * gets time in HH:MM:SS format
+   * @param {string} date datetime to return time from
+   * @returns time in HH:MM:SS format
+   */
   getTime(date) {
     return (
       String(date.getHours()).padStart(2, "0") +
@@ -356,6 +443,28 @@ class Royal5utils {
       String(date.getSeconds()).padStart(2, "0")
     );
   }
+
+
+  /**
+   * gets the next bet id from the current one. Bet id is of the form '202501260002'(YYYYMMDD+IDDD)
+   * @param {string} currentBetId the current bet id eg '202501260002'
+   * @param {string} idDateTime the date time '@currentBetId' was generated
+   * @param {number} intervalMinutes interval of generation. useful in restarting bet generation on next day
+   * @returns next bet id
+   */
+  generateNextBetId(currentBetId, idDateTime, intervalMinutes){
+    let startId = '0001';
+    let appendedId = String(currentBetId).slice(-4);
+    let nextGenerationDateTime = this.addMinutes(new Date(idDateTime), intervalMinutes);
+    let id = this.isNextDay(idDateTime, nextGenerationDateTime)?startId:+appendedId+1;
+    return this.getBetId(new Date(nextGenerationDateTime), id);
+  }
+
+  /**
+   * gets date in YYYY-MM-DD format
+   * @param {string} date datetime to return date from
+   * @returns date in YYYY-MM-DD format
+   */
   getDate(date) {
     return (
       date.getFullYear() +
@@ -366,6 +475,12 @@ class Royal5utils {
     );
   }
 
+  /**
+   * checks whether dates provided happens on different dates
+   * @param {string} date control date. date to be compared to 
+   * @param {string} checkDate does this date happens on the next day?
+   * @returns true or false. true if nextDay
+   */
   isNextDay(date, checkDate) {
     const date1 = new Date(date);
     const date2 = new Date(checkDate);
@@ -373,6 +488,11 @@ class Royal5utils {
     return false;
   }
 
+  /**
+   * removes item from cart. changes also happens on HTML DOM
+   * @param {string} id the id of the item to be removed
+   * @param {object} cart variable holding cart
+   */
   removeRow(id, cart) {
     let key = id.split("-")[1];
     $(`#cart-row${key}`).fadeOut(300, function () {
@@ -384,7 +504,13 @@ class Royal5utils {
     }
   }
 
-  fetchData(url, data = []) {
+  /**
+   * fetches data asynchronously from server.
+   * @param {string} url resource URL
+   * @param {object} data data to send before fetching
+   * @returns response object from server
+   */
+  fetchData(url, data) {
     data = data || JSON.stringify(data);
 
     return $.ajax({
@@ -392,11 +518,19 @@ class Royal5utils {
       data: data,
     });
   }
-  deleteFromCart(id, cart) {
-    let key = id.split("-")[1];
-    delete cart[key];
-  }
 
+
+  // deleteFromCart(id, cart) {
+  //   let key = id.split("-")[1];
+  //   delete cart[key];
+  // }
+
+  /**
+   * Truncates decimal. chops without rounding
+   * @param {number} number data to truncate
+   * @param {number} decimalPlaces number of decimal places to truncate
+   * @returns truncated number
+   */
   truncate(number, decimalPlaces = 3) {
     let indexOfDecimal = number.toString().indexOf(".");
     if (indexOfDecimal == -1) return number;
@@ -411,14 +545,30 @@ class Royal5utils {
     });
   }
 
+  /**
+   * counts the number of decimal places of  a number
+   * @param {number} value number supplied
+   * @returns total decimal places
+   */
   decimalCount(value) {
     const strValue = String(value);
     return strValue.includes(".") ? strValue.split(".")[1].length : 0;
   }
+  /**
+   * gets the n combination r of selection
+   * @param {number} n total elements
+   * @param {number} r sample taken at a time
+   * @returns combination of a selection
+   */
   getCombination(n, r) {
     if (!(r >= 0 && n >= r)) return -1;
     return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
   }
+  /**
+   * the factorial of a number 
+   * @param {number} num what is the factorial of 'num'? the 'num' what is supplied to the function
+   * @returns the factorial of a number
+   */
   factorial(num) {
     if (num == 0) return 1;
     if (num < 0) return -1;
@@ -427,13 +577,32 @@ class Royal5utils {
     return result;
   }
 
+  /**
+   * when bet amount is divided by total bets, the resulting value is what I call 'pseudoUnit'.
+   * unit amount is always selected from the default unit list ie  2, 1, 0.2, 0.1, 0.02, 0.01, 0.002 and 0.001
+   * 'pseudoUnit' however sometimes gives a different value from the default unit list. 'pseudoUnit' is therefore used to calculate a unit
+   * amount to give give a unit amount in the default list. This manipulation is done by increasing the multiplier.
+   * 
+   * 
+   * @returns a unit amount influenced by a multiplier of 1.
+   */
   calcPseudoUnit() {
     return this.truncate(this.betAmt / this.totalBets);
   }
 
+  /**
+   * fixes some rounding off multiplication errors in javascript. eg. 0.356 *10 gives 3.5599999999999996 in javascript. function returns 3.56 in such case.
+   * @param {number} value data to fix
+   * @returns correct value after javascript multiplication.
+   */
   fixArithmetic(value) {
     return +value.toFixed(8);
   }
+
+  /**
+   * Algorithm that returns a unit amount from the defined list 2, 1, 0.2, 0.1, 0.02, 0.01, 0.002 or 0.001 no matter number of bets selected.
+   * @returns a unit amount in the list 2, 1, 0.2, 0.1, 0.02, 0.01, 0.002 or 0.001
+   */
   calcUnitAmt() {
     /**Old Implementation */
     //   let multiplier, unitAmt;
@@ -455,24 +624,43 @@ class Royal5utils {
     return realUnit;
   }
 
+  /**
+   * gets bet amount when unit amount and multiplier are selected. There are different ways of getting bet amount.
+   * can be entered manually(don't use this method in such cases, get from input, 
+   * and set it using setBetAmt()), can be select from model (use @calcBetAmtFromModel())
+   * @returns bet amount.
+   */
   calcBetAmt() {
     return this.totalBets * this.multiplier * this.unitAmt;
   }
 
+  /**
+   * gets the actual bet amount when user enters it manually. total bets multiplied by unit amount should always give you this value.
+   * @returns rounded bet amount.
+   */
   calcActualAmt() {
     let actualAmt =
       this.totalBets * this.truncate(this.betAmt / this.totalBets);
     return parseFloat(actualAmt.toFixed(3));
   }
 
+  /**
+   * gets multiplier when actual amount and unit amount are set.
+   * @returns multiplier.
+   */
   calcMultiplier() {
     let actualAmt = this.calcActualAmt();
     let unitAmt = this.calcUnitAmt();
     return +(actualAmt / (this.totalBets * unitAmt)).toFixed(8);
   }
 
-  calcPrize(prize) {
-    let winAmt = this.multiplier * this.unitAmt * prize;
+  /**
+   * gets the potential win of user.
+   * @param {number} odds odds for a particular bet.
+   * @returns the potential win
+   */
+  calcPrize(odds) {
+    let winAmt = this.multiplier * this.unitAmt * odds;
     return this.truncate(winAmt);
   }
   /***model functions */
@@ -492,18 +680,38 @@ class Royal5utils {
   //   return actualAmt;
   // }
 
+  /**
+   * gets unit amount when user selects a particular model. Unit amount when user enters amount is different (it is calculated and selected from a predifined list ie 2, 1, 0.2, 0.1 ...)
+   * from unit amount when user selects a particular model.
+   * @param {number} balance your remaining money for betting.
+   * @param {number} modelValue selected model. value can be 1/4, 1/3, 1/2 or 1 (All in) (of your remaining balance)
+   * @returns unit amount when a model is selected. 'model can be 1/4, 1/3, 1/2 or 1 (All in)' of your remaining balance.
+   */
   calcUnitFromModel(balance, modelValue) {
     if (!this.totalBets) return 1;
     let unitAmt = (balance * modelValue) / this.totalBets;
     return this.truncate(unitAmt);
   }
 
+  /**
+   * gets the amount of money from user's account that should be used for betting after selecting a particular model. 
+   * model can be 1/4, 1/3, 1/2 or 1 (All in).
+   * @param {number} balance your remaining money for betting.
+   * @param {number} modelValue selected model. value can be 1/4, 1/3, 1/2 or 1 (All in) (of your remaining balance)
+   * @returns amount used for betting.
+   */
   calcAmtFromModel(balance, modelValue) {
     let unitAmt = this.calcUnitFromModel(balance, modelValue);
     let amt = +(this.totalBets * unitAmt).toFixed(8);
     return amt;
   }
 
+////////////////////////////////todo: comment this method
+  /**
+   * all bets generated from user selections. (works for only two rows and one row games eg. all 5 group120, all 5 group5, all 5 group60 and not all 5 combo)
+   * @param  {...,number, array} rowsAndSamples (row1, row2, sample1, sample2) or (row1, sample1, row2, sample2)
+   * @returns all possible combinations of bets.
+   */
   allSelections(...rowsAndSamples) {
     let rows = [],
       samples = [],
@@ -675,6 +883,14 @@ class Royal5utils {
     let numIndex = this.rows[row].indexOf(data);
     if (numIndex != -1) this.rows[row].splice(numIndex, 1);
   }
+/**
+ * flags the index of that element as deleted
+ * @param {*} trackIndex 
+ */
+  // toggleSetDeleteTrack(trackIndex)
+  // {
+  //   this.trackJson.deleted = 
+  // }
 
   resetAllData() {
     this.multiplier = 1;
@@ -690,19 +906,31 @@ class Royal5utils {
     this.$('.unit-amt-select[value="2"]').addClass("active-btn");
   }
 
-  /**Getters */
+  /**Getters Begin */
   getCart() {
     return this.cart;
   }
 
+  /**
+   * getter:
+   * @returns all values stored in all rows.eg. [[1,2,3],[4,5,6],[6,7,8]]
+   */
   getAllRows() {
     return this.rows;
   }
 
+  /**
+   * getter:
+   * @returns active multiplier stored
+   */
   getMultiplier() {
     return this.multiplier;
   }
 
+  /**
+   * getter:
+   * @returns stored betAmt
+   */
   getBetAmt() {
     return this.betAmt;
   }
@@ -711,6 +939,10 @@ class Royal5utils {
     return this.totalBets;
   }
 
+  /**Getters End */
+
+
+  /**Setters Begin */
   setMultiplier(multiplier) {
     this.multiplier = multiplier;
   }
@@ -722,14 +954,60 @@ class Royal5utils {
     this.betAmt = amt;
   }
 
+  /**Setters End */
+
+  /**
+   * 
+   * @param {number} amt 
+   */
   setUnitAmt(amt) {
     this.unitAmt = amt;
   }
 
+  /**
+   * sets the trackdata
+   * @param {array} trackJsonData the track data as JSON array. 
+   * [{
+   *    trackNo: number; 
+        betId: string;
+        multiplier: number;
+        betAmt: number;
+        estimatedDrawTime: string;
+        nextDay: boolean;
+        current: boolean;
+   * },{...}]
+   */
+  setTrackJson(trackJsonData)
+  {
+    this.trackJson = trackJsonData;
+  }
+
+  /**
+   * changes the trackJson property
+   * 
+   * @param {string} property the trackJson property.
+   * @param {any} value data to set.
+   * @param {number} index location of the data to edit.
+   */
+  editTrackElement(property, value, index)
+  {
+    this.trackJson[index][property] = value;
+  }
+
+  /**
+   * gets the unit amount
+   * @returns the stored unit amount
+   */
   getUnitAmt() {
     return this.unitAmt;
   }
 
+
+  /**
+   * gets value stored in a particular row
+   * @param {string} row the row name. eg. 'row1', 'row2'
+   * @returns the value stored in the row.
+   */
   getRow(row) {
     return this.rows[row];
   }
@@ -1068,7 +1346,7 @@ class a5_joint extends Royal5utils {
     row2: [],
     row3: [],
     row4: [],
-    row5: [],
+    row5: []
   };
   constructor(pageId) {
     super(pageId);
@@ -2172,7 +2450,7 @@ function ready(className) {
   game.$(classNames.allBtn).click(function () {
     let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let row = $(this).parent().attr("data-points-to");
-    game.selectAll(`.num-group.${row}>button`);
+    $(`.num-group.${row}>button`).addClass('active-btn');
     game.saveToRow(data, row);
     game.$("input.bet-amt").val("");
     let totalBets = game.calcTotalBets();
