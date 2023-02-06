@@ -683,7 +683,7 @@ class Royal5utils {
    * @returns bet amount.
    */
   calcBetAmt() {
-    return this.totalBets * this.multiplier * this.unitAmt;
+    return this.fixArithmetic(this.totalBets * this.multiplier * this.unitAmt);
   }
 
   /**
@@ -2776,6 +2776,9 @@ function ready(className) {
     let betAmt = game.calcBetAmt();
     let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 10, 1, 1, 1, betAmt);
 
+    // let betAmt = game.calcBetAmt();
+    // let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 10, 1, 1, 1, betAmt);
+
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
     setInterval(() => {
@@ -2812,7 +2815,7 @@ function ready(className) {
       let multiplyBy = parseInt($('.multiplyBy').val());
       $('.track-data').children().hide();
       $('.track-data').children().slice(0,totalDraws).show();
-      let betAmt = game.fixArithmetic(game.getMultiplier() * game.getUnitAmt() * game.getTotalBets());
+      let betAmt = game.calcBetAmt();
       let trackJson = game.createTrackJson("2023-01-31 20:24:00", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, betAmt)
       game.createTrackInterface(trackJson); 
       game.setTrackContents(trackJson)
