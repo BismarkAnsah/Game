@@ -314,17 +314,16 @@ class Royal5utils {
     firstMultiplier,
     multiplyAfterEvery,
     multiplyBy,
-    unitAmt, totalBets
+    betAmt
   ) {
     // firstDrawId = parseInt(firstDrawId);
     
-    let nextDrawDate, nextBetId, betAmt;
+    let nextDrawDate, nextBetId;
     let track = [];
     let nextDay = false;
     let trackNo = 0;
     let multiplier  = firstMultiplier;
-    let firstBetAmt = this.fixArithmetic(firstMultiplier * unitAmt);
-    let totalBetAmt = firstBetAmt;
+    let totalBetAmt = betAmt;
     let currentBetId = this.generateNextBetId(betId, firstDrawDate, intervalMinutes);
     let currentDrawDate = new Date(this.addMinutes(firstDrawDate, intervalMinutes));
     track["trackInfo"] = {};
@@ -332,7 +331,7 @@ class Royal5utils {
       trackNo: ++trackNo,
       betId: currentBetId,
       multiplier: firstMultiplier,
-      betAmt: firstBetAmt,
+      betAmt: betAmt,
       estimatedDrawTime:
         this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
       nextDay: nextDay,
@@ -344,12 +343,10 @@ class Royal5utils {
         this.addMinutes(currentDrawDate, intervalMinutes)
       );
       
-      if(!nextDay)
-        nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
       multiplier = trackNo % multiplyAfterEvery == 0 ? multiplier * multiplyBy : multiplier;
       currentBetId  = this.generateNextBetId(currentBetId, currentDrawDate, intervalMinutes)
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
-      betAmt = this.fixArithmetic(multiplier * unitAmt);
+      betAmt = this.fixArithmetic(multiplier * betAmt);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
       track[i] = {
@@ -360,6 +357,8 @@ class Royal5utils {
         estimatedDrawTime: this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
         nextDay: nextDay,
       };
+      if(!nextDay)
+        nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
       currentDrawDate = nextDrawDate;
     }
     track["trackInfo"]["totalBetAmt"] = this.fixArithmetic(this.fixArithmetic(totalBetAmt));
@@ -2774,7 +2773,8 @@ function ready(className) {
     let current = "20230131000";
     let inc = 1;
 
-    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 120, 3, 4, 3, 0.002, game.calcTotalBets());
+    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 120, 3, 4, 3, 0.252);
+
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
     setInterval(() => {
@@ -2811,7 +2811,8 @@ function ready(className) {
       let multiplyBy = parseInt($('.multiplyBy').val());
       $('.track-data').children().hide();
       $('.track-data').children().slice(0,totalDraws).show();
-      let trackJson = game.createTrackJson("2023-01-31 20:24:00", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getUnitAmt())
+      let betAmt = game.fixArithmetic(game.getMultiplier() * game.getUnitAmt() * game.getTotalBets());
+      let trackJson = game.createTrackJson("2023-01-31 20:24:00", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, betAmt)
       game.createTrackInterface(trackJson); 
       game.setTrackContents(trackJson)
    });
