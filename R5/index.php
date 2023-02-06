@@ -1276,7 +1276,7 @@
                             </div>
 
                             <div class="solo-play">
-                                <button id="how-to-play">How to play</button>
+                                <button id="how-to-play"><a href="#" data-bs-toggle="tooltip" data-bs-title="Another one here too">How to play</a></button>
                                 <button id="What_is_solo">What is solo?</button>
                             </div>
 
@@ -1786,13 +1786,16 @@
                                                     <tbody>
                                                         <tr>
                                                             <th scope="row">1</th>
-                                                            <td>All 5 Group 120</td>
-                                                            <td>0 1 2 3 4 5 6 7 8 9</td>
+                                                            <!-- <td>All 5 Group 120</td>
+                                                            <td style="display: block;  width: 100px !important;" class="text-truncate"><span  >0 1 2 3 4 5 6 7 8 9</span></td>
                                                             <td>252</td>
-                                                            <td>2</td>
-
+                                                            <td>2</td> -->
+                                                            <td class="m-group-type">All 5 Group 120</td>
+                                                            <td class="text-truncate  text-center"><span style="max-width: 80px" class="m-detail" >0 1 2 3 4 5 6 7 8 9</span></td>
+                                                            <td class="m-bet">252</td>
+                                                            <td class="m-units">2</td>
                                                             <td>
-                                                                <span class="currency">&yen;</span>&nbsp;234
+                                                                <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency"></span>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -1829,12 +1832,8 @@
                                                             <label for="first_draw" class="form-label">
                                                                 First draw:&nbsp;&nbsp;
                                                             </label>
-                                                            <select name="first_draw" class="form-select draw-ids" id="">
-                                                                <option value="1234567">1234567</option>
-                                                                <option value="1234567">1234567</option>
-                                                                <option value="1234567">1234567</option>
-                                                                <option value="1234567">1234567</option>
-                                                                <option value="1234567">1234567</option>
+                                                            <select name="first_draw" class="form-select draw-ids" id="first__draw__select">
+                                                                
                                                             </select>
                                                         </div>
                                                         <!-- <div class="track-container">
@@ -1907,7 +1906,7 @@
                                                                             <th scope="col">
                                                                                 <input class="form-check-input"
                                                                                     type="checkbox" name="track_number"
-                                                                                    id="master"/>
+                                                                                    id="mmaster" checked/>
                                                                                 Track ID.
                                                                             </th>
                                                                             <th scope="col">Multi.</th>
@@ -1929,20 +1928,20 @@
                                                             <div class="total__bar col-sm-5">
                                                                 <span class="track__total me-3">
                                                                     Total track
-                                                                    <strong class="text-danger">10</strong> draw(s)
+                                                                    <strong class="text-danger track__total__draws">10</strong> draw(s)
                                                                 </span>
                                                                 <span class="total__bets">
                                                                     Total.
-                                                                    <strong class="text-danger">2345</strong> bet(s)
+                                                                    <strong class="text-danger track__total__bets">2345</strong> bet(s)
                                                                 </span>
                                                             </div>
                                                             <div class="total__track__bets col-sm-4">
                                                                 <span class="total__amount">Total Amt.
-                                                                    <strong class="text-danger">2345</strong></span>
+                                                                    <strong class="text-danger track__total__amt__to_pay">2345</strong></span>
                                                             </div>
                                                             <div class="total__amount__balance col-sm-3">
                                                                 <span class="total__balance">Balance:
-                                                                    <strong class="text-danger">2345</strong></span>
+                                                                    <strong class="text-danger track__total__balance">2345</strong></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2236,6 +2235,7 @@
     <script src="assets/libs/slot_master/slot.js"></script>
     <script src="assets/js/tracks-cart.js"></script>
     <script src="assets/js/timer.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
 </body>
 
 </html>

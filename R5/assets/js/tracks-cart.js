@@ -38,19 +38,26 @@ button.addEventListener("click", function () {
   }
 });
 
-const master = document.getElementById("master");
-const slaves = document.querySelectorAll(".slave");
-
-// console.log(master);
-master.addEventListener("change", function () {
-  for (let slave of slaves) {
-    slave.checked = master.checked;
+/** check and unchecks track id checkboxes */
+$(document).on("change", "#mmaster",function(e) {
+  if ($(this).is(":checked")) {
+    $('.slave').prop("checked", true);
+  } else {
+    $('.slave').prop("checked", false);
   }
 });
 
+
+
+/**
+ *
+ *
+ * @param {*} title
+ * @param {*} button_type
+ */
 const showModal = (title, button_type) => {
   // showModal()
-  var myModal = new bootstrap.Modal(document.getElementById("m-betModal"));
+  // var myModal = new bootstrap.Modal(document.getElementById("m-betModal"));
   document.querySelector(".modal-title").innerText = title;
   document.querySelector(".button-type").innertext = button_type;
   // myModal.closest(".modal-title").innerHTML = "title.innerHTML";
@@ -59,6 +66,11 @@ const showModal = (title, button_type) => {
   myModal.show();
 };
 
+/**
+ *
+ *
+ * @param {*} id
+ */
 const showCartArea = (id) => {
   let triggerEl = document.getElementById(id)
   let tabTrigger = new bootstrap.Tab(triggerEl)
@@ -69,3 +81,7 @@ const showCartArea = (id) => {
   }, 500);
 };
 
+
+$(document).on("load click", ".nav-item-c:visible", function (e) {
+  console.log($(this).data())
+})

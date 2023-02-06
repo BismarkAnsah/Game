@@ -1,4 +1,5 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
+import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 
 
 /**hides and shows balance */
@@ -19,15 +20,29 @@ class Royal5utils {
    * 'effects' adds the class to the 'target'
    *
    */
+  // gameId = 9;
+  // type = "All 5 group 5";
+  // sample1 = 1;
+  // sample2 = 1;
+  // multiplier = 1;
+  // unitAmt = 1;
+  // errorBets = 0;
+  // allBets = [];
+  // betAmt = "";
+  // rows = {};
+  // cart = [];
+  // readyData = {};
+
 
   decimalPlaces = 3;
   page;
   groupName = ".group-joint";
   units = [2, 1, 0.2, 0.1, 0.02, 0.01, 0.002, 0.001];
   multiplier = 1;
-  unitAmt = 1;
+  unitAmt = 2;
+  betType = "";
   totalBets = 0;
-  totalDraws = 10; 
+  totalDraws = 10;
   firstMultiplier = 1;
   multiplyAfterEvery = 1;
   multiplyBy = 1; 
@@ -68,8 +83,37 @@ class Royal5utils {
     // return element ? $(this.pageId).find(element) : this.$(this.pageId);
     return $(element);
   }
+  /** gets current bet type */
+  getBetType() {
+    // this.$("nav-item-c active-svg")
+    //get svg object, like a jquery object
+    let svg = $(".nav-item-c:visible.active-svg");
+    //use jquery functions to do some thing
+    let currentBetType = svg.find(".nav-text").text();
+    //  console.log(findd)
+    //  console.log(svg)
+    //  console.log(svg.find(".nav-text").html())
 
-  /**
+    return currentBetType;
+  }
+
+   setTrackContents(trackJson) {
+    $(".m-group-type").text(game.getBetType());
+    $(".m-detail").text(truncateEllipsis(game.getSavedData().userSelections.replace(/[^\d]/g, ' ').split(",").join(" "), 19));
+    $(".m-bet").text(game.getSavedData().totalBets);
+    $(".m-units").text(game.getSavedData().unitStaked);
+    $(".m-currency").text(game.getSavedData().totalBetAmt);
+    
+    // console.log((game.calcTotalBets())*10);
+    $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
+    $(".track__total__draws").text(trackJson.trackInfo.totalDraws)
+    $(".track__total__bets").text((game.calcTotalBets()) * trackJson.trackInfo.totalDraws);
+   
+    $(".track__total__balance").text(balance)
+   
+  }
+
+   /**
    * 
    * @returns the page id of the active class. eg '#all5', '#all4'
    */
@@ -218,6 +262,40 @@ class Royal5utils {
     // $(`del-${index}`).fadeIn('slow', function() { $(this).prepend(cartItem); });
   }
 
+
+
+  generateSelectOptions(currentBetId = "202301310001", idDateTime = "2023-01-31 23:20:45") {
+    let selectTrackIds = "";
+    for (let i = 0; i < 120; i++) {
+      currentBetId = game.generateNextBetId(currentBetId, idDateTime, intervalMinutes);
+      idDateTime = game.addMinutes(idDateTime, intervalMinutes);
+       selectTrackIds += `<option value="${currentBetId}">${currentBetId} ${i === 0 ? "Current" : ""}</option>`; 
+    }
+    
+    $('select[name="first_draw"]').html(
+        selectTrackIds
+    );
+    
+
+    let mid = $('table tbody.track-data tr.track-entry:first-child');
+    console.log(mid)
+    
+  }
+
+  /**
+   *
+   * changes the position of the current button in the track table.
+   * @memberof Royal5utils
+   * 
+   */
+  changeCurrentButton(){
+    $(document).find('table tbody.track-data tr.track-entry:nth-child(2) .m-btn-orange').removeClass("visually-hidden");
+    let timeOut = setTimeout(() => {
+      $(document).find('table tbody.track-data tr.track-entry:first-child .m-btn-orange').addClass("visually-hidden");
+      clearTimeout(timeOut)
+    }, 500);
+  }
+
   /**
    * creates a json object of the data in track
    * @param {string} firstDrawDate draw date time of the first bet in track. eg '2025-01-01 00:02:55'
@@ -284,7 +362,7 @@ class Royal5utils {
         nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
       currentDrawDate = nextDrawDate;
     }
-    track["trackInfo"]["totalBetAmt"] = this.fixArithmetic(totalBetAmt);
+    track["trackInfo"]["totalBetAmt"] = this.fixArithmetic(this.fixArithmetic(totalBetAmt));
     track["trackInfo"]["totalDraws"]  = totalDraws;
     return track;
   }
@@ -328,6 +406,7 @@ class Royal5utils {
               type="checkbox"
               name="track_number"
               id="track_number"
+              checked
             />
           </li>
           <li class="col-md-7">
@@ -775,20 +854,9 @@ class Royal5utils {
     return this.pageId;
   }
   /****validations */
-  validateMoney() { }
+  validateMoney() {}
 
-  gameId = 9;
-  type = "All 5 group 5";
-  sample1 = 1;
-  sample2 = 1;
-  multiplier = 1;
-  unitAmt = 1;
-  errorBets = 0;
-  allBets = [];
-  betAmt = "";
-  rows = {};
-  cart = [];
-  readyData = {};
+  
 
   setAllBets() {
     this.allBets = this.getBets();
@@ -881,9 +949,9 @@ class Royal5utils {
     this.unitAmt = 2;
     this.betAmt = "";
     this.readyData = {};
-    this.$(".clear-btn").click();
-    this.$("input.bet-amt").val("");
-    this.$(".multiplier-input").val(1);
+    this.$(".clear-btn:visible").click();
+    this.$("input.bet-amt").empty();
+    this.$(".multiplier-input").empty();
     this.$(".multiplier-select").removeClass("active-btn");
     this.$('.multiplier-select[value="1"]').addClass("active-btn");
     this.$(".unit-amt-select").removeClass("active-btn");
@@ -1234,7 +1302,7 @@ class a5_g60 extends Royal5utils {
     let repeat = repeatedNums.length;
     return (
       ((row2.length * (row2.length - 1) * (row2.length - 2)) / 6) *
-      (row1.length - repeat) +
+        (row1.length - repeat) +
       (repeat * (row2.length - 1) * (row2.length - 2) * (row2.length - 3)) / 6
     );
   }
@@ -1366,11 +1434,19 @@ class a5_joint extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
-    readyData.allSelections = this.allSelections(
-      ...Object.values(this.rows),
-      this.sample1,
-      this.sample2
-    );
+    // readyData.allSelections = this.allSelections(
+    //   ...Object.values(this.rows),
+    //   this.sample1,
+    //   this.sample2
+    // );
+    const dataSet = [];
+    let rowPosition = 1;
+
+    for (const key in this.rows) {
+      dataSet.push([rowPosition++, this.rows[key]]);
+    }
+
+    readyData.allSelections = dataSet;
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
@@ -1433,8 +1509,8 @@ class a5_combo extends Royal5utils {
   type = "All 5 Straight(Combo)";
   // sample1 = 1;
   // sample2 = 1;
-  multiplier = 1;
-  unitAmt = 1;
+  // multiplier = 1;
+  // unitAmt = 1;
   betAmt = "";
   labels = ["1st", "2nd", "3rd", "4th", "5th"];
   rows = {
@@ -1602,8 +1678,8 @@ class f4_combo extends Royal5utils {
   type = "First 4 Straight(Combo)";
   // sample1 = 1;
   // sample2 = 1;
-  multiplier = 1;
-  unitAmt = 1;
+  // multiplier = 1;
+  // unitAmt = 1;
   betAmt = "";
   labels = ["1st", "2nd", "3rd", "4th"];
   rows = {
@@ -1983,8 +2059,8 @@ class l4_combo extends Royal5utils {
   type = "Last 4 Straight(Combo)";
   // sample1 = 1;
   // sample2 = 1;
-  multiplier = 1;
-  unitAmt = 1;
+  // multiplier = 1;
+  // unitAmt = 1;
   betAmt = "";
   labels = ["2nd", "3rd", "4th", "5th"];
   rows = {
@@ -2254,79 +2330,78 @@ class l4_g4 extends Royal5utils {
 }
 
 /*-------------------Begin fixed_place class----------------------*/
-  //gameId
-  class fixed_place extends Royal5utils {
-    gameId = 99;
-    type = "fixed place";
-    // sample1 = 1;
-    // sample2 = 1;
-    labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
-    rows = {
-      row1: [], //represents each row seletion
-      row2: [],
-      row3: [],
-      row4: [],
-      row5: [],
-    };
+//gameId
+class fixed_place extends Royal5utils {
+  gameId = 99;
+  type = "fixed place";
+  // sample1 = 1;
+  // sample2 = 1;
+  labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
+  rows = {
+    row1: [], //represents each row seletion
+    row2: [],
+    row3: [],
+    row4: [],
+    row5: [],
+  };
 
-    constructor(pageId) {
-      super(pageId);
-      this.createGameInterface(this.labels);
-    }
-
-    calcTotalBets() {
-      console.log(this.rows);
-      let row1 = this.rows.row1;
-      let row2 = this.rows.row2;
-
-      let totalBets = 0
-
-      for(const key in this.rows){
-        totalBets += this.rows[key].length
-      }
-
-      console.log("total ", totalBets);
-      //let repeatedNums = row2.filter((element) => row1.includes(element));
-      //let repeat = repeatedNums.length;
-      return  totalBets   //row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
-    }
-
-    pushToCart(cart) {
-      let data = this.getSavedData();
-      let key = cart.length;
-      let type = this.type;
-      let detail = data.userSelections;
-      let bets = data.totalBets;
-      let unit = data.unitStaked;
-      let multiplier = `x${data.multiplier}`;
-      let betAmt = `&#8373;${data.totalBetAmt}`;
-      this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
-      cart[key] = data;
-    }
-
-    getSavedData() {
-      let readyData = {};
-      readyData.gameId = this.gameId;
-      readyData.unitStaked = this.unitAmt;
-      readyData.totalBetAmt = this.calcActualAmt();
-      readyData.multiplier = this.multiplier;
-      readyData.totalBets = this.calcTotalBets();
-      const dataSet = []
-      let rowPosition = 1
-
-      for(const key in this.rows){
-         dataSet.push([rowPosition ++, this.rows[key]])
-      }
-
-      readyData.allSelections = dataSet    //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
-      readyData.userSelections = Object.values(this.rows).join("|");
-      return readyData;
-    }
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
   }
 
-  /*--------------------End fixed_place class--------------------------------*/
+  calcTotalBets() {
+    console.log(this.rows);
+    let row1 = this.rows.row1;
+    let row2 = this.rows.row2;
 
-  
+    let totalBets = 0;
+
+    for (const key in this.rows) {
+      totalBets += this.rows[key].length;
+    }
+
+    console.log("total ", totalBets);
+    //let repeatedNums = row2.filter((element) => row1.includes(element));
+    //let repeat = repeatedNums.length;
+    return totalBets; //row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    const dataSet = [];
+    let rowPosition = 1;
+
+    for (const key in this.rows) {
+      dataSet.push([rowPosition++, this.rows[key]]);
+    }
+
+    readyData.allSelections = dataSet; //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+
+/*--------------------End fixed_place class--------------------------------*/
+
 const intervalMinutes = 5; // Royal5 draw number intervals
 const maxEntryValue = 9999; //maximum value allowed for input fields
 let lastId = 0;
@@ -2340,7 +2415,8 @@ hideAllExcept(".game-nav-box", ".game-nav-box.all5");
 let balance = 500;
 // $('.user-balance').html(JSON.parse(balance).userBalance);
 
-var classNames = {
+/** selects all class names  */
+let classNames = {
   selectionCtrl: "selection-ctr",
   allBtn: ".all-btn",
   bigBtn: ".big-btn",
@@ -2416,7 +2492,12 @@ function ready(className) {
 
   // $('.cart').hide();
   // $('.cart-items').hide();
-
+  $("#first__draw__select").on("change", function () {
+    console.log("changed")
+    // checkRemainingSelectOptions("#first__draw__select")
+    let drawSelect =  checkRemainingSelectOptions("#first__draw__select");
+    console.log(drawSelect)
+  })
   game.$(classNames.allBtn).click(function () {
     let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let row = $(this).parent().attr("data-points-to");
@@ -2591,7 +2672,7 @@ function ready(className) {
     game.$(classNames.unitAmt).removeClass("active-btn");
     game.$(this).addClass("active-btn");
     let value = $(this).val();
-    game.setUnitAmt(value);
+    game.setUnitAmt(Number(value));
     game.setBetAmt(game.calcBetAmt());
     game.$(classNames.modelSelect).removeClass("active-btn");
     game.$("input.bet-amt").val("");
@@ -2681,15 +2762,40 @@ function ready(className) {
   /**Track Begins */
 
   game.$(".track").click(function () {
-    // alert('click')
+    // alert('click')m-group-type
+    // m-group
+    // m-bet
+    // m-units
+    //TODO ========= get user bet data======================
+    // console.log(game.getSavedData());
+    // console.log(game.getBetType());
+    
+    // console.log(selectTrackIds);
+    let current = "20230131000";
+    let inc = 1;
+
     let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 120, 3, 4, 3, 0.252);
+
+    game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
+
+    setInterval(() => {
+      // game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
+      inc++;
+      
+    }, 5000);
+
+    game.setTrackContents(trackJson)
+    
     game.setTrackJson(trackJson);
     console.log(trackJson);
     game.createTrackInterface(trackJson);
-   });
+  });
+
+  
+  
 
   /**Track Ends */
-
+  
 
   /**Edit Track Begins */
   /**
@@ -2709,13 +2815,13 @@ function ready(className) {
       let betAmt = game.fixArithmetic(game.getMultiplier() * game.getUnitAmt() * game.getTotalBets());
       let trackJson = game.createTrackJson("2023-01-31 20:24:00", 154, totalDraws, firstMultiplier, multiplyAfterEvery, multiplyBy, betAmt)
       game.createTrackInterface(trackJson); 
+      game.setTrackContents(trackJson)
    });
 
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").click(function () {
     $(this).select();
    })
   /**Edit Track Ends */
-
 
   game.$(".plus").click(function () {
     game.increaseMultiplier(classNames.multiValue);
@@ -2740,7 +2846,7 @@ function ready(className) {
       $(".minus").removeClass("active-btn");
     }, 50);
     game.setMultiplier(value);
-    game.setBetAmt(game.calcBetAmt());
+    game.setBetAmt(game.calcBetAmt());  ``
     game.$("input.bet-amt").val("");
     game.$(".multiplier-select").removeClass("active-btn");
     game.$(`.multiplier-select[value='${value}']`).addClass("active-btn");
