@@ -2673,9 +2673,9 @@ function ready(className) {
 
   game.$(".track").click(function () {
     // alert('click')
-    let trackJson = game.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
+    let trackJson = game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
     game.setTrackJson(trackJson, totalDraws);
-    game.createTrackInterface(trackJson, totalDraws);
+    game.createTrackInterface(trackJson);
    });
 
   /**Tranck Ends */
