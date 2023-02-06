@@ -245,6 +245,24 @@ class Royal5utils {
     // $(`del-${index}`).fadeIn('slow', function() { $(this).prepend(cartItem); });
   }
 
+
+  generateSelectOptions(currentBetId = "202301310001", idDateTime = "2023-01-31 23:20:45") {
+    // let currentBetId = currentBetId
+    // let idDateTime = idDateTime;
+    // let selectTrackIds = []
+    // let nextBetId = "";
+    
+    for (let i = 0; i < 120; i++) {
+      currentBetId = game.generateNextBetId(currentBetId, idDateTime, intervalMinutes);
+      idDateTime = game.addMinutes(idDateTime, intervalMinutes);
+      // selectTrackIds.push(currentBetId)
+          $('select[name="first_draw"]').append(
+              `<option value="${currentBetId}">${currentBetId} ${i === 0 ? "Current" : ""}</option>`
+          );
+    }
+
+  }
+
   /**
    * creates a json object of the data in track
    * @param {string} firstDrawDate draw date time of the first bet in track. eg '2025-01-01 00:02:55'
@@ -352,6 +370,7 @@ class Royal5utils {
               type="checkbox"
               name="track_number"
               id="track_number"
+              checked
             />
           </li>
           <li class="col-md-7">
@@ -401,11 +420,12 @@ class Royal5utils {
 
   /**
    * add some minutes to datetime provided.
-   * @param {string} date datetime to add minutes to
+   * @param {string} dateInput datetime to add minutes to
    * @param {number} minutes minutes to add. can be negative or positive.
    * @returns new datetime with minutes added. format 'YYYY-MM-DD HH:MM:SS'
    */
-  addMinutes(date, minutes) {
+  addMinutes(dateInput, minutes) {
+    let date = new Date(dateInput);
     return new Date(date.getTime() + minutes * 60000);
   }
 
@@ -2712,13 +2732,19 @@ function ready(className) {
     //TODO ========= get user bet data======================
     // console.log(game.getSavedData());
     // console.log(game.getBetType());
+    
+    game.generateSelectOptions();
+    // console.log(selectTrackIds);
+
     $(".m-group-type").text(game.getBetType());
     $(".m-detail").text(truncateEllipsis(game.getSavedData().userSelections.replace(/[^\d]/g, ' ').split(",").join(" "), 19));
     $(".m-bet").text(game.getSavedData().totalBets);
     $(".m-units").text(game.getSavedData().unitStaked);
     $(".m-currency").text(game.getSavedData().totalBetAmt);
-
+    
     let trackJson = game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002);
+    console.log(trackJson);
+
     game.setTrackJson(trackJson);
     game.createTrackInterface(trackJson);
   });

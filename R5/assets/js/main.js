@@ -31,3 +31,8 @@ export function checkRemainingSelectOptions(attr) {
   console.log(count);
   return count;
 }
+
+// selectTrackIds.push(trackJson[nextIndex].trackId);
+//     $('select[name="first_draw"]').append(
+//     `<option value="${trackJson[nextIndex].trackId}">${trackJson[nextIndex].trackId}</option>`
+// );
