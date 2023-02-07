@@ -1949,16 +1949,15 @@
                                                         <div class="d-flex justify-content-end align-content-center">
                                                             <div class="form-check m-2">
                                                                 <input class="form-check-input m-1" type="radio"
-                                                                    name="flexRadioDefault" id="flexRadioDefault1" />
-                                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                                    name="flexRadioDefault" id="stop_if_win" />
+                                                                <label class="form-check-label" for="stop_if_win">
                                                                     Stop if win
                                                                 </label>
                                                             </div>
                                                             <div class="form-check m-2">
                                                                 <input class="form-check-input m-1" type="radio"
-                                                                    name="flexRadioDefault" id="flexRadioDefault2"
-                                                                     />
-                                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                                    name="flexRadioDefault" id="stop_if_not_win" />
+                                                                <label class="form-check-label" for="stop_if_not_win">
                                                                     Stop if not win
                                                                 </label>
                                                             </div>

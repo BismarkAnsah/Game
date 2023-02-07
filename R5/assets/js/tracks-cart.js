@@ -1,5 +1,3 @@
-
-
 // console.log(timePassed);
 
 const decrementButton = document.getElementById("decrement");
@@ -61,20 +59,26 @@ const showModal = (title, button_type) => {
 
 /**
  *
- *
+ * scroll to and shows the cart area
  * @param {*} id
  */
 const showCartArea = (id) => {
-  let triggerEl = document.getElementById(id)
-  let tabTrigger = new bootstrap.Tab(triggerEl)
-  
-  bootstrap.Tab.getInstance(triggerEl).show() // Select tab by name
-  $('html, body').animate({
-    scrollTop: $(".cart-track-bet").offset().top
-  }, 500);
+  let triggerEl = document.getElementById(id);
+  let tabTrigger = new bootstrap.Tab(triggerEl);
+
+  bootstrap.Tab.getInstance(triggerEl).show(); // Select tab by name
+  $("html, body").animate(
+    {
+      scrollTop: $(".cart-track-bet").offset().top,
+    },
+    500
+  );
 };
 
+// $(document).on("load click", ".nav-item-c:visible", function (e) {
+//   console.log($(this).data());
+// });
 
-$(document).on("load click", ".nav-item-c:visible", function (e) {
-  console.log($(this).data())
-})
+// document.getElementById("tableFixHead").addEventListener("click", function () {
+  
+// });
