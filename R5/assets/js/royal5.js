@@ -319,7 +319,7 @@ class Royal5utils {
     // firstDrawId = parseInt(firstDrawId);
     let firstBetAmt = this.fixArithmetic(eachBetAmt*firstMultiplier);
     let nextDrawDate, nextBetId, betAmt; 
-    let track = [];
+    let track = {};
     let nextDay = false;
     let trackNo = 0;
     let multiplier  = firstMultiplier;
@@ -1044,7 +1044,22 @@ class Royal5utils {
   setTrackJson(trackJsonData)
   {
     trackJsonData.deleted = []; //this will hold the index of the track data that will be unchecked (deleted).
+    trackJsonData.trackInfo.gameId  = this.trackInfo.gameId;
+    trackJsonData.trackInfo.unitStaked  = this.trackInfo.unitStaked;
+    trackJsonData.trackInfo.totalBets  = this.trackInfo.totalBets;
+    trackJsonData.trackInfo.allSelections  = this.trackInfo.allSelections;
+    trackJsonData.trackInfo.userSelections = this.trackInfo.userSelections;
     this.trackJson = trackJsonData;
+    console.log(this.trackJson);
+  }
+
+  /**
+   * sets the information about the track. This method is called when user clicks on track.
+   * @param {object} trackInfo 
+   */
+  setTrackInfo(trackInfo) 
+  {
+    this.trackInfo = trackInfo;
   }
 
   /**
@@ -1135,8 +1150,12 @@ class Royal5utils {
    */
   readyTrackJson()
   {
-    'deleted'
-    return [];
+    let trackJson = this.trackJson
+    let toDeletes = trackJson['deleted'];
+    for (const id of toDeletes) {
+      delete trackJson[id];
+    }
+    return trackJson;
   }
 
 
@@ -2867,11 +2886,17 @@ function ready(className) {
     // console.log(selectTrackIds);
     let current = "20230131000";
     let inc = 1;
-
+    let savedData = game.getSavedData();
+    let trackInfo = {}
+    trackInfo.gameId  = savedData.gameId;
+    trackInfo.unitStaked  = savedData.unitStaked;
+    trackInfo.totalBets  = savedData.totalBets;
+    trackInfo.allSelections  = savedData.allSelections;
+    trackInfo.userSelections = savedData.userSelections;
+    game.setTrackInfo(trackInfo);
     let betAmt = game.calcBetAmt();
     let totalBets = game.calcTotalBets();
     let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, 10, 1, 1, 1, betAmt, totalBets);
-
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
     setInterval(() => {
@@ -2967,6 +2992,10 @@ $(document).on("change", "#mmaster",function(e) {
     game.setTrackElement(false, deleted, 'deleted');
     $('.slave').prop("checked", false);
   }
+});
+
+game.$('.track-confirm').on('click', function(){
+  console.log(game.readyTrackJson());
 });
 
    game.$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy").click(function () {

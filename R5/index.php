@@ -1962,7 +1962,7 @@
                                                                     Stop if not win
                                                                 </label>
                                                             </div>
-                                                            <button type="button" class="m-btn-orange btn-track btn-bet-now ms-3">
+                                                            <button type="button" class="m-btn-orange btn-track track-confirm ms-3">
                                                                 Track Confirm
                                                             </button>
                                                         </div>
