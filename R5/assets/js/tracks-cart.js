@@ -1,5 +1,3 @@
-
-
 // console.log(timePassed);
 
 const decrementButton = document.getElementById("decrement");
@@ -39,15 +37,13 @@ button.addEventListener("click", function () {
 });
 
 /** check and unchecks track id checkboxes */
-$(document).on("change", "#mmaster",function(e) {
+$(document).on("change", "#mmaster", function (e) {
   if ($(this).is(":checked")) {
-    $('.slave').prop("checked", true);
+    $(".slave").prop("checked", true);
   } else {
-    $('.slave').prop("checked", false);
+    $(".slave").prop("checked", false);
   }
 });
-
-
 
 /**
  *
@@ -72,16 +68,46 @@ const showModal = (title, button_type) => {
  * @param {*} id
  */
 const showCartArea = (id) => {
-  let triggerEl = document.getElementById(id)
-  let tabTrigger = new bootstrap.Tab(triggerEl)
-  
-  bootstrap.Tab.getInstance(triggerEl).show() // Select tab by name
-  $('html, body').animate({
-    scrollTop: $(".cart-track-bet").offset().top
-  }, 500);
+  let triggerEl = document.getElementById(id);
+  let tabTrigger = new bootstrap.Tab(triggerEl);
+
+  bootstrap.Tab.getInstance(triggerEl).show(); // Select tab by name
+  $("html, body").animate(
+    {
+      scrollTop: $(".cart-track-bet").offset().top,
+    },
+    500
+  );
 };
 
-
 $(document).on("load click", ".nav-item-c:visible", function (e) {
-  console.log($(this).data())
-})
+  console.log($(this).data());
+});
+
+document.getElementById("tableFixHead").addEventListener("click", function () {
+  const rows = document.querySelectorAll("tr.track-entry");
+  const data = [];
+
+  for (const row of rows) {
+    const cells = row.querySelectorAll("td");
+    console.log(cells)
+    const obj = {};
+    if ($(cells[1]).find(".slave").is(":checked")) {
+      console.log(cells[1])
+
+      // console.log(cells[1].firstElementChild.firstElementChild)
+      console.log($(cells[1]).find(".slave").is(":checked"))
+      
+    obj["trackNo"] = cells[0].textContent;
+    obj["betId"] = cells[1].textContent.match(/\d/g).join("");
+    obj["multiplier"] = $(cells[2]).find(".track-multiplier").val();
+    obj["betAmt"] = cells[3].textContent;
+    // obj["estimatedDrawTime"] = cells[4].textContent;
+    //   obj["nextDay"] = cells[5].textContent;
+    data.push(obj);
+    }
+    // console.log($(cells[2]).find(".track-multiplier").val())
+  }
+
+  console.log(data);
+});

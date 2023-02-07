@@ -2798,7 +2798,7 @@ function ready(className) {
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
     setInterval(() => {
-      // game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
+      game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
       inc++;
       
     }, 5000);
@@ -2810,6 +2810,13 @@ function ready(className) {
     game.createTrackInterface(game.trackJson);
   });
 
+
+  $(".btn-track ").on("click", function () {
+    console.log("track btn clicked");
+    // game.record\
+    let json_to_send = game.trackJson
+    console.log(json_to_send);
+  })
   // console.log(game.trackJson);
 
   // $(document).on("input", ".track-multiplier",function (e) {

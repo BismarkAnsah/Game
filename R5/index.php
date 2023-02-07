@@ -1899,7 +1899,7 @@
                                                         <!-- <img class="card-img-top" src="holder.js/100x180/" alt="Title"> -->
                                                         <div class="card-body m-0">
                                                             <div class="table-responsive tableFixHead">
-                                                                <table class="table table-bordered" aria-describedby>
+                                                                <table class="table table-bordered" id="tableFixHead" aria-describedby>
                                                                     <thead>
                                                                         <tr>
                                                                             <th scope="col">Track No.</th>
