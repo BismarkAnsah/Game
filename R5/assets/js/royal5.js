@@ -1101,33 +1101,30 @@ class Royal5utils {
 
 
   /**
-   * stores the index of the deleted track element in a 'deleted' array.
+   * stores the index of the deleted track element in a 'deleted' array in trackJson if not already present.
    * also updates the totalBetAmt and totalBets to reflect the information.
    * the actual data is deleted when the readyTrack() method is called.
    * @param {number} index the index-location of the track to be deleted. (in the trackJson property)
    */
-   deleteTrackElement(index) 
+  toggleDeleteTrackElement(index) 
   {
-      this.trackJson['deleted'].splice(elementLocation, 1);
-      let totalBetAmt = this.trackJson['trackInfo']['totalBetAmt'];
-      let newTotalBetAmt = this.fixArithmetic(totalBetAmt + this.trackJson[index]['betAmt']); 
-      this.trackJson['trackInfo']['totalBetAmt'] = newTotalBetAmt;
-      this.trackJson['trackInfo']['totalDraws']  = this.trackJson['trackInfo']['totalDraws'] + 1;
-  }
-
-
-    /**
-   * removes the index of the deleted track element from the 'deleted' array in trackJson.
-   * also updates the totalBetAmt and totalBets to reflect the information.
-   * the actual data is deleted/undeleted when the readyTrack() method is called.
-   * @param {number} index the index-location of the track to undo delete. (in the trackJson property)
-   */
-  undoDeleteTrackElement(index){
+    let elementLocation = this.trackJson['deleted'].indexOf(index);
+    if (elementLocation == -1)
+     {
       this.trackJson['deleted'].push(index);
       let totalBetAmt = this.trackJson['trackInfo']['totalBetAmt'];
       let newTotalBetAmt = this.fixArithmetic(totalBetAmt - this.trackJson[index]['betAmt']); 
       this.trackJson['trackInfo']['totalBetAmt'] = newTotalBetAmt;
       this.trackJson['trackInfo']['totalDraws']  = this.trackJson['trackInfo']['totalDraws'] - 1;
+     }
+    else
+     {
+      this.trackJson['deleted'].splice(elementLocation, 1);
+      let totalBetAmt = this.trackJson['trackInfo']['totalBetAmt'];
+      let newTotalBetAmt = this.fixArithmetic(totalBetAmt + this.trackJson[index]['betAmt']); 
+      this.trackJson['trackInfo']['totalBetAmt'] = newTotalBetAmt;
+      this.trackJson['trackInfo']['totalDraws']  = this.trackJson['trackInfo']['totalDraws'] + 1;
+     }
   }
 
 
@@ -2943,13 +2940,7 @@ function ready(className) {
     */
    game.$(document).on('change', '.track-check', function(){
       let index = +$(this).attr('data-index');
-      if($(this).is(':checked'))
-      {
-        game.undoDeleteTrackElement(index);
-      }else 
-      {
-        game.deleteTrackElement(index);
-      }
+      game.toggleDeleteTrackElement(index);
       let totalDraws = game.getTrackElement('trackInfo', 'totalDraws');
       let eachTotalBets = game.getTrackElement('trackInfo', 'eachTotalBets');
       let totalTrackBets = totalDraws * eachTotalBets;
@@ -2966,7 +2957,14 @@ $(document).on("change", "#mmaster",function(e) {
     $('.slave').prop("checked", true);
     game.setTrackElement(false, [], 'deleted');
     console.log(game.getTrackJson());
+    
   } else {
+      let deleted = [];
+      let trackCheckBoxes = $('.track-check');
+      trackCheckBoxes.each(function(index){
+      deleted.push(+$(trackCheckBoxes[index]).attr('data-index'));
+    });
+    game.setTrackElement(false, deleted, 'deleted');
     $('.slave').prop("checked", false);
   }
 });
