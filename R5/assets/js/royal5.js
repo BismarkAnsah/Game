@@ -470,7 +470,7 @@ class Royal5utils {
     let hidden;
     for (let i = 0; i < remainEntriesLength; i++, nextIndex++) {
       output += `<tr data-index="${nextIndex}" class="track-entry">
-      <td class="trackNo">${trackJson[nextIndex].trackNo}</td>
+      <td class="trackNo">${trackJson['bets'][nextIndex].trackNo}</td>
       <td>
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
           <li class="col-md-2">
@@ -487,10 +487,10 @@ class Royal5utils {
             <span class="betId">${trackJson['bets'][nextIndex].betId}</span>
           </li>
           <li class="col-md-3">`;
-      hidden = trackJson[nextIndex].current ? "" : "visually-hidden";
+      hidden = trackJson['bets'][nextIndex].current ? "" : "visually-hidden";
       output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
       hidden =
-        trackJson[nextIndex].nextDay && !trackJson[nextIndex].current
+        trackJson['bets'][nextIndex].nextDay && !trackJson['bets'][nextIndex].current
           ? ""
           : "visually-hidden"; // makes sure 'next day' and 'current' don't appear simultaneously.
       output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`;
@@ -3004,7 +3004,7 @@ function ready(className) {
     }
 
     data["trackInfo"] = game.getTrackInfo();
-    // console.log(data);
+    console.log(data);
     // alert(JSON.stringify(data));
 
     // let json_to_send = game.trackJson
