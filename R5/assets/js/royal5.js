@@ -2572,9 +2572,9 @@ let oldClass = "a5_joint";
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint("#a5-joint");
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
-// let balance = await game.fetchData(balanceUrl) || 500;
-let balance = 500;
-// $('.user-balance').html(JSON.parse(balance).userBalance);
+let getBalance = await game.fetchData(balanceUrl) || 500;
+let balance = JSON.parse(getBalance).userBalance;
+$('.user-balance').html(balance);
 
 /** selects all class names  */
 let classNames = {
