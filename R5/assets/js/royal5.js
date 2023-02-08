@@ -307,11 +307,22 @@ class Royal5utils {
     // $(`del-${index}`).fadeIn('slow', function() { $(this).prepend(cartItem); });
   }
 
+  /**
+   *
+   *
+   * @param {string} [currentBetId="202301310001"]
+   * @param {string} [idDateTime="2023-01-31 23:20:45"]
+   * @memberof Royal5utils
+   */
   generateSelectOptions(
-    currentBetId = "202301310001",
-    idDateTime = "2023-01-31 23:20:45"
+    currentBetId = currentSelectOption.betId,
+    idDateTime = currentSelectOption.dateTime
   ) {
     let selectTrackIds = "";
+    let curSele = $(document).find('select[name="first_draw"] :selected').val()
+    let idDateTimes;
+    // let currentBe
+    console.log(currentBetId)
     for (let i = 0; i < 120; i++) {
       currentBetId = game.generateNextBetId(
         currentBetId,
@@ -319,11 +330,17 @@ class Royal5utils {
         intervalMinutes
       );
       idDateTime = game.addMinutes(idDateTime, intervalMinutes);
-      selectTrackIds += `<option value="${currentBetId}">${currentBetId} ${i === 0 ? "Current" : ""
+      console.log(idDateTime);
+
+      selectTrackIds += `<option data-date-to-start="${game.getDate(idDateTime) + " " + game.getTime(idDateTime)}" value="${currentBetId}">${currentBetId} ${i === 0 ? "Current" : ""
         }</option>`;
     }
 
     $('select[name="first_draw"]').html(selectTrackIds);
+    // $('#first__draw__select select[name="first_draw"]') first__draw__select
+    $(`#first__draw__select option[value=${curSele}]`).attr("selected", "selected");
+    console.log(curSele);
+    
 
     let mid = $("table tbody.track-data tr.track-entry:first-child");
   }
@@ -2584,6 +2601,9 @@ hideAllExcept(".game-nav-box", ".game-nav-box.all5");
 // let balance = await game.fetchData(balanceUrl) || 500;
 let balance = 500;
 // $('.user-balance').html(JSON.parse(balance).userBalance);
+let currentSelectOption = {betId: "202301310001", dateTime: "2023-01-31 20:24:00"}; // current select option in track
+// let dateTime = ;
+
 
 /** selects all class names  */
 let classNames = {
@@ -2956,20 +2976,25 @@ function ready(className) {
     game.setTrackInfo(trackInfo);
     let betAmt = game.calcBetAmt();
     let totalBets = game.calcTotalBets();
+    console.log("track fkfkf")
     //next to lines hides existing tracks to match the default track no.
     $('.track-data').children().hide();
     $('.track-data').children().slice(0, defaultTrackDraws).show();
 
     $(".first-multiplier, .multiplyAfterEvery, .multiplyBy").val(defaultTrackInputs);
     $(".total-draws").val(defaultTrackDraws);
-    let trackJson = game.createTrackJson("2023-01-31 20:24:00", 161, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
-    game.generateSelectOptions(current = +inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
+    let trackJson = game.createTrackJson(currentSelectOption.dateTime, currentSelectOption.betId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
+    game.generateSelectOptions(currentSelectOption.betId);
 
-    setInterval(() => {
-      // game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
-      inc++;
+    // setInterval(() => {
+      // game.generateSelectOptions(currentSelectOption.betId, game.addMinutes(currentSelectOption.dateTime, intervalMinutes));
+      // inc++;
+    // let curSele = $(document).find('select[name="first_draw"] :selected').val()
 
-    }, 5000);
+    // console.log(curSele);
+
+      console.log("fuusis")
+    // }, 5000);
 
     game.setTrackContents(trackJson)
 
@@ -2978,6 +3003,29 @@ function ready(className) {
     game.createTrackInterface(trackJson);
   });
 
+  $("#first__draw__select").on("change", function () {
+    currentSelectOption.betId = $(document).find('select[name="first_draw"] :selected').val()
+    currentSelectOption.dateTime = $(document).find('select[name="first_draw"] :selected').data("date-to-start")
+
+
+    var selectedIndex = $(this).prop("selectedIndex");
+    let gettt
+    let gettt2
+    console.log(selectedIndex)
+  // if (selectedIndex > 0) {
+  //   gettt = $(this).prop("selectedIndex", selectedIndex - 1);
+  // } else {
+    gettt = $(this).prop("selectedIndex", selectedIndex - 1).val();
+    gettt2 = $(this).prop("selectedIndex", selectedIndex - 1).attr("data-date-to-start");
+    
+  // }
+    // let idDateTimes;
+    console.log(gettt);
+    console.log(gettt2);
+    // let currentBe
+    console.log(currentSelectOption.betId)
+    console.log(currentSelectOption.dateTime)
+  })
   $(".btn-track ").on("click", function () {
     // console.log("track btn clicked");
     // game.record\
@@ -3054,8 +3102,8 @@ function ready(className) {
       let betAmt = game.calcBetAmt();
       let totalBets = game.calcTotalBets();
       let trackJson = game.createTrackJson(
-        "2023-01-31 20:24:00",
-        154,
+        currentSelectOption.dateTime,
+        currentSelectOption.betId,
         totalDraws,
         firstMultiplier,
         multiplyAfterEvery,
