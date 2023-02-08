@@ -96,7 +96,36 @@ class Royal5utils {
 
     return currentBetType;
   }
+  /**
+   *
+   *
+   * @return {trackInfo} 
+   * @memberof Royal5utils
+   */
+  getTrackInfo() {
+    let trackInfo = {};
+    let total_draws = $(".track__total__draws").text()
+    let total_amt_bets = $(".track__total__bets").text()
+    let total_amt_to_pay = $(".track__total__amt__to_pay").text()
+    let stop_if_win;
+    let stop_if_not_win;
+    $('#stop_if_win').is(':checked') ? stop_if_win = 1 : stop_if_win = 0;
 
+     
+    $('#stop_if_not_win').is(':checked') ? stop_if_not_win = 1 : stop_if_not_win = 0;
+    // console.log(total_draws, total_amt_bets, total_amt_to_pay, stop_if_not_win, stop_if_win);
+
+    trackInfo["total_draws"] = total_draws 
+    trackInfo["total_amt_bets"] = total_amt_bets
+    trackInfo["total_amt_to_pay"] = total_amt_to_pay 
+    trackInfo["stop_if_win"] = stop_if_win 
+    trackInfo["stop_if_not_win"] = stop_if_not_win 
+    Object.assign(trackInfo, this.trackInfo);
+    
+    console.log(trackInfo);
+    // console.log(this.trackInfo)
+    return trackInfo;
+  }
    setTrackContents(trackJson) {
     $(".m-group-type").text(game.getBetType());
     $(".m-detail").text(truncateEllipsis(game.getSavedData().userSelections.replace(/[^\d]/g, ' ').split(",").join(" "), 19));
@@ -2917,7 +2946,11 @@ function ready(className) {
     console.log("track btn clicked");
     // game.record\
     const rows = document.querySelectorAll("tr.track-entry");
-    const data = [];
+    const data = {};
+    data["bets"] = {};
+    data["trackInfo"] = {};
+
+    let i = 0;
 
     for (const row of rows) {
       const cells = row.querySelectorAll("td");
@@ -2935,12 +2968,15 @@ function ready(className) {
         obj["betAmt"] = cells[3].textContent;
         // obj["estimatedDrawTime"] = cells[4].textContent;
         //   obj["nextDay"] = cells[5].textContent;
-        data.push(obj);
+        data["bets"][i++] = obj;
       }
       // console.log($(cells[2]).find(".track-multiplier").val())
     }
-
+    
+    data["trackInfo"] = game.getTrackInfo();
     console.log(data);
+    alert(JSON.stringify(data));
+
     // let json_to_send = game.trackJson
     // console.log(json_to_send);
   })

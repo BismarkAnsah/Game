@@ -59,7 +59,7 @@ const showModal = (title, button_type) => {
 
 /**
  *
- *
+ * scroll to and shows the cart area
  * @param {*} id
  */
 const showCartArea = (id) => {
@@ -75,10 +75,10 @@ const showCartArea = (id) => {
   );
 };
 
-$(document).on("load click", ".nav-item-c:visible", function (e) {
-  console.log($(this).data());
-});
+// $(document).on("load click", ".nav-item-c:visible", function (e) {
+//   console.log($(this).data());
+// });
 
-document.getElementById("tableFixHead").addEventListener("click", function () {
+// document.getElementById("tableFixHead").addEventListener("click", function () {
   
-});
+// });
