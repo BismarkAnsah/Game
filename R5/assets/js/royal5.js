@@ -2797,11 +2797,11 @@ function ready(className) {
 
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
-    setInterval(() => {
-      game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
-      inc++;
+    // setInterval(() => {
+    //   game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
+    //   inc++;
       
-    }, 5000);
+    // }, 5000);
 
     game.setTrackContents(game.trackJson)
     
