@@ -2979,7 +2979,7 @@ function ready(className) {
   });
 
   $(".btn-track ").on("click", function () {
-    console.log("track btn clicked");
+    // console.log("track btn clicked");
     // game.record\
     const rows = document.querySelectorAll("tr.track-entry");
     const data = {};
