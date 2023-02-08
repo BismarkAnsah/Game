@@ -366,13 +366,13 @@ class Royal5utils {
     let trackNo = 0;
     let multiplier = firstMultiplier;
     let totalBetAmt = firstBetAmt;
+    let currentDrawDate = new Date(
+      this.addMinutes(firstDrawDate, intervalMinutes)
+    );
     let currentBetId = this.generateNextBetId(
       betId,
       firstDrawDate,
       intervalMinutes
-    );
-    let currentDrawDate = new Date(
-      this.addMinutes(firstDrawDate, intervalMinutes)
     );
     track["trackInfo"] = {};
     track["bets"] = {};
@@ -401,6 +401,7 @@ class Royal5utils {
         currentDrawDate,
         intervalMinutes
       );
+      //todo: fix draw date time well
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.fixArithmetic(multiplier * eachBetAmt);
       // betAmt = (multiplier * unitAmt).toFixed(4);
@@ -411,7 +412,7 @@ class Royal5utils {
         multiplier: multiplier,
         betAmt: betAmt,
         estimatedDrawTime:
-          this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
+          this.getDate(nextDrawDate) + " " + this.getTime(nextDrawDate),
         nextDay: nextDay,
       };
       if (!nextDay) nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
@@ -429,52 +430,18 @@ class Royal5utils {
    * creates a track interface by appending elements to HTML DOM.
    * @param {array} trackJson Json array containing all track data
    */
-  createTrackInterface(trackJson) {
-    // let trackJson = this.createTrackJson(firstDrawDate,firstDrawId,totalDraws,firstMultiplier,multiplyAfterEvery,multiplyBy,unitAmt);
-
-    let entries = this.$(".track-entry:visible");
-    let entriesLength = entries.length;
-    // console.log(entriesLength);
+   createTrackInterface(trackJson) {
     let totalDraws = trackJson.trackInfo.totalDraws;
-    let nextIndex = 0;
-    this.$("button.current:not(button.current.visually-hidden)").addClass(
-      "visually-hidden"
-    );
-    $(entries[0]).find("button.current").removeClass("visually-hidden");
-    let slave = this.$(".slave");
-    slave.each(function (index) {
-      slave[index].checked = true;
-    });
-
-    // let slave = $(document).find('.slave');
-
-    // console.log($('.slave'));
-    // let slave = document.querySelectorAll('.slave');
-    // slave.forEach(element => {
-    //   console.log(element.setAttribute('checked','checked'));
-    // });
-    // console.log(slave);
-
-    entries.each(function (index) {
-      // console.log(trackJson['bets'][index])
-      $(entries[index]).find('.trackNo').text(trackJson['bets'][index].trackNo);
-      $(entries[index]).find('.betId').text(trackJson['bets'][index].betId);
-      $(entries[index]).find('.betAmt').text(trackJson['bets'][index].betAmt);
-      $(entries[index]).find('.estimatedDrawTime').text(trackJson['bets'][index].estimatedDrawTime);
-      $(entries[index]).find('.track-multiplier').val(trackJson['bets'][index].multiplier);
-      ++nextIndex;
-    });
-    let remainEntriesLength = totalDraws - entriesLength;
     let output = "";
     let hidden;
-    for (let i = 0; i < remainEntriesLength; i++, nextIndex++) {
-      output += `<tr data-index="${nextIndex}" class="track-entry">
-      <td class="trackNo">${trackJson['bets'][nextIndex].trackNo}</td>
+    for (let i = 0; i < totalDraws; i++, i++) {
+      output += `<tr data-index="${i}" class="track-entry" value="${trackJson['bets'][i].betId}">
+      <td class="trackNo">${trackJson['bets'][i].trackNo}</td>
       <td>
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
           <li class="col-md-2">
             <input
-              data-index="${nextIndex}"
+              data-index="${i}"
               class="form-check-input slave track-check"
               type="checkbox"
               name="track_number"
@@ -483,13 +450,18 @@ class Royal5utils {
             />
           </li>
           <li class="col-md-7">
-            <span class="betId">${trackJson['bets'][nextIndex].betId}</span>
+            <span class="betId">${trackJson['bets'][i].betId}</span>
           </li>
           <li class="col-md-3">`;
-      hidden = trackJson['bets'][nextIndex].current ? "" : "visually-hidden";
+          //TODO===========================check the current button=========
+          // console.log(typeof trackJson['bets'][i].betId)
+          // console.log(trackJson['bets'][i].betId)
+          // console.log("serverBetId", serverBetId)
+          // console.log(trackJson['bets'][i].betId === serverBetId)
+      hidden = trackJson['bets'][i].betId === serverBetId ? "" : "visually-hidden";
       output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
       hidden =
-        trackJson['bets'][nextIndex].nextDay && !trackJson['bets'][nextIndex].current
+        trackJson['bets'][i].nextDay && !trackJson['bets'][i].current
           ? ""
           : "visually-hidden"; // makes sure 'next day' and 'current' don't appear simultaneously.
       output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`;
@@ -502,16 +474,15 @@ class Royal5utils {
             type="number"
             min="1"
             class="form-control track-multiplier"
-            data-index="${nextIndex}"
-          value="${trackJson['bets'][nextIndex].multiplier}"/>
+            data-index="${i}"
+          value="${trackJson['bets'][i].multiplier}"/>
         </div>
       </td>
-      <td class="betAmt">${trackJson['bets'][nextIndex].betAmt}</td>
-      <td class="estimatedDrawTime">${trackJson['bets'][nextIndex].estimatedDrawTime}</td>
+      <td class="betAmt">${trackJson['bets'][i].betAmt}</td>
+      <td class="estimatedDrawTime">${trackJson['bets'][i].estimatedDrawTime}</td>
     </tr>`;
     }
-
-    $(".track-data").append(output);
+    $(".track-data").html(output);
   }
 
   /**
@@ -2572,6 +2543,7 @@ let oldClass = "a5_joint";
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint("#a5-joint");
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
+let serverBetId = "202301310162";
 // let balance = await game.fetchData(balanceUrl) || 500;
 let balance = 500;
 // $('.user-balance').html(JSON.parse(balance).userBalance);
