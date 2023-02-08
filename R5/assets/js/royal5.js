@@ -394,12 +394,13 @@ class Royal5utils {
     let totalBetAmt = firstBetAmt;
     let currentDrawDate = new Date(
       this.addMinutes(firstDrawDate, intervalMinutes)
-    );
-    let currentBetId = this.generateNextBetId(
-      betId,
-      firstDrawDate,
-      intervalMinutes
-    );
+      );
+      let currentBetId = this.generateNextBetId(
+        betId,
+        firstDrawDate,
+        intervalMinutes
+        );
+    let estimatedDrawTime = this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate);
     track["trackInfo"] = {};
     track["bets"] = {};
     track['bets'][0] = {
@@ -407,10 +408,9 @@ class Royal5utils {
       betId: currentBetId,
       multiplier: firstMultiplier,
       betAmt: firstBetAmt,
-      estimatedDrawTime:
-        this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate),
-      nextDay: nextDay,
-      current: true,
+      estimatedDrawTime:estimatedDrawTime,
+      nextDay: this.isNextDay(estimatedDrawTime),
+      current: this.isCurrent(currentBetId)
     };
 
     for (let i = 1; i < totalDraws; i++) {
@@ -432,16 +432,17 @@ class Royal5utils {
       betAmt = this.fixArithmetic(multiplier * eachBetAmt);
       // betAmt = (multiplier * unitAmt).toFixed(4);
       totalBetAmt += betAmt;
+      estimatedDrawTime = this.getDate(nextDrawDate) + " " + this.getTime(nextDrawDate);
       track['bets'][i] = {
         trackNo: ++trackNo,
         betId: currentBetId,
         multiplier: multiplier,
         betAmt: betAmt,
-        estimatedDrawTime:
-          this.getDate(nextDrawDate) + " " + this.getTime(nextDrawDate),
-        nextDay: nextDay,
+        estimatedDrawTime:estimatedDrawTime,
+        nextDay: this.isNextDay(estimatedDrawTime),
+        current: this.isCurrent(currentBetId)
       };
-      if (!nextDay) nextDay = this.isNextDay(currentDrawDate, nextDrawDate);
+      if (!nextDay) nextDay = this.isNextDay(nextDrawDate);
       currentDrawDate = nextDrawDate;
     }
     track["trackInfo"]["totalBetAmt"] = this.fixArithmetic(
@@ -489,7 +490,7 @@ class Royal5utils {
     let totalDraws = trackJson.trackInfo.totalDraws;
     let output = "";
     let hidden;
-    for (let i = 0; i < totalDraws; i++, i++) {
+    for (let i = 0; i < totalDraws; i++) {
       output += `<tr data-index="${i}" class="track-entry" value="${trackJson['bets'][i].betId}">
       <td class="trackNo">${trackJson['bets'][i].trackNo}</td>
       <td>
@@ -513,12 +514,9 @@ class Royal5utils {
           // console.log(trackJson['bets'][i].betId)
           // console.log("serverBetId", serverBetId)
           // console.log(trackJson['bets'][i].betId === serverBetId)
-      hidden = trackJson['bets'][i].betId === serverBetId ? "" : "visually-hidden";
+      hidden = trackJson['bets'][i].current? "" : "visually-hidden";
       output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
-      hidden =
-        trackJson['bets'][i].nextDay && !trackJson['bets'][i].current
-          ? ""
-          : "visually-hidden"; // makes sure 'next day' and 'current' don't appear simultaneously.
+      hidden = trackJson['bets'][i].nextDay && !trackJson['bets'][i].current? "": "visually-hidden"; // makes sure 'next day' and 'current' don't appear simultaneously.
       output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`;
       output += `</li>
         </ul>
@@ -635,13 +633,17 @@ class Royal5utils {
    * @param {string} checkDate does this date happens on the next day?
    * @returns true or false. true if nextDay
    */
-  isNextDay(date, checkDate) {
+  isNextDay(checkDate, date = serverTime) {
     const date1 = new Date(date);
     const date2 = new Date(checkDate);
     if (date1.getDate() != date2.getDate()) return true;
     return false;
   }
 
+  isCurrent(betId, currentBetId = serverBetId)
+  {
+    return betId == currentBetId;
+  }
   /**
    * removes item from cart. changes also happens on HTML DOM
    * @param {string} id the id of the item to be removed
@@ -2604,9 +2606,11 @@ let maxInput = 120;
 // $('.user-balance').html(JSON.parse(balance).userBalance);
 let currentSelectOption = {betId: "202301310001", dateTime: "2023-01-31 20:24:00"}; // current select option in track
 // let dateTime = ;
-/** variable to store betId from server */
-let serverBetId = "202301310006"; 
+/** variable to store the next betId from server */
+let serverBetId = "202301310002"; 
 
+/** variable to store the next betId from server */
+let serverTime  = "2023-01-31 20:24:00"
 
 /** selects all class names  */
 let classNames = {
@@ -3119,6 +3123,7 @@ function ready(className) {
         totalBets
       );
       game.setTrackJson(trackJson);
+      console.log(trackJson);
       game.createTrackInterface(trackJson);
       game.setTrackContents(trackJson);
     });
