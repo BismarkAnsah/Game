@@ -264,13 +264,6 @@ class Royal5utils {
 
 
 
-  /**
-   * generates the select element for the track with trackId.
-   *
-   * @param {string} [currentBetId="202301310001"]
-   * @param {string} [idDateTime="2023-01-31 23:20:45"]
-   * @memberof Royal5utils
-   */
   generateSelectOptions(currentBetId = "202301310001", idDateTime = "2023-01-31 23:20:45") {
     let selectTrackIds = "";
     for (let i = 0; i < 120; i++) {
@@ -286,20 +279,6 @@ class Royal5utils {
 
     let mid = $('table tbody.track-data tr.track-entry:first-child');
     
-  }
-
-
-  updateTrackJson(trackId) {
-    //update the json file with the new track data on user input
-    console.log("trackId");
-
-  }
-
-
-  updateTrackJson(trackId) {
-    //update the json file with the new track data on user input
-    console.log("trackId");
-
   }
 
   /**
@@ -459,7 +438,6 @@ class Royal5utils {
           <input 
             type="number"
             min="1"
-            max="99999"
             class="form-control track-multiplier"
             data-index="${nextIndex}"
           value="${trackJson[nextIndex].multiplier}"/>
@@ -2922,12 +2900,12 @@ function ready(className) {
     game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
 
     // setInterval(() => {
-    //   game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
+      // game.generateSelectOptions(current=+inc, game.addMinutes('2023-12-01 21:01:05', intervalMinutes));
     //   inc++;
       
     // }, 5000);
 
-    game.setTrackContents(game.trackJson)
+    game.setTrackContents(trackJson)
     
     game.setTrackJson(trackJson);
     game.setTrackJson(trackJson);
@@ -3247,7 +3225,9 @@ function getClass(className, classConstructor) {
     f4_joint: f4_joint,
     f4_manual: f4_manual,
     f4_combo: f4_combo,
+    f4_g24: f4_g24,
     f4_g12: f4_g12,
+    f4_g6: f4_g6,
     f4_g4: f4_g4,
     l4_joint: l4_joint,
     l4_manual: l4_manual,
