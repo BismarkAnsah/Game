@@ -2598,7 +2598,6 @@ let oldClass = "a5_joint";
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint("#a5-joint");
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
-let serverBetId = "202301310162";
 // let balance = await game.fetchData(balanceUrl) || 500;
 let balance = 500;
 let maxInput = 120;
