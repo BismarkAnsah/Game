@@ -319,7 +319,7 @@ class Royal5utils {
     idDateTime = currentSelectOption.dateTime
   ) {
     let selectTrackIds = "";
-    let curSele = $(document).find('select[name="first_draw"] :selected').val()
+    // let curSele = $(document).find('select[name="first_draw"] :selected').val()
     let idDateTimes;
     // let currentBe
     console.log(currentBetId)
@@ -330,7 +330,7 @@ class Royal5utils {
         intervalMinutes
       );
       idDateTime = game.addMinutes(idDateTime, intervalMinutes);
-      console.log(idDateTime);
+      // console.log(idDateTime);
 
       selectTrackIds += `<option data-date-to-start="${game.getDate(idDateTime) + " " + game.getTime(idDateTime)}" value="${currentBetId}">${currentBetId} ${i === 0 ? "Current" : ""
         }</option>`;
@@ -338,11 +338,11 @@ class Royal5utils {
 
     $('select[name="first_draw"]').html(selectTrackIds);
     // $('#first__draw__select select[name="first_draw"]') first__draw__select
-    $(`#first__draw__select option[value=${curSele}]`).attr("selected", "selected");
-    console.log(curSele);
+    // $(`#first__draw__select option[value=${curSele}]`).attr("selected", "selected");
+    // console.log(curSele);
     
 
-    let mid = $("table tbody.track-data tr.track-entry:first-child");
+    // let mid = $("table tbody.track-data tr.track-entry:first-child");
   }
 
   /**
@@ -452,6 +452,35 @@ class Royal5utils {
   }
 
   /**
+   * Compares a single date with the current date and time
+   * @param {string} date - The input date to compare, in the format "YYYY-MM-DDTHH:MM:SS"
+   * @return {boolean} - Returns true if the input date is in the future, or false if it's in the past
+   */
+  isFutureDate(date) {
+    // Convert the input date to a JavaScript Date object
+    let inputDate = new Date(date + "T00:00:00");
+
+    // Get the current date and time
+    let currentDate = new Date();//pass server time here
+
+    // Calculate the difference between the two dates
+    let diff = inputDate - currentDate;
+
+    // Return true if the input date is in the future, or false if it's in the past
+    if (diff >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  //call the above like below
+  // let result = isFutureDate("2023-02-09T10:00:00");
+  // console.log(result); // outputs "true"
+
+
+  
+
+  /**
    * creates a track interface by appending elements to HTML DOM.
    * @param {array} trackJson Json array containing all track data
    */
@@ -512,6 +541,8 @@ class Royal5utils {
             <span class="betId">${trackJson['bets'][nextIndex].betId}</span>
           </li>
           <li class="col-md-3">`;
+          //TODO===========================check the current button=========
+          console.log(trackJson['bets'][nextIndex].current)
       hidden = trackJson['bets'][nextIndex].current ? "" : "visually-hidden";
       output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
       hidden =
@@ -2600,6 +2631,7 @@ let game = new a5_joint("#a5-joint");
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
 // let balance = await game.fetchData(balanceUrl) || 500;
 let balance = 500;
+let maxInput = 120;
 // $('.user-balance').html(JSON.parse(balance).userBalance);
 let currentSelectOption = {betId: "202301310001", dateTime: "2023-01-31 20:24:00"}; // current select option in track
 // let dateTime = ;
@@ -2683,10 +2715,9 @@ function ready(className) {
   // $('.cart').hide();
   // $('.cart-items').hide();
   $("#first__draw__select").on("change", function () {
-    console.log("changed");
-    // checkRemainingSelectOptions("#first__draw__select")
-    let drawSelect = checkRemainingSelectOptions("#first__draw__select");
-    console.log(drawSelect);
+    // console.log("changed");
+    // // checkRemainingSelectOptions("#first__draw__select")
+    // console.log(drawSelect);
   });
   game.$(classNames.allBtn).click(function () {
     let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -3004,24 +3035,29 @@ function ready(className) {
   });
 
   $("#first__draw__select").on("change", function () {
-    currentSelectOption.betId = $(document).find('select[name="first_draw"] :selected').val()
-    currentSelectOption.dateTime = $(document).find('select[name="first_draw"] :selected').data("date-to-start")
+    // currentSelectOption.betId = $(document).find('select[name="first_draw"] :selected').val()
+    // currentSelectOption.dateTime = $(document).find('select[name="first_draw"] :selected').data("date-to-start")
 
+    maxInput = checkRemainingSelectOptions("#first__draw__select");
 
     var selectedIndex = $(this).prop("selectedIndex");
-    let gettt
-    let gettt2
+    // let gettt
+    // let gettt2
+    // let get3
     console.log(selectedIndex)
   // if (selectedIndex > 0) {
-  //   gettt = $(this).prop("selectedIndex", selectedIndex - 1);
+    let getprev = $(this).find("option").eq(selectedIndex - 1);
+    // let getdata = $(this).find("option").eq(selectedIndex - 1)//retrieve the previous option using the previous option and then access its data attribute using the .data() method;
   // } else {
-    gettt = $(this).prop("selectedIndex", selectedIndex - 1).val();
-    gettt2 = $(this).prop("selectedIndex", selectedIndex - 1).attr("data-date-to-start");
+    currentSelectOption.betId = getprev.val();
+    // gettt2 = gettts.attr("data-date-to-start");
+    currentSelectOption.dateTime = getprev.data("date-to-start");
     
   // }
     // let idDateTimes;
-    console.log(gettt);
-    console.log(gettt2);
+    // console.log(gettt);
+    // console.log(gettt2);
+    console.log("drawSelect", drawSelect);
     // let currentBe
     console.log(currentSelectOption.betId)
     console.log(currentSelectOption.dateTime)
@@ -3092,7 +3128,7 @@ function ready(className) {
       let thisValue = $(this).val();
       let totalDraws = $(".total-draws").val();
       $(this).val(game.onlyNums(thisValue));
-      $(".total-draws").val(game.onlyNums(totalDraws, "", 120));
+      $(".total-draws").val(game.onlyNums(totalDraws, "", maxInput));
       totalDraws = parseInt($(".total-draws").val());
       let firstMultiplier = parseInt($(".first-multiplier").val());
       let multiplyAfterEvery = parseInt($(".multiplyAfterEvery").val());
