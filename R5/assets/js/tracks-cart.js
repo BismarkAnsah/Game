@@ -36,14 +36,9 @@ button.addEventListener("click", function () {
   }
 });
 
-/** check and unchecks track id checkboxes */
-$(document).on("change", "#mmaster", function (e) {
-  if ($(this).is(":checked")) {
-    $(".slave").prop("checked", true);
-  } else {
-    $(".slave").prop("checked", false);
-  }
-});
+
+
+
 
 /**
  *
