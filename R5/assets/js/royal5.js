@@ -80,23 +80,25 @@ class Royal5utils {
     // return element ? $(this.pageId).find(element) : this.$(this.pageId);
     return $(element);
   }
-  /** gets current bet type */
+
+  /**
+   *
+   * gets current bet type
+   * @return {*} currentBetType
+   * @memberof Royal5utils
+   */
   getBetType() {
-    // this.$("nav-item-c active-svg")
-    //get svg object, like a jquery object
     let svg = $(".nav-item-c:visible.active-svg");
-    //use jquery functions to do some thing
     let currentBetType = svg.find(".nav-text").text();
-    //  console.log(findd)
-    //  console.log(svg)
-    //  console.log(svg.find(".nav-text").html())
+    
 
     return currentBetType;
   }
+  
   /**
    *
-   *
-   * @return {trackInfo}
+   * used to retrieve the track data upon send
+   * @return {Object} track info
    * @memberof Royal5utils
    */
   getTrackInfo() {
@@ -124,6 +126,13 @@ class Royal5utils {
     // console.log(this.trackInfo)
     return trackInfo;
   }
+
+  /**
+   *
+   * used to display the track contents
+   * @param {*} trackJson
+   * @memberof Royal5utils
+   */
   setTrackContents(trackJson) {
     $(".m-group-type").text(game.getBetType());
     $(".m-detail").text(
