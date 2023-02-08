@@ -122,7 +122,7 @@ class Royal5utils {
     trackInfo["stop_if_not_win"] = stop_if_not_win 
     Object.assign(trackInfo, this.trackInfo);
     
-    console.log(trackInfo);
+    // console.log(trackInfo);
     // console.log(this.trackInfo)
     return trackInfo;
   }
@@ -1079,7 +1079,7 @@ class Royal5utils {
     trackJsonData.trackInfo.allSelections  = this.trackInfo.allSelections;
     trackJsonData.trackInfo.userSelections = this.trackInfo.userSelections;
     this.trackJson = trackJsonData;
-    console.log(this.trackJson);
+    // console.log(this.trackJson);
   }
 
   /**
@@ -2974,8 +2974,8 @@ function ready(className) {
     }
     
     data["trackInfo"] = game.getTrackInfo();
-    console.log(data);
-    alert(JSON.stringify(data));
+    // console.log(data);
+    // alert(JSON.stringify(data));
 
     // let json_to_send = game.trackJson
     // console.log(json_to_send);
