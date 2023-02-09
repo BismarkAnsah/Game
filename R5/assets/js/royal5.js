@@ -458,10 +458,10 @@ class Royal5utils {
    */
   isFutureDate(date) {
     // Convert the input date to a JavaScript Date object
-    let inputDate = new Date(date + "T00:00:00");
+    let inputDate = new Date(currentSelectOption.dateTime);
 
     // Get the current date and time
-    let currentDate = new Date();//pass server time here
+    let currentDate = new Date("2023-01-31 20:49:00");//pass server time here
 
     // Calculate the difference between the two dates
     let diff = inputDate - currentDate;
@@ -495,11 +495,12 @@ class Royal5utils {
     this.$("button.current:not(button.current.visually-hidden)").addClass(
       "visually-hidden"
     );
-    $(entries[0]).find("button.current").removeClass("visually-hidden");
+    // $(entries[0]).find("button.current").removeClass("visually-hidden");
     let slave = this.$(".slave");
     slave.each(function (index) {
       slave[index].checked = true;
     });
+    
 
     // let slave = $(document).find('.slave');
 
@@ -512,6 +513,8 @@ class Royal5utils {
 
     entries.each(function (index) {
       // console.log(trackJson['bets'][index])
+      $(entries[index]).val(trackJson['bets'][index].betId);
+      console.log(trackJson['bets'][index].betId)
       $(entries[index]).find('.trackNo').text(trackJson['bets'][index].trackNo);
       $(entries[index]).find('.betId').text(trackJson['bets'][index].betId);
       $(entries[index]).find('.betAmt').text(trackJson['bets'][index].betAmt);
@@ -519,11 +522,13 @@ class Royal5utils {
       $(entries[index]).find('.track-multiplier').val(trackJson['bets'][index].multiplier);
       ++nextIndex;
     });
+    console.log(this.$(document).find('.track-entry'));
+    this.$(`.track-entry[value="${serverBetId}"] .current`).removeClass("visually-hidden");
     let remainEntriesLength = totalDraws - entriesLength;
     let output = "";
     let hidden;
     for (let i = 0; i < remainEntriesLength; i++, nextIndex++) {
-      output += `<tr data-index="${nextIndex}" class="track-entry">
+      output += `<tr data-index="${nextIndex}" class="track-entry" value="${trackJson['bets'][nextIndex].betId}">
       <td class="trackNo">${trackJson['bets'][nextIndex].trackNo}</td>
       <td>
         <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
@@ -542,8 +547,11 @@ class Royal5utils {
           </li>
           <li class="col-md-3">`;
           //TODO===========================check the current button=========
-          console.log(trackJson['bets'][nextIndex].current)
-      hidden = trackJson['bets'][nextIndex].current ? "" : "visually-hidden";
+          // console.log(typeof trackJson['bets'][nextIndex].betId)
+          // console.log(trackJson['bets'][nextIndex].betId)
+          // console.log("serverBetId", serverBetId)
+          // console.log(trackJson['bets'][nextIndex].betId === serverBetId)
+      hidden = trackJson['bets'][nextIndex].betId === serverBetId ? "" : "visually-hidden";
       output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
       hidden =
         trackJson['bets'][nextIndex].nextDay && !trackJson['bets'][nextIndex].current
@@ -2635,6 +2643,8 @@ let maxInput = 120;
 // $('.user-balance').html(JSON.parse(balance).userBalance);
 let currentSelectOption = {betId: "202301310001", dateTime: "2023-01-31 20:24:00"}; // current select option in track
 // let dateTime = ;
+/** variable to store betId from server */
+let serverBetId = "202301310006"; 
 
 
 /** selects all class names  */
@@ -3057,7 +3067,7 @@ function ready(className) {
     // let idDateTimes;
     // console.log(gettt);
     // console.log(gettt2);
-    console.log("drawSelect", drawSelect);
+    // console.log("drawSelect", drawSelect);
     // let currentBe
     console.log(currentSelectOption.betId)
     console.log(currentSelectOption.dateTime)
