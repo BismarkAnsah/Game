@@ -23,10 +23,10 @@ export function truncateEllipsis(input, truncateAfter) {
   return input;
 }
 
-/** returns the count of remaining options in a select element */
+/** returns the count of remaining options in a select element right from the current selected option*/
 export function checkRemainingSelectOptions(attr) {
   let selectedIndex = $(attr).prop("selectedIndex");
-  let count = $(`${attr} option:gt(" ${selectedIndex} ")`).length;
+  let count = $(`${attr} option:gt(" ${selectedIndex} "), option:eq(" ${selectedIndex} ")`).length;
   console.log(count);
   return count;
 }

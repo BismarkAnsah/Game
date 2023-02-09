@@ -450,6 +450,7 @@ class Royal5utils {
     );
     track["trackInfo"]["totalDraws"] = totalDraws;
     track["trackInfo"]["eachTotalBets"] = totalBets;
+    track["trackInfo"]["eachBetAmt"] = eachBetAmt;
     return track;
   }
 
@@ -558,7 +559,7 @@ class Royal5utils {
    * @param {number} minutes minutes to add. can be negative or positive.
    * @returns new datetime with minutes added. format 'YYYY-MM-DD HH:MM:SS'
    */
-  addMinutes(dateInput, minutes) {
+  addMinutes(dateInput, minutes = intervalMinutes) {
     let date = new Date(dateInput);
     return new Date(date.getTime() + minutes * 60000);
   }
@@ -602,7 +603,7 @@ class Royal5utils {
    * @param {number} intervalMinutes interval of generation. useful in restarting bet generation on next day
    * @returns next bet id
    */
-  generateNextBetId(currentBetId, idDateTime, intervalMinutes) {
+  generateNextBetId(currentBetId, idDateTime, intervalMinutes = intervalMinutes) {
     let startId = "0001";
     let appendedId = String(currentBetId).slice(-4);
     let nextGenerationDateTime = this.addMinutes(idDateTime, intervalMinutes);
@@ -633,7 +634,7 @@ class Royal5utils {
    * @param {string} checkDate does this date happens on the next day?
    * @returns true or false. true if nextDay
    */
-  isNextDay(checkDate, date = serverTime) {
+  isNextDay(checkDate, date = serverDrawNum.dateTime) {
     const date1 = new Date(date);
     const date2 = new Date(checkDate);
     if (date1.getDate() != date2.getDate()) return true;
@@ -2610,7 +2611,23 @@ let currentSelectOption = {betId: "202301310001", dateTime: "2023-01-31 20:24:00
 let serverBetId = "202301310002"; 
 
 /** variable to store the next betId from server */
-let serverTime  = "2023-01-31 20:24:00"
+let serverTime  = "2023-01-31 20:24:00";
+
+/** variable to store current betId & current dateTime and generate the next betid & nextDateTime */
+let serverDrawNum = {
+  betId: "202301310001",
+  dateTime: "2023-01-31 20:24:00"
+}
+function setNextDraws(){
+  serverDrawNum.nextBetId = game.generateNextBetId(serverDrawNum.betId, serverDrawNum.dateTime);
+  serverDrawNum.nextDateTime = game.addMinutes(serverdrawNum.dateTime);  
+}
+
+// let liveDrawNum = {
+  
+//   nextBetId: game.getNextBetId(serverDrawNum.betId),
+//   nextDateTime: "2023-01-31 20:29:00"
+// }
 
 /** selects all class names  */
 let classNames = {
@@ -3012,23 +3029,52 @@ function ready(className) {
   $("#first__draw__select").on("change", function () {
     // currentSelectOption.betId = $(document).find('select[name="first_draw"] :selected').val()
     // currentSelectOption.dateTime = $(document).find('select[name="first_draw"] :selected').data("date-to-start")
-
+    console.log($('#first__draw__select option').length)
     maxInput = checkRemainingSelectOptions("#first__draw__select");
+    $(".total-draws").val(maxInput);
 
-    var selectedIndex = $(this).prop("selectedIndex");
+    let currentSelected = $(document).find('select[name="first_draw"] :selected')
+    let selectedIndex = $(this).prop("selectedIndex");
+    let getprev = $(this).find("option").eq(selectedIndex - 1);
+    
+    console.log(currentSelected.text().replace(/\D+/g, ""));
+    console.log(serverBetId)
+    if (currentSelected.text().replace(/\D+/g, "") === serverBetId) {
+      currentSelectOption.betId = serverDrawNum.betId;
+      // gettt2 = gettts.attr("data-date-to-start");
+      currentSelectOption.dateTime = serverDrawNum.dateTime;
+    }else{
+      currentSelectOption.betId = getprev.val();
+      // gettt2 = gettts.attr("data-date-to-start");
+      currentSelectOption.dateTime = getprev.data("date-to-start");
+    }
+
+
     // let gettt
     // let gettt2
+
     // let get3
-    console.log(selectedIndex)
-  // if (selectedIndex > 0) {
-    let getprev = $(this).find("option").eq(selectedIndex - 1);
-    // let getdata = $(this).find("option").eq(selectedIndex - 1)//retrieve the previous option using the previous option and then access its data attribute using the .data() method;
-  // } else {
-    currentSelectOption.betId = getprev.val();
-    // gettt2 = gettts.attr("data-date-to-start");
-    currentSelectOption.dateTime = getprev.data("date-to-start");
     
-  // }
+
+    // console.log(selectedIndex)
+    // console.log(currentIndex)
+    // if (selectedIndex > 0) {
+    // let getdata = $(this).find("option").eq(selectedIndex - 1)//retrieve the previous option using the previous option and then access its data attribute using the .data() method;
+    // } else {
+    
+    let firstMultiplier = +$(".first-multiplier").val();
+    let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
+    let multiplyBy = +$(".multiplyBy").val();
+    // console.log(firstMultiplier)
+    // console.log(multiplyAfterEvery)
+    // console.log(multiplyBy)
+
+    let trackJson = game.createTrackJson(currentSelectOption.dateTime, currentSelectOption.betId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "totalBets"));
+
+    game.createTrackInterface(trackJson);
+    
+    
+    // }
     // let idDateTimes;
     // console.log(gettt);
     // console.log(gettt2);
