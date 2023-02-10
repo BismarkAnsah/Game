@@ -1,6 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
-
+import { countdown } from "./timer.js";
 //todo: test next day.
 /**hides and shows balance */
 $(".eye, .eye-slash").click(function () {
@@ -322,7 +322,6 @@ class Royal5utils {
     // let curSele = $(document).find('select[name="first_draw"] :selected').val()
     let idDateTimes;
     // let currentBe
-    console.log(currentBetId)
     for (let i = 0; i < 120; i++) {
       currentBetId = game.generateNextBetId(
         currentBetId,
@@ -351,18 +350,43 @@ class Royal5utils {
    * @memberof Royal5utils
    *
    */
-  changeCurrentButton() {
-    $(document)
-      .find("table tbody.track-data tr.track-entry:nth-child(2) .m-btn-orange")
-      .removeClass("visually-hidden");
-    let timeOut = setTimeout(() => {
-      $(document)
-        .find("table tbody.track-data tr.track-entry:first-child .m-btn-orange")
-        .addClass("visually-hidden");
-      clearTimeout(timeOut);
-    }, 500);
-  }
+  // changeCurrentButton() {
+  //   $(document)
+  //     .find("table tbody.track-data tr.track-entry:nth-child(2) .m-btn-orange")
+  //     .removeClass("visually-hidden");
+  //   let timeOut = setTimeout(() => {
+  //     $(document)
+  //       .find("table tbody.track-data tr.track-entry:first-child .m-btn-orange")
+  //       .addClass("visually-hidden");
+          
+  //     clearTimeout(timeOut);
+  //   }, 500);
+  // }
 
+  // }
+
+  /**
+   *
+   *
+   * @memberof Royal5utils
+   */
+  changeCurrentButton() {
+    let currentBetId = $(document).find("table tbody.track-data tr.track-entry").attr("value");
+  console.log("Current bet ID:", currentBetId);
+  console.log("Next bet ID:", serverDrawNum.nextBetId);
+  
+  let btn_to_change = $(document).find("table tbody.track-data tr.track-entry .current:visible");
+  if (currentBetId !== serverDrawNum.nextBetId) {
+    btn_to_change.addClass("visually-hidden");
+    btn_to_change.closest('tr.track-entry')
+      .next('tr.track-entry')
+      .find('.m-btn-orange').slice(0, 1)
+      .removeClass("visually-hidden");
+    console.log(btn_to_change.closest('tr.track-entry')
+    .find('.m-btn-orange').slice(0, 1));
+  }
+    
+  }
   /**
    * creates a json object of the data in track
    * @param {string} firstDrawDate draw date time of the first bet in track. eg '2025-01-01 00:02:55'
@@ -392,14 +416,8 @@ class Royal5utils {
     let trackNo = 0;
     let multiplier = firstMultiplier;
     let totalBetAmt = firstBetAmt;
-    let currentDrawDate = new Date(
-      this.addMinutes(firstDrawDate, intervalMinutes)
-      );
-      let currentBetId = this.generateNextBetId(
-        betId,
-        firstDrawDate,
-        intervalMinutes
-        );
+    let currentDrawDate =firstDrawDate;
+      let currentBetId = betId;
     let estimatedDrawTime = this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate);
     track["trackInfo"] = {};
     track["bets"] = {};
@@ -619,6 +637,7 @@ class Royal5utils {
    * @returns date in YYYY-MM-DD format
    */
   getDate(date) {
+    date = new Date(date);
     return (
       date.getFullYear() +
       "-" +
@@ -641,7 +660,7 @@ class Royal5utils {
     return false;
   }
 
-  isCurrent(betId, currentBetId = serverDrawNum.betId)
+  isCurrent(betId, currentBetId = serverDrawNum.nextBetId)
   {
     return betId == currentBetId;
   }
@@ -2607,7 +2626,6 @@ let balance = 500;
 /** max input length for the track draw*/
 let maxInput = 120;
 // $('.user-balance').html(JSON.parse(balance).userBalance);
-let currentSelectOption = {betId: "202301310001", dateTime: "2023-01-31 20:24:00"}; // current select option in track
 // let dateTime = ;
 /** variable to store the next betId from server */
 let serverBetId = "202301310002"; 
@@ -2617,12 +2635,18 @@ let serverTime  = "2023-01-31 20:24:00";
 
 /** variable to store current betId & current dateTime and generate the next betid & nextDateTime */
 let serverDrawNum = {
-  betId: "202301310001",
-  dateTime: "2023-01-31 20:24:00"
+  // betId: "202301310001",
+  // dateTime: "2023-01-31 20:24:00",
+  // nextBetId: "202301310002",
+  // nextDateTime: "2023-01-31 20:29:00"
+
 }
+let currentSelectOption = {}; // current select option in track
+
 function setNextDraws(){
-  serverDrawNum.nextBetId = game.generateNextBetId(serverDrawNum.betId, serverDrawNum.dateTime);
-  serverDrawNum.nextDateTime = game.addMinutes(serverDrawNum.dateTime);  
+  serverDrawNum.nextBetId = game.generateNextBetId(serverDrawNum.betId, serverDrawNum.dateTime, intervalMinutes);
+  serverDrawNum.nextDateTime = game.addMinutes(serverDrawNum.dateTime, intervalMinutes);
+  
 }
 
 // let liveDrawNum = {
@@ -2708,11 +2732,7 @@ function ready(className) {
 
   // $('.cart').hide();
   // $('.cart-items').hide();
-  $("#first__draw__select").on("change", function () {
-    // console.log("changed");
-    // // checkRemainingSelectOptions("#first__draw__select")
-    // console.log(drawSelect);
-  });
+
   game.$(classNames.allBtn).click(function () {
     let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let row = $(this).parent().attr("data-points-to");
@@ -3001,24 +3021,24 @@ function ready(className) {
     game.setTrackInfo(trackInfo);
     let betAmt = game.calcBetAmt();
     let totalBets = game.calcTotalBets();
-    console.log("track fkfkf")
+    
     //next to lines hides existing tracks to match the default track no.
     $('.track-data').children().hide();
     $('.track-data').children().slice(0, defaultTrackDraws).show();
 
     $(".first-multiplier, .multiplyAfterEvery, .multiplyBy").val(defaultTrackInputs);
     $(".total-draws").val(defaultTrackDraws);
-    let trackJson = game.createTrackJson(currentSelectOption.dateTime, currentSelectOption.betId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
+    let trackJson = game.createTrackJson(currentSelectOption.nextDateTime, currentSelectOption.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
+    console.log(currentSelectOption.betId)
     game.generateSelectOptions(currentSelectOption.betId);
 
     // setInterval(() => {
-      // game.generateSelectOptions(currentSelectOption.betId, game.addMinutes(currentSelectOption.dateTime, intervalMinutes));
-      // inc++;
-    // let curSele = $(document).find('select[name="first_draw"] :selected').val()
+      
+    //   inc++;
+    //   let curSele = $(document).find('select[name="first_draw"] :selected').val()
 
     // console.log(curSele);
 
-      console.log("fuusis")
     // }, 5000);
 
     game.setTrackContents(trackJson)
@@ -3030,29 +3050,39 @@ function ready(className) {
 
   $("#first__draw__select").on("change", function () {
     maxInput = checkRemainingSelectOptions("#first__draw__select");
-    $(".total-draws").val(maxInput);
+    let hshs = $(".total-draws").val();
 
     let currentSelected = $(document).find('select[name="first_draw"] :selected')
     let selectedIndex = $(this).prop("selectedIndex");
     let getprev = $(this).find("option").eq(selectedIndex - 1);
     
-    
-    if (currentSelected.text().replace(/\D+/g, "") === serverBetId) {
-      currentSelectOption.betId = serverDrawNum.betId;
-      currentSelectOption.dateTime = serverDrawNum.dateTime;
-    }else{
-      currentSelectOption.betId = getprev.val();
-      currentSelectOption.dateTime = getprev.data("date-to-start");
-    }
+    // console.log("nextBetId",serverDrawNum.nextBetId)
+    // console.log("betId",serverDrawNum.betId)
+    // console.log("currentSelect",currentSelected.text().replace(/\D+/g, ""))
+    // console.log(currentSelected.text().replace(/\D+/g, "") === serverDrawNum.nextBetId)
+    let currentSelect;
+    let currentSelectdateTime;
+    // if (currentSelected.text().replace(/\D+/g, "") === serverDrawNum.nextBetId) {
+    //   // console.log("come over here")
+    //   currentSelect = serverDrawNum.betId;
+    //   console.log("serverDrawNum.betId", serverDrawNum.betId)
+    //   console.log("serverDrawNum.dateTime", serverDrawNum.dateTime)
+    //   currentSelectdateTime = serverDrawNum.dateTime;
+    // }else{
+      currentSelect = $(this).val();
+
+      currentSelectdateTime = $(document).find('select[name="first_draw"] :selected').data("date-to-start");
+    // }
 
 
-    
+    console.log(currentSelect, currentSelectdateTime)
+
     
     let firstMultiplier = +$(".first-multiplier").val();
     let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
     let multiplyBy = +$(".multiplyBy").val();
 
-    let trackJson = game.createTrackJson(currentSelectOption.dateTime, currentSelectOption.betId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "totalBets"));
+    let trackJson = game.createTrackJson(currentSelectdateTime, currentSelect, hshs, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "totalBets"));
 
     game.createTrackInterface(trackJson);
     
@@ -3063,8 +3093,8 @@ function ready(className) {
     // console.log(gettt2);
     // console.log("drawSelect", drawSelect);
     // let currentBe
-    console.log(currentSelectOption.betId)
-    console.log(currentSelectOption.dateTime)
+    // console.log(currentSelectOption.betId)
+    // console.log(currentSelectOption.dateTime)
   })
   $(".btn-track ").on("click", function () {
     // console.log("track btn clicked");
@@ -3100,10 +3130,14 @@ function ready(className) {
     data["trackInfo"] = game.getTrackInfo();
     console.log(data);
     // alert(JSON.stringify(data));
-
+    let callback = function(resp){
+      console.log(resp)
+    }
+    $.post("http://192.168.199.126/task/track.php", JSON.stringify(data), callback)
+  })
     // let json_to_send = game.trackJson
     // console.log(json_to_send);
-  });
+  
   // console.log(game.trackJson);
 
   // $(document).on("input", ".track-multiplier",function (e) {
@@ -3141,9 +3175,13 @@ function ready(className) {
       $(".track-data").children().slice(0, totalDraws).show();
       let betAmt = game.calcBetAmt();
       let totalBets = game.calcTotalBets();
+      let betDateTime = $("#first__draw__select :selected").data("date-to-start");
+      let betId = $("#first__draw__select :selected").attr("value");
+
+      console.log(betDateTime, betId)
       let trackJson = game.createTrackJson(
-        currentSelectOption.dateTime,
-        currentSelectOption.betId,
+        betDateTime,
+        betId,
         totalDraws,
         firstMultiplier,
         multiplyAfterEvery,
@@ -3439,10 +3477,21 @@ $().ready(function () {
   let req = $.post(url, data, function (response) {
     response = JSON.parse(response);
     lastId = response.id;
-    // console.log(response);
-    $(".wining_num").each(function (index) {
-      $(this).html(response.numbers[index]);
-    });
+    if (response.numbers) {
+      console.log("response received", response);
+      // lastId = response.id;
+      serverDrawNum = response
+      currentSelectOption = serverDrawNum
+      console.log(currentSelectOption)
+
+      callAllFunctionsHere()
+      $(".wining_num").each(function (index) {
+        $(this).html(response.numbers[index]);
+      });
+    }else{
+      console.log("not changed");
+      drawNum()
+    }
   });
   req.fail(function () {
     console.log("failed");
@@ -3451,6 +3500,7 @@ $().ready(function () {
 
 function drawNum() {
   // let url = '../generateRandom.php';
+  console.log("lastId", lastId)
   let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
   let data = {
     last_id: lastId,
@@ -3459,15 +3509,62 @@ function drawNum() {
   let req = $.post(url, data, function (response) {
     response = JSON.parse(response);
     if (response.numbers) {
-      // console.log(response);
+      console.log("response received", response);
       // lastId = response.id;
+      serverDrawNum = response
+      currentSelectOption = serverDrawNum
+      console.log(currentSelectOption)
+      callAllFunctionsHere()
       $(".wining_num").each(function (index) {
         $(this).html(response.numbers[index]);
       });
+    }else{
+      console.log("not changed");
+      drawNum()
     }
   });
   req.fail(function () {
     console.log("failed");
   });
 }
-// slotjs([9, 2, 3, 4, 5]);
+
+
+
+// console.log(serverDrawNum)
+
+
+/**call all your functions here */
+function callAllFunctionsHere() {
+  let callDrawNum = setInterval(() => {
+    drawNum()
+    console.log("spmething")
+    console.log((+serverDrawNum.timeLeft + 10) *1000)
+    clearInterval(callDrawNum);
+    // slotjs(serverDrawNum.numbers);
+    
+
+  }, (+serverDrawNum.timeLeft) * 1000);
+  setNextDraws()
+  // let maxInput = game.getTrackElement('trackInfo', 'totalDraws');
+  // let firstMultiplier = game.getTrackElement();
+  let firstMultiplier = +$(".first-multiplier").val();
+    let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
+    let multiplyBy = +$(".multiplyBy").val();
+    let maxInput = +$(".total-draws").val();
+  console.log(maxInput)
+  if(game.getTrackJson()){
+    game.changeCurrentButton()
+    setTimeout(() => {
+      game.generateSelectOptions(currentSelectOption.betId, game.addMinutes(currentSelectOption.dateTime, intervalMinutes));
+
+      let trackJson = game.createTrackJson(currentSelectOption.nextDateTime, currentSelectOption.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "totalBets"));
+      game.createTrackInterface(trackJson)
+      game.setTrackJson(trackJson)
+    }, 1000);
+    
+  }
+  
+
+  slotjs(serverDrawNum.numbers);
+  countdown(Math.abs(+serverDrawNum.timeLeft - 5));
+}

@@ -2266,7 +2266,8 @@ width:255px;
 .slot-wrapper {
   /* border:0px solid #000000; */
   /* width: fit-content; */
-  display: none;
+  z-index: 999999;
+  /* display: none; */
   height: 40px;
 }
 
@@ -2277,11 +2278,11 @@ width:255px;
 
   /* background-position-y: -70px; */
 
-  background: url("libs/images/sharp.png") repeat-y;
+  background: url("../libs/slot_master/images/sharp.png") repeat-y;
   /*Taken from http://www.swish-designs.co.uk*/
-  width: 40px;
+  width: 48px;
 
-  height: 40px;
+  height: 42px;
 
   float: left;
   /* border:0px solid #000; */
@@ -2290,7 +2291,7 @@ width:255px;
 }
 
 .motion {
-  background: url("libs/images/sharp.png") repeat-y;
+  background: url("../libs/slot_master/images/blur.png") repeat-y;
   /*Taken from http://www.swish-designs.co.uk*/
 }
 

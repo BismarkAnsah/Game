@@ -7,14 +7,17 @@ const mins = document.getElementById("mins");
 const secs = document.getElementById("secs");
 const week = document.getElementById("week");
 
-/** countdown timer */
-function countdown(seconds) {
+/**
+ * This function implements a countdown timer.
+ * @param {Number} seconds - The number of seconds for the countdown timer.
+ */
+export function countdown(seconds) {
   let intervalId = setInterval(function () {
     let hours = Math.floor(seconds / 3600);
     let minutes = Math.floor((seconds % 3600) / 60);
     let myseconds = seconds % 60;
     seconds--;
-    updateProgressBar(seconds, 300, 1);
+    updateProgressBar(seconds, 60, 1);
 
     if (seconds < 0) {
       clearInterval(intervalId);
@@ -27,19 +30,30 @@ function countdown(seconds) {
 
 
 
-/** formats time and makes it human readerble eg. 1:1 will give 01:01 */
+/**
+ * This function formats the time to a human-readable format. eg. 1:1 will give 01:01
+ * @param {Number} time - The time in seconds to be formatted.
+ * @returns {String} - The formatted time string, with leading zeros if necessary.
+ */
 function formatTime(time) {
   return time < 10 ? `0${time}` : time;
 }
 
 
-/** changes the progress bar with respect to time in seconds */
+
+/**
+ * This function updates the progress bar on the page based on the start time, duration and reduceAfter time.
+ * Always make sure the duration is greater than the startTime
+ * @param {Number} startTime - The start time of the progress bar, in seconds.
+ * @param {Number} duration - The total duration of the progress bar, in seconds and tells the progressbar where to start from.
+ * @param {Number} reduceAfter - The time interval, in seconds, at which the progress bar is updated.
+ */
 function updateProgressBar(startTime, duration, reduceAfter) {
   const progressBar = document.querySelector(".Rectangle_37");
 
   let elapsedTime = duration - startTime;
 
-  let percent = Math.round(((duration - elapsedTime) / duration) * 100);
+  let percent = (((duration - elapsedTime) / duration) * 100);
   progressBar.style.width = percent + "%";
   if (percent > 0) {
       // requestAnimationFrame(()=>{updateProgressBar(startTime, duration, reduceAfter)});
@@ -51,4 +65,4 @@ function updateProgressBar(startTime, duration, reduceAfter) {
 }
 
 
-countdown(300);
+// countdown(30);
