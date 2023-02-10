@@ -152,7 +152,7 @@
                 <span>For sale</span>
             </div>
             <div class="Rectangle_93">
-                <div class="Rectangle_37" style="height: 24px; width: 75%"></div>
+                <div class="Rectangle_37" style="height: 24px;"></div>
             </div>
 
             <div class="draw-num-box container">
@@ -1904,7 +1904,7 @@
                                                                         <tr>
                                                                             <th scope="col">Track No.</th>
                                                                             <th scope="col">
-                                                                                <input class="form-check-input"
+                                                                                <input class="form-check-input visually-hidden"
                                                                                     type="checkbox" name="track_number"
                                                                                     id="mmaster" checked/>
                                                                                 Track ID.
@@ -2233,7 +2233,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="assets/libs/slot_master/slot.js"></script>
     <script src="assets/js/tracks-cart.js"></script>
-    <script src="assets/js/timer.js"></script>
+    <script type="module" src="assets/js/timer.js"></script>
     <script type="module" src="assets/js/main.js"></script>
 </body>
 
