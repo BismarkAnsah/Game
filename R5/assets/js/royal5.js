@@ -56,7 +56,7 @@ class Royal5utils {
     },
   };
 
-  constructor(pageId) {
+  constructor() {
     // this.pageId = pageId;
     // this.page = $(pageId);
   }
@@ -739,6 +739,7 @@ class Royal5utils {
     if (!(r >= 0 && n >= r)) return -1;
     return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
   }
+  
   /**
    * the factorial of a number
    * @param {number} num what is the factorial of 'num'? the 'num' what is supplied to the function
@@ -1597,7 +1598,8 @@ class a5_g120 extends Royal5utils {
 }
 
 class a5_joint extends Royal5utils {
-  gameId = 1;
+  settings;
+  gameId = 59;
   type = "All 5 Straight(Joint)";
   labels = ["1st", "2nd", "3rd", "4th", "5th"];
   // sample1 = 1;
@@ -1609,8 +1611,13 @@ class a5_joint extends Royal5utils {
     row4: [],
     row5: [],
   };
-  constructor(pageId) {
-    super(pageId);
+  constructor(settings) {
+    super();
+    this.settings = settings;
+    console.log(settings);
+    // this.label = settings.label;
+    // this.gameId = settings.gameId;
+    // this.type = settings.type;
     this.createGameInterface(this.labels);
   }
 
@@ -2618,7 +2625,7 @@ let initializedClasses = [];
 let cart = [];
 let oldClass = "a5_joint";
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
-let game = new a5_joint("#a5-joint");
+let game = new a5_joint(settings()[a5_joint]);
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
 // let balance = await game.fetchData(balanceUrl) || 500;
 let balance = 500;
@@ -3395,7 +3402,7 @@ $(` ${classNames.navItem}`).click(function () {
   if (oldClass != className) {
     oldClass = className;
     game.resetAllData();
-    game = getClass(className, /*`#${pointsTo}`*/ ".game-interface");
+    game = getClass(className);
     // ready(className);
   }
 });
@@ -3419,7 +3426,7 @@ $(".group-nav>li").click(function () {
   //}
 });
 
-function getClass(className, classConstructor) {
+function getClass(className) {
   let classes = {
     a5_joint: a5_joint,
     a5_manual: a5_manual,
@@ -3446,7 +3453,9 @@ function getClass(className, classConstructor) {
     l4_g6: l4_g6,
     l4_g4: l4_g4,
   };
-  return new classes[className](classConstructor);
+  console.log('here');
+  console.log(settings()[className]);
+  return new classes[className](settings()[className]);
 }
 
 function getDrawNums(url = false, data = false) {
@@ -3479,7 +3488,7 @@ $().ready(function () {
     lastId = response.id;
     if (response.numbers) {
       console.log("response received", response);
-      // lastId = response.id;
+      lastId = response.id;
       serverDrawNum = response
       currentSelectOption = serverDrawNum
       console.log(currentSelectOption)
@@ -3510,7 +3519,7 @@ function drawNum() {
     response = JSON.parse(response);
     if (response.numbers) {
       console.log("response received", response);
-      // lastId = response.id;
+      lastId = response.id;
       serverDrawNum = response
       currentSelectOption = serverDrawNum
       console.log(currentSelectOption)
@@ -3567,4 +3576,50 @@ function callAllFunctionsHere() {
 
   slotjs(serverDrawNum.numbers);
   countdown(Math.abs(+serverDrawNum.timeLeft - 5));
+}
+
+
+
+class TotalBets 
+{
+    /**
+     * gets the n combination r of selection
+     * @param {number} n total elements
+     * @param {number} r sample taken at a time
+     * @returns combination of a selection
+     */
+    getCombination(n, r) {
+      if (!(r >= 0 && n >= r)) return -1;
+      return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
+    }
+    /**
+     * the factorial of a number
+     * @param {number} num what is the factorial of 'num'? the 'num' what is supplied to the function
+     * @returns the factorial of a number
+     */
+    factorial(num) {
+      if (num == 0) return 1;
+      if (num < 0) return -1;
+      let result = num;
+      for (let i = num - 1; i > 1; i--) result *= i;
+      return result;
+    }
+}
+
+function settings(className){
+  let labels = {
+      "0":["1st", "2nd", "3rd", "4th", "5th", "",""],
+      "1":["1st", "2nd", "3rd", "4th", "5th"],
+      "2":["1st", "2nd", "3rd", "4th"],
+  }
+  let games = {
+    a5_joint: {
+      "label":labels[1],
+      "totalBets":1,
+      "gameId":2,
+      "allSelections":"raw"
+    }
+  }
+
+  return games[className];
 }
