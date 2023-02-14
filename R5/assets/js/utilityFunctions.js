@@ -10,7 +10,7 @@ const  chunkArray = (array, chunkSize) => {
 
 const factorial = (num) => {
     if (num == 0) return 1;
-    if (num < 0) return -1;
+    if (num < 0) return 0
     let result = num;
     for (let i = num - 1; i > 1; i--) result *= i;
     return result;
@@ -19,7 +19,7 @@ const factorial = (num) => {
 //n= number of selections 
 //r= sample items selected
 const getCombination = (n, r) =>  {
-    if (!(r >= 0 && n >= r)) return -1;
+    if (!(r >= 0 && n >= r)) return 0;
     return factorial(n) / (factorial(r) * factorial(n - r));
 }
 
