@@ -1,11 +1,16 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
+import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
+import { countdown } from "./timer.js";
+import { chunkArray, getCombination } from "./utilityFunctions.js";
+//todo: test next day.
+/**hides and shows balance */
 // import fixedPlace from "./c1`omponents/fixed_place.js";
 
 $(".eye, .eye-slash").click(function () {
   $(".balance-box").toggleClass("show-balance");
 });
-// import { animateDraw } from "../lib/slot-master/slot.js";
-class Royal5utils {
+
+export class Royal5utils {
   /***
    *
    * README.md
@@ -2009,8 +2014,254 @@ class l4_g4 extends Royal5utils {
 
   /*--------------------End fixed_place class--------------------------------*/
 
+
+
+/*--------------------Begin any_place class--------------------------------*/
+
+//Any place one out of first three
+
+class any_plce_one_out_of_first_three extends Royal5utils{ 
+  sample1 = 1;
+  gameId = 100;
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [], 
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
   
-const intervalMinutes = 5;
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+
+}
+
+
+//Any place 2 out of first three
+class any_place_two_out_of_first_three extends Royal5utils {  
+
+  sample1 = 2;
+  gameId = 101;
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1) 
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+
+}
+
+//
+class any_place_one_out_of_mid_three extends Royal5utils{  
+
+  sample1 = 1;
+  gameId = 103;
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [], 
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1) 
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+
+}
+
+//
+class any_place_two_out_of_mid_three extends Royal5utils{ 
+
+  sample1 = 2;
+  gameId = 104;
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [], 
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1) 
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+
+}
+
+//
+class any_place_one_out_of_last_three extends Royal5utils {
+
+  sample1 = 1
+  gameId = 105
+}
+class any_place_two_out_of_last_last_three extends Royal5utils {
+  sample1 = 2
+  gameId = 106
+} 
+
+class any_place_one_out_of_first_four extends Royal5utils {
+  sample1 = 1
+  gameId = 107
+} 
+class any_place_two_out_of_first_four extends Royal5utils {
+  sample1 = 2
+  gameId = 108
+} 
+class any_place_three_out_of_first_four extends Royal5utils {
+  sample1 = 3
+  gameId = 109
+} 
+class any_place_one_out_of_last_four extends Royal5utils {
+  sample1 = 3
+  gameId = 110
+}
+class any_place_two_out_of_last_four extends Royal5utils {
+  sample1 = 2
+  gameId = 111
+} 
+class any_place_three_out_of_last_four extends Royal5utils {
+  sample1 = 3
+  gameId = 112
+}
+
+class any_place_one_out_of_five extends Royal5utils {
+  sample1 = 1
+  gameId = 113
+} 
+class any_place_two_out_of_five extends Royal5utils {
+  sample1 = 2
+  gameId = 114
+} 
+class any_place_three_out_of_five extends Royal5utils {
+  sample1 = 3
+  gameId = 115
+} 
+
+/*--------------------End any_place class--------------------------------*/
+
+
+const intervalMinutes = 5; // Royal5 draw number intervals
+const maxEntryValue = 9999; //maximum value allowed for input fields
 let lastId = 0;
 let initializedClasses = [];
 let cart = [];
@@ -2542,6 +2793,21 @@ function getClass(className, classConstructor) {
     f4_g24: f4_g24,
     f4_g6: f4_g6,
     fixed_place: fixed_place,
+    any_plce_one_out_of_first_three:any_plce_one_out_of_first_three,
+    any_place_two_out_of_first_three:any_place_two_out_of_first_three,
+    any_place_one_out_of_mid_three:any_place_one_out_of_mid_three,
+    any_place_two_out_of_mid_three:any_place_two_out_of_mid_three,
+    any_place_one_out_of_last_three:any_place_one_out_of_last_three,
+    any_place_two_out_of_last_last_three:any_place_two_out_of_last_last_three,
+    any_place_one_out_of_first_four:any_place_one_out_of_first_four,
+    any_place_two_out_of_first_four:any_place_two_out_of_first_four,
+    any_place_three_out_of_first_four:any_place_three_out_of_first_four,
+    any_place_one_out_of_last_four:any_place_one_out_of_last_four,
+    any_place_two_out_of_last_four:any_place_two_out_of_last_four,
+    any_place_three_out_of_last_four:any_place_three_out_of_last_four,
+    any_place_one_out_of_five:any_place_one_out_of_five,
+    any_place_two_out_of_five:any_place_two_out_of_five,
+    any_place_three_out_of_five:any_place_three_out_of_five,
     f4_joint: f4_joint,
     f4_manual: f4_manual,
     f4_combo: f4_combo,
