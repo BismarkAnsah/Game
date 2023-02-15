@@ -2047,7 +2047,7 @@
                                                     </tr>
                                                     <tr>
                                                         <th>
-                                                            <button class="btn-track">Track</button>
+                                                            <button class="btn-track m-btn-orange">Track</button>
                                                             <button class="btn-bet-now">Bet Now</button>
                                                         </th>
                                                     </tr>

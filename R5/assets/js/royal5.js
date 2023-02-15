@@ -3479,7 +3479,7 @@ $().ready(function () {
     lastId = response.id;
     if (response.numbers) {
       console.log("response received", response);
-      // lastId = response.id;
+      lastId = response.id;
       serverDrawNum = response
       currentSelectOption = serverDrawNum
       console.log(currentSelectOption)
@@ -3510,7 +3510,7 @@ function drawNum() {
     response = JSON.parse(response);
     if (response.numbers) {
       console.log("response received", response);
-      // lastId = response.id;
+      lastId = response.id;
       serverDrawNum = response
       currentSelectOption = serverDrawNum
       console.log(currentSelectOption)
