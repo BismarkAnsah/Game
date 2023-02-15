@@ -3569,5 +3569,6 @@ function callAllFunctionsHere() {
   countdown(Math.abs(+serverDrawNum.timeLeft - 5));
 }
 // countdown(30)
+// slotjs([0,1,2,3,4,5])
 
 //TODO ==========ask for duration time for progressbar from dollar

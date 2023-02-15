@@ -50,7 +50,7 @@ function formatTime(time) {
  */
 let previousPercent = 100; //stores the percentage and the percent width is not repeatedly updated
 function updateProgressBar(startTime, duration, reduceAfter) {
-  const progressBar = document.querySelector(".Rectangle_37");
+  let progressBar = $(".Rectangle_37");
   let elapsedTime = duration - startTime;
   let percent = (((duration - elapsedTime) / duration) * 100);
   // console.log(elapsedTime)
@@ -61,14 +61,14 @@ function updateProgressBar(startTime, duration, reduceAfter) {
   if (previousPercent >= percent) {
     // console.log("sjsjdds================================")
 
-    progressBar.style.width = percent + "%";
+    progressBar.animate({ width: percent }, 500);
     previousPercent = percent;
   }
   if (percent > 0) {
       // requestAnimationFrame(()=>{updateProgressBar(startTime)});
-    setTimeout(function () {
-      updateProgressBar(startTime, duration, reduceAfter);
-    }, reduceAfter * 1000);
+    // setTimeout(function () {
+    //   updateProgressBar(startTime, duration, reduceAfter);
+    // }, reduceAfter * 1000);
   }else{
     previousPercent = 100;
 

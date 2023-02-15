@@ -92,9 +92,7 @@
                     <li class="nav-item d-flex flex-column justify-content-center">
                     <span class="timer-date-time">minutes</span> <div class="d-inline text-center"><span class="timer-box-contents" id="mins" ></span></div>
                     </li>
-                    <li class="nav-item d-flex flex-column justify-content-center">
-                    <span class="timer-box-contents" id="mins" ></span>
-                    </li>
+                    
                     <li class="nav-item d-flex  mt-3">
                     <span class="timer-date-time-colon">:</span>
                     </li>
