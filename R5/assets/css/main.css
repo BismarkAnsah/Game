@@ -2859,7 +2859,11 @@ text {
 .Rectangle_93 {
   overflow: hidden;
   position: absolute;
+<<<<<<< HEAD
   width: 210px;
+=======
+  width: 218px;
+>>>>>>> Jo-Branch
 
   height: fit-content;
   left: 368px;
@@ -2873,6 +2877,7 @@ text {
 
 #progressBar {
   width: 100%;
+<<<<<<< HEAD
   /* margin: 10px auto; */
   height: 5px;
   background-color: #3eb0f1;
@@ -2891,6 +2896,64 @@ text {
       rgba(252, 221, 26, 1) 100%
   );
   box-sizing: border-box;
+=======
+  height: 30px;
+  background-color: #ddd;
+  border-radius: 5px;
+  position: relative;
+}
+
+#progress {
+  height: 100%;
+  border-radius: 5px;
+  
+  /* ff 3.6+ */
+  background: -moz-linear-gradient(
+    90deg,
+    rgba(123, 161, 245, 1) 0%,
+    rgba(253, 114, 54, 1) 50%,
+    rgba(252, 221, 26, 1) 100%
+  );
+
+  /* safari 5.1+,chrome 10+ */
+  background: -webkit-linear-gradient(
+    90deg,
+    rgba(123, 161, 245, 1) 0%,
+    rgba(253, 114, 54, 1) 50%,
+    rgba(252, 221, 26, 1) 100%
+  );
+
+  /* opera 11.10+ */
+  background: -o-linear-gradient(
+    90deg,
+    rgba(123, 161, 245, 1) 0%,
+    rgba(253, 114, 54, 1) 50%,
+    rgba(252, 221, 26, 1) 100%
+  );
+
+  /* ie 6-9 */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FCDD1A', endColorstr='#7BA1F5', GradientType=0);
+
+  /* ie 10+ */
+  background: -ms-linear-gradient(
+    90deg,
+    rgba(123, 161, 245, 1) 0%,
+    rgba(253, 114, 54, 1) 50%,
+    rgba(252, 221, 26, 1) 100%
+  );
+
+  /* global 94%+ browsers support */
+  background: linear-gradient(
+    90deg,
+    rgba(123, 161, 245, 1) 0%,
+    rgba(253, 114, 54, 1) 50%,
+    rgba(252, 221, 26, 1) 100%
+  );
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+>>>>>>> Jo-Branch
 }
 
 #Rectangle_94 {
@@ -15689,3 +15752,14 @@ text {
 
   overflow: visible;
 }
+<<<<<<< HEAD
+=======
+
+.path-fill-box {
+  width: 100% !important;
+ 
+}
+.label-space {
+  /* padding-right: 10px; */
+}
+>>>>>>> Jo-Branch

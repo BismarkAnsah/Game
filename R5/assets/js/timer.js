@@ -2,15 +2,23 @@
 # Timer JS
 --------------------------------------------------------------*/
 
+<<<<<<< HEAD
 // const hrs = document.getElementById("hrs");
 // const mins = document.getElementById("mins");
 // const secs = document.getElementById("secs");
 // const week = document.getElementById("week");
+=======
+const hrs = document.getElementById("hrs");
+const mins = document.getElementById("mins");
+const secs = document.getElementById("secs");
+const week = document.getElementById("week");
+>>>>>>> Jo-Branch
 
 /**
  * This function implements a countdown timer.
  * @param {Number} seconds - The number of seconds for the countdown timer.
  */
+<<<<<<< HEAD
 // export function countdown(seconds) {
 //   let intervalId = setInterval(function () {
 //     let hours = Math.floor(seconds / 3600);
@@ -67,14 +75,35 @@ export function progress(timeleft, timetotal, $element) {
 
     }, 1000);
   }
+=======
+export function countdown(seconds) {
+  let intervalId = setInterval(function () {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let myseconds = seconds % 60;
+    seconds--;
+    updateProgressBar(seconds, 60, 1);
+
+    if (seconds < 0) {
+      clearInterval(intervalId);
+    }
+    hrs.innerText = formatTime(hours);
+    mins.innerText = formatTime(minutes);
+    secs.innerText = formatTime(myseconds);
+  }, 1000);
+>>>>>>> Jo-Branch
 }
 
 
 
+<<<<<<< HEAD
 
 
 /**
  * This is a helper function that formats a number to add a leading zero if the number is less than 10
+=======
+/**
+>>>>>>> Jo-Branch
  * This function formats the time to a human-readable format. eg. 1:1 will give 01:01
  * @param {Number} time - The time in seconds to be formatted.
  * @returns {String} - The formatted time string, with leading zeros if necessary.
@@ -92,6 +121,7 @@ function formatTime(time) {
  * @param {Number} duration - The total duration of the progress bar, in seconds and tells the progressbar where to start from.
  * @param {Number} reduceAfter - The time interval, in seconds, at which the progress bar is updated.
  */
+<<<<<<< HEAD
 let previousPercent = 100; //stores the percentage and the percent width is not repeatedly updated
 function updateProgressBar(startTime, duration, reduceAfter) {
   let progressBar = $(".Rectangle_37");
@@ -116,8 +146,26 @@ function updateProgressBar(startTime, duration, reduceAfter) {
   }else{
     previousPercent = 100;
 
+=======
+function updateProgressBar(startTime, duration, reduceAfter) {
+  const progressBar = document.querySelector(".Rectangle_37");
+
+  let elapsedTime = duration - startTime;
+
+  let percent = (((duration - elapsedTime) / duration) * 100);
+  progressBar.style.width = percent + "%";
+  if (percent > 0) {
+      // requestAnimationFrame(()=>{updateProgressBar(startTime, duration, reduceAfter)});
+    setTimeout(function () {
+      updateProgressBar(startTime, duration, reduceAfter);
+    }, reduceAfter * 1000);
+>>>>>>> Jo-Branch
   }
   startTime--;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Jo-Branch
 // countdown(30);
