@@ -17,7 +17,7 @@ export function countdown(seconds) {
     let minutes = Math.floor((seconds % 3600) / 60);
     let myseconds = seconds % 60;
     seconds--;
-    updateProgressBar(seconds, 30, 1);
+    updateProgressBar(seconds, 60, 1);
 
     if (seconds < 0) {
       clearInterval(intervalId);
@@ -53,8 +53,14 @@ function updateProgressBar(startTime, duration, reduceAfter) {
   const progressBar = document.querySelector(".Rectangle_37");
   let elapsedTime = duration - startTime;
   let percent = (((duration - elapsedTime) / duration) * 100);
+  // console.log(elapsedTime)
+  // console.log("startTime",startTime)
 
+  // console.log("previousPercent",previousPercent)
+  // console.log("percent",percent)
   if (previousPercent >= percent) {
+    // console.log("sjsjdds================================")
+
     progressBar.style.width = percent + "%";
     previousPercent = percent;
   }
@@ -63,9 +69,11 @@ function updateProgressBar(startTime, duration, reduceAfter) {
     setTimeout(function () {
       updateProgressBar(startTime, duration, reduceAfter);
     }, reduceAfter * 1000);
+  }else{
+    previousPercent = 100;
+
   }
   startTime--;
 }
-
 
 // countdown(30);

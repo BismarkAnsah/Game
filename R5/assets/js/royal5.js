@@ -3538,7 +3538,6 @@ function callAllFunctionsHere() {
   document.querySelector(".Rectangle_37").style.width = "100%";
   let callDrawNum = setInterval(() => {
     drawNum()
-    console.log("spmething")
     console.log((+serverDrawNum.timeLeft + 10) *1000)
     clearInterval(callDrawNum);
     // slotjs(serverDrawNum.numbers);
@@ -3552,7 +3551,7 @@ function callAllFunctionsHere() {
     let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
     let multiplyBy = +$(".multiplyBy").val();
     let maxInput = +$(".total-draws").val();
-  console.log(maxInput)
+  console.log("maxInput",maxInput)
   if(game.getTrackJson()){
     game.changeCurrentButton()
     setTimeout(() => {
@@ -3564,9 +3563,9 @@ function callAllFunctionsHere() {
     }, 1000);
     
   }
-  
+  console.log(serverDrawNum.numbers.map(Number))
 
-  slotjs(serverDrawNum.numbers);
+  slotjs(serverDrawNum.numbers.map(Number));
   countdown(Math.abs(+serverDrawNum.timeLeft - 5));
 }
 // countdown(30)
