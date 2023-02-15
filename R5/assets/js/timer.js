@@ -17,7 +17,7 @@ export function countdown(seconds) {
     let minutes = Math.floor((seconds % 3600) / 60);
     let myseconds = seconds % 60;
     seconds--;
-    updateProgressBar(seconds, 60, 1);
+    updateProgressBar(seconds, 30, 1);
 
     if (seconds < 0) {
       clearInterval(intervalId);
@@ -48,15 +48,18 @@ function formatTime(time) {
  * @param {Number} duration - The total duration of the progress bar, in seconds and tells the progressbar where to start from.
  * @param {Number} reduceAfter - The time interval, in seconds, at which the progress bar is updated.
  */
+let previousPercent = 100; //stores the percentage and the percent width is not repeatedly updated
 function updateProgressBar(startTime, duration, reduceAfter) {
   const progressBar = document.querySelector(".Rectangle_37");
-
   let elapsedTime = duration - startTime;
-
   let percent = (((duration - elapsedTime) / duration) * 100);
-  progressBar.style.width = percent + "%";
+
+  if (previousPercent >= percent) {
+    progressBar.style.width = percent + "%";
+    previousPercent = percent;
+  }
   if (percent > 0) {
-      // requestAnimationFrame(()=>{updateProgressBar(startTime, duration, reduceAfter)});
+      // requestAnimationFrame(()=>{updateProgressBar(startTime)});
     setTimeout(function () {
       updateProgressBar(startTime, duration, reduceAfter);
     }, reduceAfter * 1000);

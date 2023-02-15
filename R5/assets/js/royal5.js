@@ -3566,6 +3566,7 @@ function drawNum() {
 
 /**call all your functions here */
 function callAllFunctionsHere() {
+  document.querySelector(".Rectangle_37").style.width = "100%";
   let callDrawNum = setInterval(() => {
     drawNum()
     console.log("spmething")
@@ -3598,6 +3599,10 @@ function callAllFunctionsHere() {
   slotjs(serverDrawNum.numbers);
   countdown(Math.abs(+serverDrawNum.timeLeft));
 }
+// countdown(30)
+
+//TODO ==========ask for duration time for progressbar from dollar
+
 
 
 
