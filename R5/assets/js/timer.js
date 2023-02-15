@@ -59,12 +59,12 @@ export function progress(timeleft, timetotal, $element) {
   // Update the displayed time in hours, minutes, and seconds
   // Format the time to add a leading zero if the number is less than 10
   if (timeleft >= 0) {
-    setTimeout(function () {
+    let timeOut = setTimeout(function () {
       progress(timeleft - 1, timetotal, $element);
       hrs.innerText = formatTime(hours);
       mins.innerText = formatTime(minutes);
       secs.innerText = formatTime(seconds);
-
+      clearTimeout(timeOut);
     }, 1000);
   }
 }
