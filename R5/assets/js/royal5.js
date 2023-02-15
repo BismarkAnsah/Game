@@ -3480,8 +3480,8 @@ function getClass(className) {
 function getDrawNums(url = false, data = false) {
   // let url = '../generateRandom.php';
   //  url = url || '../receiver.php?action=getdrawnumber';
-  url = "demo/generator.php";
-  // url = url || "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
+  // url = "demo/generator.php";
+  url = url || "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
   data = data || {
     last_id: lastId,
   };
@@ -3498,8 +3498,8 @@ function showDrawNums(drawNums = getDrawNums()) {
 $().ready(function () {
   // let url = '../generateRandom.php';
   // let url = '../receiver.php?action=getdrawnumber';
-  // let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-  let url = "demo/generator.php";
+  let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
+  // let url = "demo/generator.php";
   let data = {
     last_id: lastId,
   };
@@ -3531,8 +3531,8 @@ $().ready(function () {
 function drawNum() {
   // let url = '../generateRandom.php';
   console.log("lastId", lastId);
-  let url = "demo/generator.php";
-  // let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
+  // let url = "demo/generator.php";
+  let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
   let data = {
     last_id: lastId,
   };
