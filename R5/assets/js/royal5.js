@@ -1,6 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
-import { countdown } from "./timer.js";
+import { progress } from "./timer.js";
 import { chunkArray, getCombination } from "./utilityFunctions.js";
 //todo: test next day.
 /**hides and shows balance */
