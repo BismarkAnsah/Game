@@ -1978,7 +1978,7 @@
                                 <div class="tab-pane fade" id="cart-tab-pane" role="tabpanel" aria-labelledby="cart-tab"
                                     tabindex="0">
                                     <div class="table-balance-container">
-                                        <div class="table-content table-responsive">
+                                        <div class="table-content table-responsive sub-table">
                                             <table class="table table-borderless" aria-describedby>
                                                 <thead>
                                                     <tr>
@@ -2019,32 +2019,6 @@
                                                             </div>
                                                         </td>
                                                         <td><span class="currency">$</span>&nbsp;&nbsp;234</td>
-                                                        <td><span class="bi bi-trash3"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">2</th>
-                                                        <td>Jacob</td>
-                                                        <td>Thornton</td>
-                                                        <td>@fat</td>
-                                                        <td>@fat</td>
-                                                        <td>@fat</td>
-
-                                                        <td><span class="bi bi-trash3"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">3</th>
-                                                        <td colspan="2">Larry the Bird</td>
-                                                        <td>@twitter</td>
-                                                        <td>@twitter</td>
-                                                        <td>@twitter</td>
-                                                        <td><span class="bi bi-trash3"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">3</th>
-                                                        <td colspan="2">Larry the Bird</td>
-                                                        <td>@twitter</td>
-                                                        <td>@twitter</td>
-                                                        <td>@</td>
                                                         <td><span class="bi bi-trash3"></span></td>
                                                     </tr>
                                                 </tbody>
@@ -2096,7 +2070,10 @@
                                                 <th scope="col">Operation</th>
                                             </tr>
                                         </thead>
-                                        <tbody></tbody>
+                                        <tbody>
+                                            <tr><th>no data</th></tr>
+
+                                        </tbody>
                                     </table>
                                 </div>
                                 <div class="tab-pane fade" id="tab-5-tab-pane" role="tabpanel"
@@ -2115,23 +2092,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td colspan="2">Larry the Bird</td>
-                                                <td>@twitter</td>
-                                            </tr>
+                                            <tr><th>no data</th></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -2150,23 +2111,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td colspan="2">Larry the Bird</td>
-                                                <td>@twitter</td>
-                                            </tr>
+                                        <tr><th>no data</th></tr>
                                         </tbody>
                                     </table>
                                 </div>
