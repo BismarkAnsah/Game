@@ -482,6 +482,8 @@ try {
     };
 
     function toArray(strg) {
+        console.log("toArray: " + strg);
+
         strg = strg.replace(/left|top/g, '0px');
         strg = strg.replace(/right|bottom/g, '100%');
         strg = strg.replace(/([0-9\.]+)(\s|\)|$)/g, "$1px$2");
@@ -497,12 +499,15 @@ try {
             }
 
             start = toArray(start);
+            console.log("start: " + start);
+
             fx.start = [start[0], start[2]];
             var end = toArray(fx.end);
             fx.end = [end[0], end[2]];
 
             fx.unit = [end[1], end[3]];
             fx.bgPosReady = true;
+            start = '0px -3px';
         }
         //return;
         var nowPosX = [];
@@ -519,17 +524,28 @@ let completed = 0;
 
 let imgPos = {
     0: -3,
-    1: 1302,
-    2: 1258,
-    3: 5713,
-    4: 3418,
-    5: 3372,
-    6: 5578,
-    7: 584,
-    8: 539,
+    1: -48,
+    2: -92,
+    3: -136,
+    4: -182,
+    5: -226,
+    6: 178,
+    7: 132,
+    8: 88,
     9: 43,
 };
-
+// let imgPos = {
+//     0: -3,
+//     1: 1302,
+//     2: 1258,
+//     3: 5713,
+//     4: 3418,
+//     5: 3372,
+//     6: 5578,
+//     7: 584,
+//     8: 539,
+//     9: 43,
+// };
 
 /**
  * @class Slot
@@ -589,6 +605,21 @@ let slotjs;
                 }
             }, 100);
         }
+
+        /**
+        * @method reset
+        * Reset a slot to initial state
+        */
+        reset = function() {
+            console.log($(this.el))
+            let el_id = $(this.el).attr('id');
+            $._spritely.instances[el_id].t = 0;
+            $(this.el).css('background-position', '0px -226px');
+            this.speed = 0;
+            completed = 0;
+            // $('#result').html('');
+        };
+
         /**
          * @method finalPos
          * Finds the final position of the slot
@@ -620,6 +651,7 @@ let slotjs;
             c.start();
             d.start();
             e.start();
+            
             // this.innerHTML = "Stop";
             setTimeout(function() {
                 a.stop(imgPos[drawNum[0]]);
@@ -628,6 +660,13 @@ let slotjs;
                 d.stop(imgPos[drawNum[3]]);
                 e.stop(imgPos[drawNum[4]]);
             }, timeinterval);
+            a.reset();
+            b.reset();
+            c.reset();
+            d.reset();
+            e.reset();
+
+            
         };
     }
 
@@ -645,5 +684,7 @@ let slotjs;
 
 // $(document).ready(function () {
 setTimeout(() => {}, 2000);
+//
+//dbatmecode
 
 

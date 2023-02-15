@@ -68,6 +68,10 @@
   text-align: center;
 }
 
+.cart-area .table-content.sub-table{
+  margin: 0 !important;
+}
+
 .cart-area .table-content ul {
   list-style-type: none;
   margin: 0;
