@@ -2,17 +2,10 @@
 # Timer JS
 --------------------------------------------------------------*/
 
-<<<<<<< HEAD
 // const hrs = document.getElementById("hrs");
 // const mins = document.getElementById("mins");
 // const secs = document.getElementById("secs");
 // const week = document.getElementById("week");
-=======
-const hrs = document.getElementById("hrs");
-const mins = document.getElementById("mins");
-const secs = document.getElementById("secs");
-const week = document.getElementById("week");
->>>>>>> Jo-Branch
 
 /**
  * This function implements a countdown timer.
@@ -78,14 +71,10 @@ export function progress(timeleft, timetotal, $element) {
 
 
 
-<<<<<<< HEAD
 
 
 /**
  * This is a helper function that formats a number to add a leading zero if the number is less than 10
-=======
-/**
->>>>>>> Jo-Branch
  * This function formats the time to a human-readable format. eg. 1:1 will give 01:01
  * @param {Number} time - The time in seconds to be formatted.
  * @returns {String} - The formatted time string, with leading zeros if necessary.
