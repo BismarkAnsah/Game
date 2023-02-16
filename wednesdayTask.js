@@ -10,4 +10,3 @@
 // find num in bets array return true or false
 // log the array position in bets [][]
 
-/// modify some properties
