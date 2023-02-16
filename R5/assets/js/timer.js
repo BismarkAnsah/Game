@@ -34,22 +34,22 @@
  * @param {number} timetotal - The total number of seconds in the countdown.
  * @param {jQuery} $element - The jQuery object for the progress bar element.
  */
-export function progress(timeleft, timetotal, $element) {
+export let progress = (timeleft, timetotal, $element) => {
   // Get the elements that will display hours, minutes, and seconds
-  const hrs = document.getElementById("hrs");
-  const mins = document.getElementById("mins");
-  const secs = document.getElementById("secs");
+  let hrs = document.getElementById("hrs");
+  let mins = document.getElementById("mins");
+  let secs = document.getElementById("secs");
 
   // Calculate the total number of minutes remaining
-  const totalMinutes = Math.floor(timeleft / 60);
+  let totalMinutes = Math.floor(timeleft / 60);
 
   // Calculate the number of seconds remaining, as well as the number of hours and minutes remaining
-  const seconds = timeleft % 60;
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
+  let seconds = timeleft % 60;
+  let hours = Math.floor(totalMinutes / 60);
+  let minutes = totalMinutes % 60;
 
   // Calculate the current width of the progress bar based on the time left and the total time
-  var progressBarWidth = (timeleft * $element.width()) / timetotal;
+  let progressBarWidth = (timeleft * $element.width()) / timetotal;
 
   // Update the progress bar by animating its width
   $element
@@ -79,7 +79,7 @@ export function progress(timeleft, timetotal, $element) {
  * @param {Number} time - The time in seconds to be formatted.
  * @returns {String} - The formatted time string, with leading zeros if necessary.
  */
-function formatTime(time) {
+let formatTime = (time) => {
   return time < 10 ? `0${time}` : time;
 }
 

@@ -3538,7 +3538,7 @@ function drawNum() {
   };
   data = JSON.stringify(data);
   let req = $.post(url, data, function (response) {
-    response = JSON.parse(response);
+    response = JSON.parse(response);//
     if (response.numbers) {
       console.log("response received", response);
       lastId = response.id;
