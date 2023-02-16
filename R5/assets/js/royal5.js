@@ -4341,7 +4341,29 @@ class TotalBets {
 }
 
 
- 
+/**
+ * Multiplies a given value by the lengths of all the elements in an array.
+ * 
+ * @param {number} multiplyBy - The value to multiply with.
+ * @param {...Array} rows - A variable number of arrays whose lengths will be multiplied.
+ * @returns {number} The final result of multiplying the lengths of all the input arrays.
+ */
+ _multiply_totalBets(multiplyBy, ...rows) {
+  // Initialize the result to the input multiplyBy value
+  let result = multiplyBy;
+
+  // Store the number of input arrays
+  let totalElements = rows.length;
+
+  // Multiply the length of each array with the result
+  for (let i = 0; i < totalElements; i++) {
+    result *= rows[i].length;
+  }
+
+  return result;
+}
+
+
 
 
   /**
