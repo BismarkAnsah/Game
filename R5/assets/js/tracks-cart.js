@@ -1,5 +1,3 @@
-console.log("hello world");
-
 // console.log(timePassed);
 
 const decrementButton = document.getElementById("decrement");
@@ -38,19 +36,19 @@ button.addEventListener("click", function () {
   }
 });
 
-const master = document.getElementById("master");
-const slaves = document.querySelectorAll(".slave");
 
-// console.log(master);
-master.addEventListener("change", function () {
-  for (let slave of slaves) {
-    slave.checked = master.checked;
-  }
-});
 
+
+
+/**
+ *
+ *
+ * @param {*} title
+ * @param {*} button_type
+ */
 const showModal = (title, button_type) => {
   // showModal()
-  var myModal = new bootstrap.Modal(document.getElementById("m-betModal"));
+  // var myModal = new bootstrap.Modal(document.getElementById("m-betModal"));
   document.querySelector(".modal-title").innerText = title;
   document.querySelector(".button-type").innertext = button_type;
   // myModal.closest(".modal-title").innerHTML = "title.innerHTML";
@@ -59,15 +57,28 @@ const showModal = (title, button_type) => {
   myModal.show();
 };
 
+/**
+ *
+ * scroll to and shows the cart area
+ * @param {*} id
+ */
 const showCartArea = (id) => {
-  let triggerEl = document.getElementById(id)
-  let tabTrigger = new bootstrap.Tab(triggerEl)
-  
-  bootstrap.Tab.getInstance(triggerEl).show() // Select tab by name
-  $('html, body').animate({
-    scrollTop: $(".cart-track-bet").offset().top
-  }, 500);
+  let triggerEl = document.getElementById(id);
+  let tabTrigger = new bootstrap.Tab(triggerEl);
+
+  bootstrap.Tab.getInstance(triggerEl).show(); // Select tab by name
+  $("html, body").animate(
+    {
+      scrollTop: $(".cart-track-bet").offset().top,
+    },
+    500
+  );
 };
 
+// $(document).on("load click", ".nav-item-c:visible", function (e) {
+//   console.log($(this).data());
+// });
 
+// document.getElementById("tableFixHead").addEventListener("click", function () {
   
+// });
