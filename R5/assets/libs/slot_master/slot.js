@@ -482,8 +482,6 @@ try {
     };
 
     function toArray(strg) {
-        console.log("toArray: " + strg);
-
         strg = strg.replace(/left|top/g, '0px');
         strg = strg.replace(/right|bottom/g, '100%');
         strg = strg.replace(/([0-9\.]+)(\s|\)|$)/g, "$1px$2");
@@ -499,8 +497,6 @@ try {
             }
 
             start = toArray(start);
-            console.log("start: " + start);
-
             fx.start = [start[0], start[2]];
             var end = toArray(fx.end);
             fx.end = [end[0], end[2]];
@@ -611,7 +607,6 @@ let slotjs;
         * Reset a slot to initial state
         */
         reset = function() {
-            console.log($(this.el))
             let el_id = $(this.el).attr('id');
             $._spritely.instances[el_id].t = 0;
             $(this.el).css('background-position', '0px -226px');

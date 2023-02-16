@@ -1640,7 +1640,6 @@ class a5_joint extends Royal5utils {
     // this.type = settings.type;
     this.settings = settings;
     this.createGameInterface(this.settings.label);
-    console.log(settings);
   }
 
   calcTotalBets() {
@@ -3839,6 +3838,7 @@ function ready(className) {
     // alert(JSON.stringify(data));
     let callback = function (resp) {
       console.log(resp)
+
     }
     $.post("http://192.168.199.126/task/track.php", JSON.stringify(data), callback)
   })
@@ -4215,8 +4215,7 @@ $().ready(function () {
         $(this).html(response.numbers[index]);
       });
     } else {
-      console.log("not changed");
-      drawNum()
+      drawNum();
     }
   });
   req.fail(function () {
@@ -4246,7 +4245,6 @@ function drawNum() {
         $(this).html(response.numbers[index]);
       });
     } else {
-      console.log("not changed");
       drawNum()
     }
   });
@@ -4264,7 +4262,7 @@ function drawNum() {
 function callAllFunctionsHere() {
   let callDrawNum = setInterval(() => {
     drawNum()
-    console.log((+serverDrawNum.timeLeft + 10) *1000)
+
     clearInterval(callDrawNum);
     // slotjs(serverDrawNum.numbers);
 
@@ -4277,7 +4275,6 @@ function callAllFunctionsHere() {
     let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
     let multiplyBy = +$(".multiplyBy").val();
     let maxInput = +$(".total-draws").val();
-  console.log("maxInput",maxInput)
   if(game.getTrackJson()){
     game.changeCurrentButton()
     setTimeout(() => {
@@ -4289,7 +4286,7 @@ function callAllFunctionsHere() {
     }, 1000);
 
   }
-  console.log(serverDrawNum.numbers.map(Number))
+  // console.log(serverDrawNum.numbers.map(Number))
 
   slotjs(serverDrawNum.numbers.map(Number));
   // countdown(Math.abs(+serverDrawNum.timeLeft - 5));
