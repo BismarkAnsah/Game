@@ -150,7 +150,10 @@
                 <span>For sale</span>
             </div>
             <div class="Rectangle_93">
-                <div class="Rectangle_37" style="height: 24px;"></div>
+                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
+                <div id="progressBar">
+                    <div class="bar"></div>
+                </div>
             </div>
 
             <div class="draw-num-box container">

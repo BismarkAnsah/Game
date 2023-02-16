@@ -659,12 +659,13 @@ let slotjs;
                 c.stop(imgPos[drawNum[2]]);
                 d.stop(imgPos[drawNum[3]]);
                 e.stop(imgPos[drawNum[4]]);
-                a.reset();
+            }, timeinterval);
+            a.reset();
             b.reset();
             c.reset();
             d.reset();
             e.reset();
-            }, timeinterval);
+
             
         };
     }

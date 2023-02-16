@@ -1,6 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
-import { countdown } from "./timer.js";
+import { progress } from "./timer.js";
 //todo: test next day.
 /**hides and shows balance */
 $(".eye, .eye-slash").click(function () {
@@ -3566,7 +3566,6 @@ function drawNum() {
 
 /**call all your functions here */
 function callAllFunctionsHere() {
-  document.querySelector(".Rectangle_37").style.width = "100%";
   let callDrawNum = setInterval(() => {
     drawNum()
     console.log((+serverDrawNum.timeLeft + 10) *1000)
@@ -3597,7 +3596,9 @@ function callAllFunctionsHere() {
   console.log(serverDrawNum.numbers.map(Number))
 
   slotjs(serverDrawNum.numbers.map(Number));
-  countdown(Math.abs(+serverDrawNum.timeLeft - 5));
+  // countdown(Math.abs(+serverDrawNum.timeLeft - 5));
+  progress((+serverDrawNum.timeLeft - 5), 60, $("#progressBar"));
+
 }
 // countdown(30)
 // slotjs([0,1,2,3,4,5])

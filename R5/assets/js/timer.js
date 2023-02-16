@@ -2,35 +2,79 @@
 # Timer JS
 --------------------------------------------------------------*/
 
-const hrs = document.getElementById("hrs");
-const mins = document.getElementById("mins");
-const secs = document.getElementById("secs");
-const week = document.getElementById("week");
+// const hrs = document.getElementById("hrs");
+// const mins = document.getElementById("mins");
+// const secs = document.getElementById("secs");
+// const week = document.getElementById("week");
 
 /**
  * This function implements a countdown timer.
  * @param {Number} seconds - The number of seconds for the countdown timer.
  */
-export function countdown(seconds) {
-  let intervalId = setInterval(function () {
-    let hours = Math.floor(seconds / 3600);
-    let minutes = Math.floor((seconds % 3600) / 60);
-    let myseconds = seconds % 60;
-    seconds--;
-    updateProgressBar(seconds, 60, 1);
+// export function countdown(seconds) {
+//   let intervalId = setInterval(function () {
+//     let hours = Math.floor(seconds / 3600);
+//     let minutes = Math.floor((seconds % 3600) / 60);
+//     let myseconds = seconds % 60;
+//     seconds--;
+//     updateProgressBar(seconds, 60, 1);
 
-    if (seconds < 0) {
-      clearInterval(intervalId);
-    }
-    hrs.innerText = formatTime(hours);
-    mins.innerText = formatTime(minutes);
-    secs.innerText = formatTime(myseconds);
-  }, 1000);
+//     if (seconds < 0) {
+//       clearInterval(intervalId);
+//     }
+//     hrs.innerText = formatTime(hours);
+//     mins.innerText = formatTime(minutes);
+//     secs.innerText = formatTime(myseconds);
+//   }, 1000);
+// }
+
+/**
+ * Updates a progress bar and a displayed countdown timer based on the time left and the total time.
+ * @param {number} timeleft - The number of seconds left in the countdown.
+ * @param {number} timetotal - The total number of seconds in the countdown.
+ * @param {jQuery} $element - The jQuery object for the progress bar element.
+ */
+export function progress(timeleft, timetotal, $element) {
+  // Get the elements that will display hours, minutes, and seconds
+  const hrs = document.getElementById("hrs");
+  const mins = document.getElementById("mins");
+  const secs = document.getElementById("secs");
+
+  // Calculate the total number of minutes remaining
+  const totalMinutes = Math.floor(timeleft / 60);
+
+  // Calculate the number of seconds remaining, as well as the number of hours and minutes remaining
+  const seconds = timeleft % 60;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  // Calculate the current width of the progress bar based on the time left and the total time
+  var progressBarWidth = (timeleft * $element.width()) / timetotal;
+
+  // Update the progress bar by animating its width
+  $element
+    .find("div")
+    .animate({ width: progressBarWidth }, 500)
+
+  // Update the displayed time in hours, minutes, and seconds
+  // Format the time to add a leading zero if the number is less than 10
+  if (timeleft >= 0) {
+    setTimeout(function () {
+      progress(timeleft - 1, timetotal, $element);
+      hrs.innerText = formatTime(hours);
+      mins.innerText = formatTime(minutes);
+      secs.innerText = formatTime(seconds);
+
+    }, 1000);
+  }
 }
 
 
 
+
+
 /**
+ * This is a helper function that formats a number to add a leading zero if the number is less than 10
  * This function formats the time to a human-readable format. eg. 1:1 will give 01:01
  * @param {Number} time - The time in seconds to be formatted.
  * @returns {String} - The formatted time string, with leading zeros if necessary.
@@ -65,10 +109,10 @@ function updateProgressBar(startTime, duration, reduceAfter) {
     previousPercent = percent;
   }
   if (percent > 0) {
-      // requestAnimationFrame(()=>{updateProgressBar(startTime)});
-    // setTimeout(function () {
-    //   updateProgressBar(startTime, duration, reduceAfter);
-    // }, reduceAfter * 1000);
+      requestAnimationFrame(()=>{updateProgressBar(startTime)});
+    setTimeout(function () {
+      updateProgressBar(startTime, duration, reduceAfter);
+    }, reduceAfter * 1000);
   }else{
     previousPercent = 100;
 
