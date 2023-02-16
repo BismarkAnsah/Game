@@ -482,7 +482,7 @@ try {
     };
 
     function toArray(strg) {
-        console.log("toArray: " + strg);
+        // console.log("toArray: " + strg);
 
         strg = strg.replace(/left|top/g, '0px');
         strg = strg.replace(/right|bottom/g, '100%');
@@ -499,7 +499,7 @@ try {
             }
 
             start = toArray(start);
-            console.log("start: " + start);
+            // console.log("start: " + start);
 
             fx.start = [start[0], start[2]];
             var end = toArray(fx.end);
