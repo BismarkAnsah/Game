@@ -2,9 +2,9 @@
 # Timer JS
 --------------------------------------------------------------*/
 
-// const hrs = document.getElementById("hrs");
-// const mins = document.getElementById("mins");
-// const secs = document.getElementById("secs");
+const hrs = document.getElementById("hrs");
+const mins = document.getElementById("mins");
+const secs = document.getElementById("secs");
 // const week = document.getElementById("week");
 
 /**
@@ -35,10 +35,13 @@
  * @param {jQuery} $element - The jQuery object for the progress bar element.
  */
 export let progress = (timeleft, timetotal, $element) => {
+  if (timeleft === 0) 
+    return;
+  
   // Get the elements that will display hours, minutes, and seconds
-  let hrs = document.getElementById("hrs");
-  let mins = document.getElementById("mins");
-  let secs = document.getElementById("secs");
+  // let hrs = document.getElementById("hrs");
+  // let mins = document.getElementById("mins");
+  // let secs = document.getElementById("secs");
 
   // Calculate the total number of minutes remaining
   let totalMinutes = Math.floor(timeleft / 60);
@@ -66,7 +69,12 @@ export let progress = (timeleft, timetotal, $element) => {
       secs.innerText = formatTime(seconds);
       clearTimeout(timeOut);
     }, 1000);
+  }else{
+    clearTimeout(timeleft);
+
   }
+  // console.log("timeleft", timeleft);
+  // console.log("===============super==================")
 }
 
 

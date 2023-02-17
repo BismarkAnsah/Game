@@ -126,6 +126,9 @@
   justify-content: space-between;
 }
 
+.cart-area .table>tbody {
+  vertical-align: middle;
+}
  /* .m-spacer{
   width: 10px;
   display: flex !important;
@@ -326,6 +329,46 @@ ul.multibetCounter {
 .tableFixHead ul {
   background-color: transparent;
   width: 100%;
+}
+
+/* .tableFixHeight {
+  overflow-y: auto;
+  height: 400px;
+}
+.tableFixHeight {
+  overflow-y: auto;
+  height: 250px;
+}
+
+.tableFixHeight table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tableFixHeight th,
+.tableFixHeight td {
+  padding: 8px 16px;
+} */
+
+/* .tableFixHeight tr{
+  height: fit-content;
+
+} */
+
+
+.tableClassName tbody {
+  display: block;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tableClassName thead, .tableClassName tbody tr {
+  display: table;
+  width: 100%;
+  /* table-layout: fixed; */
+}
+.tableClassName thead {
+  width: calc( 100% - 1.1em );
 }
 
 /* td{

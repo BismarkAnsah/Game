@@ -1,20 +1,20 @@
 // console.log(timePassed);
-
-const decrementButton = document.getElementById("decrement");
-const incrementButton = document.getElementById("increment");
-const result = document.getElementById("btnMultiBetCount");
+$(function () {
+let result;
 let currentValue = 1;
 
-decrementButton.addEventListener("click", function () {
+$(document).on("click", "#decrement", function () {
+  result = $(document).find(".input-multibet-counter");
   if (currentValue > 1) {
     currentValue -= 1;
-    result.value = "X" + currentValue;
+    result.val("X" + currentValue);
   }
 });
 
-incrementButton.addEventListener("click", function () {
+$(document).on("click", "#increment", function () {
+  result = $(document).find(".input-multibet-counter");
   currentValue += 1;
-  result.value = "X" + currentValue;
+  result.val( "X" + currentValue);
 });
 
 const button = document.querySelector(".btn-mask-balance");
@@ -37,7 +37,7 @@ button.addEventListener("click", function () {
 });
 
 
-
+})
 
 
 /**
@@ -62,7 +62,7 @@ const showModal = (title, button_type) => {
  * scroll to and shows the cart area
  * @param {*} id
  */
-const showCartArea = (id) => {
+export const showCartArea = (id) => {
   let triggerEl = document.getElementById(id);
   let tabTrigger = new bootstrap.Tab(triggerEl);
 

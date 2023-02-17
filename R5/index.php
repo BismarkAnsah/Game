@@ -1277,7 +1277,7 @@
                             </div>
 
                             <div class="solo-play">
-                                <button id="how-to-play"><a href="#" data-bs-toggle="tooltip" data-bs-title="Another one here too">How to play</a></button>
+                                <button id="how-to-play" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="Another one here too">How to play</button>
                                 <button id="What_is_solo">What is solo?</button>
                             </div>
 
@@ -1633,7 +1633,7 @@
                         </div>
 
                         <div class="row-c cart-track-bet" id="cart-track-bet">
-                            <div id="Group_3" class="col-c track " onclick="showCartArea('track-tab')">
+                            <div id="Group_3" class="col-c track " onclick="">
                                 <svg class="Path_3 path" viewBox="2771.25 1959.5 314.75 76.5">
                                     <style>
                                     
@@ -1656,7 +1656,7 @@
                                     <span class="text">Track</span>
                                 </div>
                             </div>
-                            <div id="Group_5" class="col-c cart disabled-svg" onclick="showCartArea('cart-tab')">
+                            <div id="Group_5" class="col-c cart disabled-svg" ">
                                 <svg class="Path_3_ib" viewBox="2771.25 1959.5 314.75 76.5">
                                     <style>
                                     .disabled-svg {
@@ -1784,7 +1784,7 @@
                                                             <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody class="">
                                                         <tr>
                                                             <th scope="row">1</th>
                                                             <!-- <td>All 5 Group 120</td>
@@ -1980,7 +1980,7 @@
                                     tabindex="0">
                                     <div class="table-balance-container">
                                         <div class="table-content table-responsive sub-table">
-                                            <table class="table table-borderless" aria-describedby>
+                                            <table class="table table-borderless tableClassName" aria-describedby>
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Type</th>
@@ -1993,41 +1993,14 @@
                                                         <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>All 5 Group 120</td>
-                                                        <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                        <td>252</td>
-                                                        <td>2</td>
-                                                        <td>
-                                                            <div class="row">
-                                                                <ul class="multibetCounter">
-                                                                    <li data-btn-type="decrement" class="cart-decrement"
-                                                                        id="decrement">
-                                                                        <span class="romoveBtn"><i
-                                                                                class="bi bi-dash"></i></span>
-                                                                    </li>
-
-                                                                    <input class="input-multibet-counter"
-                                                                        id="btnMultiBetCount" name="multiBetCount"
-                                                                        type="text" value="X1" disabled />
-                                                                    <li data-btn-type="increment" id="increment"
-                                                                        class="cart-increment">
-                                                                        <span class="romoveBtn"><i
-                                                                                class="bi bi-plus"></i></span>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                        <td><span class="currency">$</span>&nbsp;&nbsp;234</td>
-                                                        <td><span class="bi bi-trash3"></span></td>
-                                                    </tr>
+                                                <tbody class="cart-items">
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="m-2"></div>
                                         <div class="balance-content">
-                                            <table class="table table-responsive table-borderless" aria-describedby>
+                                            <table class="table table-responsive table-borderless" style="height: 100%;" aria-describedby>
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">
@@ -2037,21 +2010,8 @@
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <th>
-                                                            <h5>
-                                                                Total <span class="total-bets">252</span> bets
-                                                            </h5>
-                                                            <h6>Total <span class="total-bets">504</span></h6>
-                                                        </th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>
-                                                            <button class="btn-track m-btn-orange">Track</button>
-                                                            <button class="btn-bet-now">Bet Now</button>
-                                                        </th>
-                                                    </tr>
+                                                <tbody class="cart-items-track-bets">
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
@@ -2178,7 +2138,7 @@
     <script type="module" src="assets/js/royal5.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="assets/libs/slot_master/slot.js"></script>
-    <script src="assets/js/tracks-cart.js"></script>
+    <script type="module" src="assets/js/tracks-cart.js"></script>
     <script type="module" src="assets/js/timer.js"></script>
     <script type="module" src="assets/js/main.js"></script>
 </body>

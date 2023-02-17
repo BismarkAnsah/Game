@@ -482,11 +482,11 @@ try {
     };
 
     function toArray(strg) {
-        // console.log("toArray: " + strg);
+        console.log("toArray: " + strg);
 
         strg = strg.replace(/left|top/g, '0px');
         strg = strg.replace(/right|bottom/g, '100%');
-        strg = strg.replace(/([0-9\.]+)(\s|\)|$)/g, "$1px$2");
+        strg = strg.replace(/([+-]?\d*\.?\d+(?:[eE][+-]?\d+)?)(px|pt|em|rem|%|in|cm|mm|ex|pc|ch|vh|vw|vmin|vmax)?(\s|$)/g, "$1px$3");
         var res = strg.match(/(-?[0-9\.]+)(px|\%|em|pt)\s(-?[0-9\.]+)(px|\%|em|pt)/);
         return [parseFloat(res[1], 10), res[2], parseFloat(res[3], 10), res[4]];
     }
@@ -499,7 +499,7 @@ try {
             }
 
             start = toArray(start);
-            // console.log("start: " + start);
+            console.log("start: " + start);
 
             fx.start = [start[0], start[2]];
             var end = toArray(fx.end);
@@ -611,10 +611,10 @@ let slotjs;
         * Reset a slot to initial state
         */
         reset = function() {
-            console.log($(this.el))
+            console.log("eleme", $(this.el))
             let el_id = $(this.el).attr('id');
             $._spritely.instances[el_id].t = 0;
-            $(this.el).css('background-position', '0px -226px');
+            $(this.el).css('background-position', '0px -3px');
             this.speed = 0;
             completed = 0;
             // $('#result').html('');
@@ -660,11 +660,7 @@ let slotjs;
                 d.stop(imgPos[drawNum[3]]);
                 e.stop(imgPos[drawNum[4]]);
             }, timeinterval);
-            a.reset();
-            b.reset();
-            c.reset();
-            d.reset();
-            e.reset();
+            
 
             
         };
