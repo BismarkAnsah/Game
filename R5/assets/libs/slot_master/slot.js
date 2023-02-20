@@ -673,13 +673,5 @@ let slotjs;
 
 
 
-/**
- * Slot machine controller
- */
-
-// $(document).ready(function () {
-setTimeout(() => {}, 2000);
-//
-//dbatmecode
 
 

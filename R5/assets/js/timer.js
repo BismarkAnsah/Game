@@ -35,6 +35,8 @@
  * @param {jQuery} $element - The jQuery object for the progress bar element.
  */
 export let progress = (timeleft, timetotal, $element) => {
+  if (timeleft<0)
+    return 0;
   // Get the elements that will display hours, minutes, and seconds
   let hrs = document.getElementById("hrs");
   let mins = document.getElementById("mins");
@@ -59,6 +61,7 @@ export let progress = (timeleft, timetotal, $element) => {
   // Update the displayed time in hours, minutes, and seconds
   // Format the time to add a leading zero if the number is less than 10
   if (timeleft >= 0) {
+    console.log(timeleft - 1)
     let timeOut = setTimeout(function () {
       progress(timeleft - 1, timetotal, $element);
       hrs.innerText = formatTime(hours);

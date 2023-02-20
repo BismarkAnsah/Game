@@ -1328,7 +1328,7 @@ class a5_g5 extends Royal5utils {
     return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
   }
 
-  pushToCart(cart) {
+  pushToCart() {
     let data = this.getSavedData();
     let key = cart.length;
     let type = this.type;
@@ -1337,7 +1337,7 @@ class a5_g5 extends Royal5utils {
     let unit = data.unitStaked;
     let multiplier = `x${data.multiplier}`;
     let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -4177,18 +4177,29 @@ function getDrawNums(url = false, data = false) {
   // let url = '../generateRandom.php';
   //  url = url || '../receiver.php?action=getdrawnumber';
   // url = "demo/generator.php";
-  url = url || "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-  data = data || {
-    last_id: lastId,
+  url =  "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
+  data =  {
+    last_id: 0,
   };
-  return fetchData(url, data).numbers;
+ $.ajax({
+  url: url,
+  dataType: "json",
+  type: "post",
+  data: JSON.stringify(data),
+  success: function (data) {
+     console.log(data);
+  }})
+  // game.fetchData(url, data).then(function(response){
+  //   console.log(response);
+  // });
 }
 
-function showDrawNums(drawNums = getDrawNums()) {
-  $(".wining_num").each(function (index) {
-    $(this).html(drawNums[index]);
-  });
-}
+//  setInterval(getDrawNums,1000);
+// function showDrawNums(drawNums = getDrawNums()) {
+//   $(".wining_num").each(function (index) {
+//     $(this).html(drawNums[index]);
+//   });
+// }
 // showDrawNums([1,0,5,6,7]);
 
 $().ready(function () {
@@ -4260,6 +4271,8 @@ function drawNum() {
 
 /**call all your functions here */
 function callAllFunctionsHere() {
+ 
+
   let callDrawNum = setInterval(() => {
     drawNum()
 
@@ -4290,7 +4303,7 @@ function callAllFunctionsHere() {
 
   slotjs(serverDrawNum.numbers.map(Number));
   // countdown(Math.abs(+serverDrawNum.timeLeft - 5));
-  progress((+serverDrawNum.timeLeft - 5), 60, $("#progressBar"));
+  progress((+serverDrawNum.timeLeft), 60, $("#progressBar"));
 
 }
 // countdown(30)
@@ -4302,7 +4315,6 @@ function callAllFunctionsHere() {
 
 
 class TotalBets {
-
   /**
  * Calculates the total number of possible combinations of selections across two rows, taking into account repeated selections between the rows.
  * @param {array} row1Selections - An array containing the selections for the first row.
