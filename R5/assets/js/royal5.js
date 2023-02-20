@@ -292,9 +292,9 @@ class Royal5utils {
   appendRow(type, detail, bets, unit, multiplier, betAmt, index) {
     let cartItem = `<tr id="cart-row${index}">
     <th scope="row">${type}</th>
-    <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="${detail}">${truncateEllipsis(detail)}</td>
-    <td>${bets}</td>
-    <td>${unit}</td>
+    <td class="cart-item-details" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="${detail}">${truncateEllipsis(detail)}</td>
+    <td class="cart-item-bets">${bets}</td>
+    <td class="cart-item-unit">${unit}</td>
     <td>
       <div class="row">
         <ul class="multibetCounter">
@@ -316,15 +316,20 @@ class Royal5utils {
         </ul>
       </div>
     </td>
-    <td><span class="currency">$</span>&nbsp;&nbsp;${betAmt}</td>
+    <td class="cart-item-betamt"><span class="fa-solid fa-yen-sign currency"></span>&nbsp;&nbsp;${betAmt}</td>
     <td><span class="bi bi-trash3 delete-cart" data-id="${index}"></span></td>
   </tr>`;
+  let cart_bet_amt = $(".cart-total-bet-amt").html();
+  let cart_total_bet = $(".cart-total-bets").html();
+  let total_amut = cart_bet_amt === undefined ? betAmt : parseFloat(cart_bet_amt) + parseFloat( betAmt)
+  let total_bets = cart_bet_amt === undefined ? bets : parseFloat(cart_total_bet) + parseFloat( bets)
+  console.log(cart_total_bet, cart_bet_amt);
   let cartItemsBets = `<tr>
   <th>
       <h5>
-          Total <strong class="total-bets">${bets}</strong> bets
+          Total <strong class="cart-total-bets total-bets">${total_bets}</strong> bets
       </h5>
-      <h6>Total <strong class="text-danger  total-bet-amt">${betAmt}</strong></h6>
+      <h6>Total amt. <strong class="text-danger  cart-total-bet-amt">${ total_amut }</strong></h6>
   </th>
 </tr>
 <tr>
@@ -333,7 +338,8 @@ class Royal5utils {
       <button class="btn-bet-now">Bet Now</button>
   </th>
 </tr>`;
-    
+    // console.log("amut", amut);
+
     $(this).fadeIn('slow', function() {
       $(".cart-items").append(cartItem);
     $(".cart-items-track-bets").html(cartItemsBets);
@@ -342,11 +348,13 @@ class Royal5utils {
     $("#cart-submit").show();
     $(".clear-cart").show();
     });
+    // console.log("cart_amt", cart_amt)
   }
 
   removeFromCart(id){
+    console.log(cart);
     delete cart[id]
-    game.pushToCart(cart); 
+    // game.pushToCart(cart); 
 
   }
   /**
@@ -1375,7 +1383,7 @@ class a5_g5 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
     console.log("a5_g5.pushToCart", cart);
@@ -1429,7 +1437,7 @@ class a5_g10 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1501,7 +1509,7 @@ class a5_g20 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1540,7 +1548,7 @@ class a5_g30 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1587,7 +1595,7 @@ class a5_g60 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1638,7 +1646,7 @@ class a5_g120 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1702,7 +1710,7 @@ class a5_joint extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1762,7 +1770,7 @@ class a5_manual extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1824,7 +1832,7 @@ class a5_combo extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1879,7 +1887,7 @@ class f4_joint extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1931,7 +1939,7 @@ class f4_manual extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -1991,7 +1999,7 @@ class f4_combo extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2045,7 +2053,7 @@ class f4_g24 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2116,7 +2124,7 @@ class f4_g12 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2152,7 +2160,7 @@ class f4_g6 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2205,7 +2213,7 @@ class f4_g4 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2260,7 +2268,7 @@ class l4_joint extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2312,7 +2320,7 @@ class l4_manual extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2372,7 +2380,7 @@ class l4_combo extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2426,7 +2434,7 @@ class l4_g24 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2498,7 +2506,7 @@ class l4_g12 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2534,7 +2542,7 @@ class l4_g6 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2587,7 +2595,7 @@ class l4_g4 extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -2655,7 +2663,7 @@ class fixed_place extends Royal5utils {
     let bets = data.totalBets;
     let unit = data.unitStaked;
     let multiplier = `X${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
@@ -3445,11 +3453,25 @@ function ready(className) {
 }
 
 $(document).on("click", ".delete-cart", function () {
-  // let deleteThisRow = $(this).closest("tr");
-  // deleteThisRow.remove();
+  let deleteThisRow = $(this).closest("tr");
 
   let id = $(this).attr("data-id");
+  let itemBet = $(this).closest("tr").find(".cart-item-bets").text();
+  let itemBetAmt = $(this).closest("tr").find(".cart-item-betamt").text();
+  // $(this)
+  let sel_cart_bet_amt = $(".cart-total-bet-amt");
+  let sel_cart_total_bet = $(".cart-total-bets");
+  let cart_bet_amt = $(".cart-total-bet-amt").html()
+  let cart_total_bet = $(".cart-total-bets").html()
+  let final_cart_bet_amt = (parseFloat( cart_bet_amt ) - parseFloat( itemBetAmt ))
+  let final_cart_bet = (parseFloat( cart_total_bet ) - parseFloat( itemBet ))
+
+  sel_cart_bet_amt.html(final_cart_bet_amt);
+  sel_cart_total_bet.html(final_cart_bet);
+
   game.removeFromCart(id);
+  deleteThisRow.remove();
+
 });
 
 //display and hiding game type

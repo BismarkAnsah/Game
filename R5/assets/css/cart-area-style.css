@@ -388,7 +388,7 @@ ul.multibetCounter {
   width: calc( 100% - 1.1em );
 }
 
-.tableClassName th, td {
+.tableClassName th, .tableClassName td {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
