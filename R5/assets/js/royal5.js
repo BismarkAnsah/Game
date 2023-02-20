@@ -290,13 +290,14 @@ class Royal5utils {
    * @param {number} index used to identify particular item in cart
    */
   appendRow(type, detail, bets, unit, multiplier, betAmt, index) {
-    let cartItem = `<tr id="cart-row${index}">
+    let cartItem = `<tr id="cart-row${index}" class="cart-row">
     <th scope="row">${type}</th>
     <td class="cart-item-details" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="${detail}">${truncateEllipsis(detail)}</td>
     <td class="cart-item-bets">${bets}</td>
     <td class="cart-item-unit">${unit}</td>
     <td>
-      <div class="row">
+      ${multiplier}
+      <div class="row visually-hidden">
         <ul class="multibetCounter">
           <li data-btn-type="decrement" class="cart-decrement" id="decrement">
             <span class="romoveBtn"><i class="bi bi-dash"></i></span>
@@ -334,7 +335,7 @@ class Royal5utils {
 </tr>
 <tr>
   <th>
-      <button class="btn-track m-btn-orange">Track</button>
+      <button class="cart-btn-track m-btn-orange">Track</button>
       <button class="btn-bet-now">Bet Now</button>
   </th>
 </tr>`;
@@ -352,7 +353,6 @@ class Royal5utils {
   }
 
   removeFromCart(id){
-    console.log(cart);
     delete cart[id]
     // game.pushToCart(cart); 
 
@@ -3178,8 +3178,6 @@ function ready(className) {
     // console.log(currentSelectOption.dateTime)
   })
   $(".btn-track ").on("click", function () {
-    // console.log("track btn clicked");
-    // game.record\
     const rows = document.querySelectorAll("tr.track-entry");
     const data = {};
     data["bets"] = {};
@@ -3192,11 +3190,6 @@ function ready(className) {
       // console.log(cells)
       const obj = {};
       if ($(cells[1]).find(".slave").is(":checked")) {
-        // console.log(cells[1])
-
-        // console.log(cells[1].firstElementChild.firstElementChild)
-        // console.log($(cells[1]).find(".slave").is(":checked"))
-
         obj["trackNo"] = cells[0].textContent;
         obj["betId"] = cells[1].textContent.match(/\d/g).join("");
         obj["multiplier"] = $(cells[2]).find(".track-multiplier").val();
@@ -3205,7 +3198,6 @@ function ready(className) {
         //   obj["nextDay"] = cells[5].textContent;
         data["bets"][i++] = obj;
       }
-      // console.log($(cells[2]).find(".track-multiplier").val())
     }
 
     data["trackInfo"] = game.getTrackInfo();
@@ -3216,6 +3208,14 @@ function ready(className) {
     }
     $.post("http://192.168.199.126/task/track.php", JSON.stringify(data), callback)
   })
+
+  $(document).on("click", ".cart-btn-track", function () {
+    const row = document.querySelectorAll("tr.cart-row");
+    console.log("cart track", row)
+     
+
+  })
+
   // let json_to_send = game.trackJson
   // console.log(json_to_send);
 
@@ -3596,7 +3596,7 @@ $(".nav-item-c ").on("click", function (e) {
 });
 
 function fetchData() {
-  let url = "http://localhost/dashboard/server/returnjson.php";
+  let url = "http://localhost/Game-main/R5/add-ons/returnjson.php";
   let callback = async function (resp) {
     tooltipData = await resp;
     console.log("tooltipData returned");

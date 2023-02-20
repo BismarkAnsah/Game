@@ -36,7 +36,7 @@ export function truncateEllipsis(input, truncateAfter = 20) {
     return modifiedInput.substring(0, truncateAfter) + " ...";
   } else {
     // If the input string is not longer than `truncateAfter`, return the original string
-    return input;
+    return input.replace(/,/g, " ");
   }
 }
 
