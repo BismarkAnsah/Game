@@ -91,7 +91,7 @@
 
 .cart-area .table-content ul .input-multibet-counter {
   margin: 0;
-  width: 100px;
+  width: 65px;
 }
 
 .tab-pane .table-content table tbody{
@@ -121,11 +121,19 @@
   /* margin-left: 0.5rem; */
 }
 
+.balance-content table{
+  table-layout: fixed;
+  width: 200px;
+
+}
 .cart-area .table-balance-container {
   display: flex;
   justify-content: space-between;
 }
 
+.cart-area .table>tbody {
+  vertical-align: middle;
+}
  /* .m-spacer{
   width: 10px;
   display: flex !important;
@@ -182,13 +190,25 @@
 
 .cart-increment,
 .cart-decrement {
-  padding: 5px;
+  /* padding: 5px; */
+  width: 17px;
+  background-color: var(--lightGrey);
+  /* border: 1px solid#f70000; */
+  /* background-color: #e65b35; */
 }
 
 ul.multibetCounter {
   border-radius: 5px !important;
+  margin: 0;
+  padding: 0;
+  width: 100px;
+  height: 22px;
+  background-color: var(--lighterGrey);
+  color: var(--black);
 }
-
+.bi-plus, .bi-dash{
+  font-size: 14px;
+}
 
 .mask-balance{
     content: 'sss';
@@ -326,6 +346,53 @@ ul.multibetCounter {
 .tableFixHead ul {
   background-color: transparent;
   width: 100%;
+}
+
+/* .tableFixHeight {
+  overflow-y: auto;
+  height: 400px;
+}
+.tableFixHeight {
+  overflow-y: auto;
+  height: 250px;
+}
+
+.tableFixHeight table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tableFixHeight th,
+.tableFixHeight td {
+  padding: 8px 16px;
+} */
+
+/* .tableFixHeight tr{
+  height: fit-content;
+
+} */
+
+
+.tableClassName tbody {
+  display: block;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tableClassName thead, .tableClassName tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.tableClassName thead {
+  width: calc( 100% - 1.1em );
+}
+
+.tableClassName th, .tableClassName td {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100px;
 }
 
 /* td{

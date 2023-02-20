@@ -1,5 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
+import { showCartArea } from "./tracks-cart.js";
 import { progress } from "./timer.js";
 import { chunkArray, getCombination } from "./utilityFunctions.js";
 //todo: test next day.
@@ -142,10 +143,7 @@ export class Royal5utils {
       truncateEllipsis(
         game
           .getSavedData()
-          .userSelections.replace(/[^\d]/g, " ")
-          .split(",")
-          .join(" "),
-        19
+          .userSelections
       )
     );
     $(".m-bet").text(game.getSavedData().totalBets);
@@ -296,20 +294,72 @@ export class Royal5utils {
    */
   appendRow(type, detail, bets, unit, multiplier, betAmt, index) {
     let cartItem = `<tr id="cart-row${index}">
-      <th scope="row">${type}</th>
-      <td>${detail}</td>
-      <td>${bets}</td>
-      <td>${unit}</td>
-      <td>${multiplier}</td>
-      <td>${betAmt}</td>
-      <td><i class="del bx bxs-trash" id="del-${index}"></i></td>
-      </tr>`;
-    $(".cart-items").prepend(cartItem);
+    <th scope="row">${type}</th>
+    <td class="cart-item-details" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="${detail}">${truncateEllipsis(detail)}</td>
+    <td class="cart-item-bets">${bets}</td>
+    <td class="cart-item-unit">${unit}</td>
+    <td>
+      <div class="row">
+        <ul class="multibetCounter">
+          <li data-btn-type="decrement" class="cart-decrement" id="decrement">
+            <span class="romoveBtn"><i class="bi bi-dash"></i></span>
+          </li>
+
+          <input
+            class="input-multibet-counter text-center"
+            id="btnMultiBetCount"
+            name="multiBetCount"
+            type="text"
+            value="${multiplier}"
+            disabled
+          />
+          <li data-btn-type="increment" id="increment" class="cart-increment">
+            <span class="romoveBtn"><i class="bi bi-plus"></i></span>
+          </li>
+        </ul>
+      </div>
+    </td>
+    <td class="cart-item-betamt"><span class="fa-solid fa-yen-sign currency"></span>&nbsp;&nbsp;${betAmt}</td>
+    <td><span class="bi bi-trash3 delete-cart" data-id="${index}"></span></td>
+  </tr>`;
+  let cart_bet_amt = $(".cart-total-bet-amt").html();
+  let cart_total_bet = $(".cart-total-bets").html();
+  let total_amut = cart_bet_amt === undefined ? betAmt : parseFloat(cart_bet_amt) + parseFloat( betAmt)
+  let total_bets = cart_bet_amt === undefined ? bets : parseFloat(cart_total_bet) + parseFloat( bets)
+  console.log(cart_total_bet, cart_bet_amt);
+  let cartItemsBets = `<tr>
+  <th>
+      <h5>
+          Total <strong class="cart-total-bets total-bets">${total_bets}</strong> bets
+      </h5>
+      <h6>Total amt. <strong class="text-danger  cart-total-bet-amt">${ total_amut }</strong></h6>
+  </th>
+</tr>
+<tr>
+  <th>
+      <button class="btn-track m-btn-orange">Track</button>
+      <button class="btn-bet-now">Bet Now</button>
+  </th>
+</tr>`;
+    // console.log("amut", amut);
+
+    $(this).fadeIn('slow', function() {
+      $(".cart-items").append(cartItem);
+    $(".cart-items-track-bets").html(cartItemsBets);
+    showCartArea('cart-tab');
+    console.log(cart)
     $("#cart-submit").show();
     $(".clear-cart").show();
-    // $(`del-${index}`).fadeIn('slow', function() { $(this).prepend(cartItem); });
+    });
+    // console.log("cart_amt", cart_amt)
   }
 
+  removeFromCart(id){
+    console.log(cart);
+    delete cart[id]
+    // game.pushToCart(cart); 
+
+  }
   /**
    *
    *
@@ -1330,15 +1380,18 @@ class a5_g5 extends Royal5utils {
 
   pushToCart() {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
+    console.log("a5_g5.pushToCart", cart);
+    console.log("-------------------------------------------------------------------------------------");
+
   }
 
   getSavedData() {
@@ -1381,14 +1434,14 @@ class a5_g10 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1453,14 +1506,14 @@ class a5_g20 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 }
@@ -1492,14 +1545,14 @@ class a5_g30 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1539,14 +1592,14 @@ class a5_g60 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1590,14 +1643,14 @@ class a5_g120 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1653,14 +1706,14 @@ class a5_joint extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1713,14 +1766,14 @@ class a5_manual extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1775,14 +1828,14 @@ class a5_combo extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1830,14 +1883,14 @@ class f4_joint extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1882,14 +1935,14 @@ class f4_manual extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1942,14 +1995,14 @@ class f4_combo extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -1996,14 +2049,14 @@ class f4_g24 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2067,14 +2120,14 @@ class f4_g12 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 }
@@ -2103,14 +2156,14 @@ class f4_g6 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2156,14 +2209,14 @@ class f4_g4 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2211,14 +2264,14 @@ class l4_joint extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2263,14 +2316,14 @@ class l4_manual extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2323,14 +2376,14 @@ class l4_combo extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2377,14 +2430,14 @@ class l4_g24 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2449,14 +2502,14 @@ class l4_g12 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 }
@@ -2485,14 +2538,14 @@ class l4_g6 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2538,14 +2591,14 @@ class l4_g4 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -2606,14 +2659,14 @@ class fixed_place extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
     let unit = data.unitStaked;
-    let multiplier = `x${data.multiplier}`;
-    let betAmt = `&#8373;${data.totalBetAmt}`;
-    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    let multiplier = `X${data.multiplier}`;
+    let betAmt = `${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
     cart[key] = data;
   }
 
@@ -3321,7 +3374,7 @@ const intervalMinutes = 5; // Royal5 draw number intervals
 const maxEntryValue = 9999; //maximum value allowed for input fields
 let lastId = 0;
 let initializedClasses = [];
-let cart = [];
+let cart = {};
 let oldClass = "a5_joint";
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings('a5_joint'));
@@ -3348,6 +3401,8 @@ let serverDrawNum = {
 
 }
 let currentSelectOption = {}; // current select option in track
+
+let tooltipData; //tooltips data
 
 function setNextDraws() {
   serverDrawNum.nextBetId = game.generateNextBetId(serverDrawNum.betId, serverDrawNum.dateTime, intervalMinutes);
@@ -3715,7 +3770,7 @@ function ready(className) {
 
     let defaultTrackDraws = 10; //total number tracks that will be shown when user clicks on track.
     let defaultTrackInputs = 1; //default input for .first-multiplier, .multiplyAfterEvery, .multiplyBy.
-    let current = "20230131000";
+    // let current = "20230131000";
     let inc = 1;
     let savedData = game.getSavedData();
     let trackInfo = {};
@@ -3737,7 +3792,7 @@ function ready(className) {
     let trackJson = game.createTrackJson(currentSelectOption.nextDateTime, currentSelectOption.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
     console.log(currentSelectOption.betId)
     game.generateSelectOptions(currentSelectOption.betId);
-
+    showCartArea('track-tab')
     // setInterval(() => {
 
     //   inc++;
@@ -4078,12 +4133,26 @@ function ready(className) {
   }
 }
 
-$(document).on("click", ".del", function () {
-  // let deleteThisRow = $(this).closest("tr");
-  // deleteThisRow.remove();
+$(document).on("click", ".delete-cart", function () {
+  let deleteThisRow = $(this).closest("tr");
 
-  let id = $(this).attr("id");
+  let id = $(this).attr("data-id");
+  let itemBet = $(this).closest("tr").find(".cart-item-bets").text();
+  let itemBetAmt = $(this).closest("tr").find(".cart-item-betamt").text();
+  // $(this)
+  let sel_cart_bet_amt = $(".cart-total-bet-amt");
+  let sel_cart_total_bet = $(".cart-total-bets");
+  let cart_bet_amt = $(".cart-total-bet-amt").html()
+  let cart_total_bet = $(".cart-total-bets").html()
+  let final_cart_bet_amt = (parseFloat( cart_bet_amt ) - parseFloat( itemBetAmt ))
+  let final_cart_bet = (parseFloat( cart_total_bet ) - parseFloat( itemBet ))
+
+  sel_cart_bet_amt.html(final_cart_bet_amt);
+  sel_cart_total_bet.html(final_cart_bet);
+
   game.removeFromCart(id);
+  deleteThisRow.remove();
+
 });
 
 //display and hiding game type
@@ -4194,13 +4263,52 @@ function getDrawNums(url = false, data = false) {
   // });
 }
 
-//  setInterval(getDrawNums,1000);
-// function showDrawNums(drawNums = getDrawNums()) {
-//   $(".wining_num").each(function (index) {
-//     $(this).html(drawNums[index]);
-//   });
-// }
+function showDrawNums(drawNums = getDrawNums()) {
+  $(".wining_num").each(function (index) {
+    $(this).html(drawNums[index]);
+  });
+}
 // showDrawNums([1,0,5,6,7]);
+
+$(function () {
+  // Wait for the document to be ready
+  fetchData().done((tooltipData) => {
+    // Once the data is fetched, update the title attribute
+    const tooltipTitle = tooltipData[0]["5D"]["a5_joint"];
+    $('#tt').attr('data-bs-title', tooltipTitle);
+    const tooltipTrigger = document.getElementById('how-to-play');
+    const myTooltip = new bootstrap.Tooltip(tooltipTrigger, {title: tooltipTitle});
+
+    // Show the tooltip
+    myTooltip.show();
+
+    // Hide the tooltip
+    myTooltip.hide();
+  });
+
+});
+
+$(".nav-item-c ").on("click", function (e) {
+  // console.log($(e.target).data("class"));
+  // $(e.target).data("class");
+  console.log("tooltipData");
+  console.log($(e.currentTarget).data("class"))
+  console.log($(e))
+  console.log(tooltipData);
+  const tooltipTitle = tooltipData[0]["5D"][`${$(e.currentTarget).data("class")}`];
+    $('#tt').attr('data-bs-title', tooltipTitle);
+    const tooltipTrigger = document.getElementById('how-to-play');
+    const myTooltip = new bootstrap.Tooltip(tooltipTrigger, {title: tooltipTitle});
+});
+
+function fetchData() {
+  let url = "http://localhost/dashboard/server/returnjson.php";
+  let callback = async function (resp) {
+    tooltipData = await resp;
+    console.log("tooltipData returned");
+  };
+  return $.get(url, callback);
+}
 
 $().ready(function () {
   // let url = '../generateRandom.php';
@@ -4219,6 +4327,7 @@ $().ready(function () {
       lastId = response.id;
       serverDrawNum = response
       currentSelectOption = serverDrawNum
+      // $('#tt').tooltip();
    
 
       callAllFunctionsHere()
@@ -4271,8 +4380,9 @@ function drawNum() {
 
 /**call all your functions here */
 function callAllFunctionsHere() {
- 
-
+  // const hrs = document.getElementById("hrs");
+// const mins = document.getElementById("mins");
+// const secs = document.getElementById("secs");
   let callDrawNum = setInterval(() => {
     drawNum()
 
@@ -4303,8 +4413,10 @@ function callAllFunctionsHere() {
 
   slotjs(serverDrawNum.numbers.map(Number));
   // countdown(Math.abs(+serverDrawNum.timeLeft - 5));
-  progress((+serverDrawNum.timeLeft), 60, $("#progressBar"));
+  requestAnimationFrame(() => {
+    progress((+serverDrawNum.timeLeft - 5), 60, $("#progressBar"));
 
+  });
 }
 // countdown(30)
 // slotjs([0,1,2,3,4,5])
