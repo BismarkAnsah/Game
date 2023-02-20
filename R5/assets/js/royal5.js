@@ -292,7 +292,7 @@ class Royal5utils {
   appendRow(type, detail, bets, unit, multiplier, betAmt, index) {
     let cartItem = `<tr id="cart-row${index}">
     <th scope="row">${type}</th>
-    <td>${truncateEllipsis(detail)}</td>
+    <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="${detail}">${truncateEllipsis(detail)}</td>
     <td>${bets}</td>
     <td>${unit}</td>
     <td>
@@ -303,7 +303,7 @@ class Royal5utils {
           </li>
 
           <input
-            class="input-multibet-counter"
+            class="input-multibet-counter text-center"
             id="btnMultiBetCount"
             name="multiBetCount"
             type="text"
@@ -317,7 +317,7 @@ class Royal5utils {
       </div>
     </td>
     <td><span class="currency">$</span>&nbsp;&nbsp;${betAmt}</td>
-    <td><span class="bi bi-trash3" id="del-${index}"></span></td>
+    <td><span class="bi bi-trash3 delete-cart" data-id="${index}"></span></td>
   </tr>`;
   let cartItemsBets = `<tr>
   <th>
@@ -338,11 +338,17 @@ class Royal5utils {
       $(".cart-items").append(cartItem);
     $(".cart-items-track-bets").html(cartItemsBets);
     showCartArea('cart-tab');
+    console.log(cart)
     $("#cart-submit").show();
     $(".clear-cart").show();
     });
   }
 
+  removeFromCart(id){
+    delete cart[id]
+    game.pushToCart(cart); 
+
+  }
   /**
    *
    *
@@ -1363,7 +1369,7 @@ class a5_g5 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1417,7 +1423,7 @@ class a5_g10 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1489,7 +1495,7 @@ class a5_g20 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1528,7 +1534,7 @@ class a5_g30 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1575,7 +1581,7 @@ class a5_g60 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1626,7 +1632,7 @@ class a5_g120 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1690,7 +1696,7 @@ class a5_joint extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1750,7 +1756,7 @@ class a5_manual extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1812,7 +1818,7 @@ class a5_combo extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1867,7 +1873,7 @@ class f4_joint extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1919,7 +1925,7 @@ class f4_manual extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -1979,7 +1985,7 @@ class f4_combo extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2033,7 +2039,7 @@ class f4_g24 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2104,7 +2110,7 @@ class f4_g12 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2140,7 +2146,7 @@ class f4_g6 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2193,7 +2199,7 @@ class f4_g4 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2248,7 +2254,7 @@ class l4_joint extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2300,7 +2306,7 @@ class l4_manual extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2360,7 +2366,7 @@ class l4_combo extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2414,7 +2420,7 @@ class l4_g24 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2486,7 +2492,7 @@ class l4_g12 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2522,7 +2528,7 @@ class l4_g6 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2575,7 +2581,7 @@ class l4_g4 extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2643,7 +2649,7 @@ class fixed_place extends Royal5utils {
 
   pushToCart(cart) {
     let data = this.getSavedData();
-    let key = cart.length;
+    let key = Object.keys(cart).length;
     let type = this.type;
     let detail = data.userSelections;
     let bets = data.totalBets;
@@ -2680,7 +2686,7 @@ const intervalMinutes = 5; // Royal5 draw number intervals
 const maxEntryValue = 9999; //maximum value allowed for input fields
 let lastId = 0;
 let initializedClasses = [];
-let cart = [];
+let cart = {};
 let oldClass = "a5_joint";
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings('a5_joint'));
@@ -3438,11 +3444,11 @@ function ready(className) {
   }
 }
 
-$(document).on("click", ".del", function () {
+$(document).on("click", ".delete-cart", function () {
   // let deleteThisRow = $(this).closest("tr");
   // deleteThisRow.remove();
 
-  let id = $(this).attr("id");
+  let id = $(this).attr("data-id");
   game.removeFromCart(id);
 });
 

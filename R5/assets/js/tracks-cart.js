@@ -1,19 +1,26 @@
 // console.log(timePassed);
 $(function () {
 let result;
-let currentValue = 1;
 
-$(document).on("click", "#decrement", function () {
-  result = $(document).find(".input-multibet-counter");
+$(document).on("click", "#decrement", function (e) {
+  $(this).siblings()
+  let currentValue = $(this).siblings(".input-multibet-counter").val().replace(/\D/g, '');
+  // console.log($(document).find(".input-multibet-counter").val().replace(/\D/g, ''));
+  // console.log();
+
+  result = $(this).siblings(".input-multibet-counter");
   if (currentValue > 1) {
-    currentValue -= 1;
+    currentValue --;
     result.val("X" + currentValue);
   }
 });
 
-$(document).on("click", "#increment", function () {
-  result = $(document).find(".input-multibet-counter");
-  currentValue += 1;
+$(document).on("click", "#increment", function (e) {
+  let currentValue = $(this).siblings(".input-multibet-counter").val().replace(/\D/g, '');
+  console.log(currentValue);
+
+  result = $(this).siblings(".input-multibet-counter");
+  currentValue ++;
   result.val( "X" + currentValue);
 });
 

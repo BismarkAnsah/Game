@@ -4,12 +4,19 @@
 // $(document).ready(function () {
 // })
 
-
+const tooltipTriggerList = $(document).find('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(
+  (tooltipTriggerEl) => {console.log(tooltipTriggerList); new bootstrap.Tooltip(tooltipTriggerEl)}
+);
 
 // myTooltipEl.addEventListener('show.bs.tooltip', function () {
 //   // do something...
 //   console.log("show tooltip")
 // })
+
+// export const removeCart = (id) => {
+//   console.log("cart removed")
+// }
 
 
 
