@@ -61,7 +61,7 @@ class Cron
         $SQL = "INSERT INTO draw_data(draw_id, draw_date, draw_number, draw_datetime) VALUES (?, ?, ?, ?)";
         $draw_date =  $this->nextDrawData['draw_date'];
         $draw_datetime = Date('Y-m-d H:i:s');
-        $draw_numbers =  json_encode($this->nextDrawData['draw_numbers']);
+        $draw_numbers =  implode(',',$this->nextDrawData['draw_numbers']);
         // echo json_encode([$draw_id, $draw_date, $draw_numbers, $draw_datetime]);
         // die;
         $this->conn->query($SQL, [$draw_id, $draw_date, $draw_numbers, $draw_datetime]);
