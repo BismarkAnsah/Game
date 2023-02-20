@@ -1,7 +1,103 @@
 <?php
 date_default_timezone_set("Asia/Shanghai");
-require_once "conn.php";
+class Database {
+    protected $pdo;
+    private $dsn = "mysql:dbname=test;host=localhost";
+    private $username = "root";
+    private $password = "";
 
+    /**
+     * Database constructor.
+     *
+     * @param string $dsn The DSN string.
+     * @param string $username The username to connect to the database.
+     * @param string $password The password to connect to the database.
+     * @param array $options An array of PDO options.
+     */
+    public function __construct(array $options = []) 
+    {
+        $dsn=$this->dsn;
+        $username=$this->username;
+        $password=$this->password;
+        $this->pdo = new PDO($dsn, $username, $password, $options);
+    }
+
+    /**
+     * Executes a SQL query and returns the result set as an array of objects.
+     *
+     * @param string $query The SQL query to execute.
+     * @param array $params An array of parameters to bind to the query.
+     * @return array An array of objects representing the rows returned by the query.
+     */
+    public function query(string $query, array $params = []): array {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+
+    /**
+     * Executes a SQL query and returns the first row as an object.
+     *
+     * @param string $query The SQL query to execute.
+     * @param array $params An array of parameters to bind to the query.
+     * @return object|null The first row returned by the query, or null if no rows were returned.
+     */
+    public function queryOne(string $query, array $params = []): ?object {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetch(PDO::FETCH_OBJ) ?: null;
+    }
+
+    /**
+     * Executes a SQL query and returns the value of the first column of the first row.
+     *
+     * @param string $query The SQL query to execute.
+     * @param array $params An array of parameters to bind to the query.
+     * @return mixed The value of the first column of the first row returned by the query.
+     */
+    public function queryScalar(string $query, array $params = []) {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchColumn();
+    }
+
+    /**
+     * Executes a SQL query and returns the number of rows affected.
+     *
+     * @param string $query The SQL query to execute.
+     * @param array $params An array of parameters to bind to the query.
+     * @return int The number of rows affected by the query.
+     */
+    public function execute(string $query, array $params = []): int {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Begins a transaction.
+     */
+    public function beginTransaction() {
+        $this->pdo->beginTransaction();
+    }
+
+    /**
+     * Commits a transaction.
+     */
+    public function commit() {
+        $this->pdo->commit();
+    }
+
+    /**
+     * Rolls back a transaction.
+     */
+    public function rollBack() {
+        $this->pdo->rollBack();
+    }
+}
 
 
 
@@ -34,13 +130,13 @@ class Cron
     public function setNextDrawData()
     {
         $currentTime = Date('H:i:s');
-        $SQL = "SELECT draw_id, draw_time FROM royal_5_draws WHERE draw_time > ? LIMIT 2";
+        $SQL = "SELECT draw_id AS draw_count, draw_time FROM 1k1min WHERE draw_time > ? LIMIT 2";
         $results = $this->conn->query($SQL, [$currentTime]);
         $nextDraw = $results[0];
         $this->nextTwoDraws = $results[1];
-        $nextDraw['full_id'] = Date('Ymd') . str_pad($nextDraw['draw_id'],  4, "0", STR_PAD_LEFT);   
+        $nextDraw['draw_date'] = Date('Ymd') . str_pad($nextDraw['draw_count'],  4, "0", STR_PAD_LEFT);   
+        
         $nextDraw['draw_numbers'] = $this->generateRandomNumbers();
-        $nextDraw['draw_date'] =  Date('Y-m-d') . ' ' . $nextDraw['draw_time'];
         $this->nextDrawData = $nextDraw;
     }
 
@@ -53,18 +149,19 @@ class Cron
 
     public function insertDrawDetails()
     {
-        $draw_id = $this->nextDrawData['full_id'];
-        $SQL = "SELECT COUNT(draw_id) FROM draw_data WHERE draw_id = ?";
-        $dataExists = $this->conn->queryScalar($SQL, [$draw_id]);
+        $draw_date = $this->nextDrawData['draw_date'];
+        $SQL = "SELECT COUNT(draw_date) FROM royal5draw WHERE draw_date = ?";
+        $dataExists = $this->conn->queryScalar($SQL, [$draw_date]);
         if(!$dataExists)
         {       
-        $SQL = "INSERT INTO draw_data(draw_id, draw_date, draw_number, draw_datetime) VALUES (?, ?, ?, ?)";
-        $draw_date =  $this->nextDrawData['draw_date'];
-        $draw_datetime = Date('Y-m-d H:i:s');
+        $SQL = "INSERT INTO royal5draw(draw_count, draw_date, draw_time, draw_number, draw_datetime) VALUES (?, ?, ?, ?, ?)";
+        $draw_time =  $this->nextDrawData['draw_time'];
+        $draw_count = $this->nextDrawData['draw_count'];
         $draw_numbers =  implode(',',$this->nextDrawData['draw_numbers']);
+        $draw_datetime = Date('Y-m-d H:i:s');
         // echo json_encode([$draw_id, $draw_date, $draw_numbers, $draw_datetime]);
         // die;
-        $this->conn->query($SQL, [$draw_id, $draw_date, $draw_numbers, $draw_datetime]);
+        $this->conn->query($SQL, [$draw_count, $draw_date, $draw_time, $draw_numbers, $draw_datetime]);
         }
     }
 

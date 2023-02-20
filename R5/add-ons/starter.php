@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
 <body>
-
     <script>
         const timeInterval = 58000;
 
-        function ajax(url, callback = null, method = "GET", data = null) {
+        function ajax(url, callback = null, method = 'GET', data = null) {
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -34,7 +23,7 @@
         }
 
         function makeRequest() {
-            ajax("cron.php", function(err, response) {
+            ajax('cron.php', function(err, response) {
                 console.log(response);
                 let responseObj = JSON.parse(response);
                 let nextRequestTime = responseObj.nextRequestTime? responseObj.nextRequestTime-2: 2;
@@ -46,4 +35,3 @@
     </script>
 </body>
 
-</html>
