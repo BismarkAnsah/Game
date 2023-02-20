@@ -3585,10 +3585,7 @@ $(function () {
 $(".nav-item-c ").on("click", function (e) {
   // console.log($(e.target).data("class"));
   // $(e.target).data("class");
-  console.log("tooltipData");
-  console.log($(e.currentTarget).data("class"))
-  console.log($(e))
-  console.log(tooltipData);
+  
   const tooltipTitle = tooltipData[0]["5D"][`${$(e.currentTarget).data("class")}`];
     $('#tt').attr('data-bs-title', tooltipTitle);
     const tooltipTrigger = document.getElementById('how-to-play');
@@ -3599,7 +3596,6 @@ function fetchData() {
   let url = "http://localhost/Game-main/R5/add-ons/returnjson.php";
   let callback = async function (resp) {
     tooltipData = await resp;
-    console.log("tooltipData returned");
   };
   return $.get(url, callback);
 }
