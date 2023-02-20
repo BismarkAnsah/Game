@@ -5,7 +5,7 @@ class Database {
     private $dsn = "mysql:dbname=test;host=localhost";
     private $username = "root";
     private $password = "";
-
+    
     /**
      * Database constructor.
      *
