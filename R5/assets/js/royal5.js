@@ -130,32 +130,32 @@ class Royal5utils {
 
   /**
    *
-   * used to display the track contents
+   * used to display the track-table-top body contents when track button is clicked
    * @param {*} trackJson
    * @memberof Royal5utils
    */
-  // setTrackContents(trackJson) {
-  //   $(".m-group-type").text(game.getBetType());
-  //   $(".m-detail").text(
-  //     truncateEllipsis(
-  //       game
-  //         .getSavedData()
-  //         .userSelections
-  //     )
-  //   );
-  //   $(".m-bet").text(game.getSavedData().totalBets);
-  //   $(".m-units").text(game.getSavedData().unitStaked);
-  //   $(".m-currency").text(game.getSavedData().totalBetAmt);
+  setTrackTopTableContents(trackJson) {
+    $(".m-group-type").text(game.getBetType());
+    $(".m-detail").text(
+      truncateEllipsis(
+        game
+          .getSavedData()
+          .userSelections
+      )
+    );
+    $(".m-bet").text(game.getSavedData().totalBets);
+    $(".m-units").text(game.getSavedData().unitStaked);
+    $(".m-currency").text(game.getSavedData().totalBetAmt);
 
-  //   // console.log((game.calcTotalBets())*10);
-  //   $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
-  //   $(".track__total__draws").text(trackJson.trackInfo.totalDraws);
-  //   $(".track__total__bets").text(
-  //     game.calcTotalBets() * trackJson.trackInfo.totalDraws
-  //   );
+    // console.log((game.calcTotalBets())*10);
+    $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
+    $(".track__total__draws").text(trackJson.trackInfo.totalDraws);
+    $(".track__total__bets").text(
+      game.calcTotalBets() * trackJson.trackInfo.totalDraws
+    );
 
-  //   $(".track__total__balance").text(balance);
-  // }
+    $(".track__total__balance").text(balance);
+  }
 
   /**
    *
@@ -3120,7 +3120,7 @@ function ready(className) {
 
     // }, 5000);
 
-    // game.setTrackContents(trackJson)
+    game.setTrackTopTableContents(trackJson)
 
     game.setTrackJson(trackJson);
     game.setTrackJson(trackJson);
