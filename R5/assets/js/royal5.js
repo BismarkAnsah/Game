@@ -134,28 +134,28 @@ class Royal5utils {
    * @param {*} trackJson
    * @memberof Royal5utils
    */
-  setTrackContents(trackJson) {
-    $(".m-group-type").text(game.getBetType());
-    $(".m-detail").text(
-      truncateEllipsis(
-        game
-          .getSavedData()
-          .userSelections
-      )
-    );
-    $(".m-bet").text(game.getSavedData().totalBets);
-    $(".m-units").text(game.getSavedData().unitStaked);
-    $(".m-currency").text(game.getSavedData().totalBetAmt);
+  // setTrackContents(trackJson) {
+  //   $(".m-group-type").text(game.getBetType());
+  //   $(".m-detail").text(
+  //     truncateEllipsis(
+  //       game
+  //         .getSavedData()
+  //         .userSelections
+  //     )
+  //   );
+  //   $(".m-bet").text(game.getSavedData().totalBets);
+  //   $(".m-units").text(game.getSavedData().unitStaked);
+  //   $(".m-currency").text(game.getSavedData().totalBetAmt);
 
-    // console.log((game.calcTotalBets())*10);
-    $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
-    $(".track__total__draws").text(trackJson.trackInfo.totalDraws);
-    $(".track__total__bets").text(
-      game.calcTotalBets() * trackJson.trackInfo.totalDraws
-    );
+  //   // console.log((game.calcTotalBets())*10);
+  //   $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
+  //   $(".track__total__draws").text(trackJson.trackInfo.totalDraws);
+  //   $(".track__total__bets").text(
+  //     game.calcTotalBets() * trackJson.trackInfo.totalDraws
+  //   );
 
-    $(".track__total__balance").text(balance);
-  }
+  //   $(".track__total__balance").text(balance);
+  // }
 
   /**
    *
@@ -290,7 +290,7 @@ class Royal5utils {
    * @param {number} index used to identify particular item in cart
    */
   appendRow(type, detail, bets, unit, multiplier, betAmt, index) {
-    let cartItem = `<tr id="cart-row${index}" class="cart-row">
+    let cartItem = `<tr id="cart-row${index}" class="m-cart-row">
     <th scope="row">${type}</th>
     <td class="cart-item-details" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="${detail}">${truncateEllipsis(detail)}</td>
     <td class="cart-item-bets">${bets}</td>
@@ -432,8 +432,8 @@ class Royal5utils {
         .next('tr.track-entry')
         .find('.m-btn-orange').slice(0, 1)
         .removeClass("visually-hidden");
-      console.log(btn_to_change.closest('tr.track-entry')
-        .find('.m-btn-orange').slice(0, 1));
+      // console.log(btn_to_change.closest('tr.track-entry')
+      //   .find('.m-btn-orange').slice(0, 1));
     }
 
   }
@@ -557,6 +557,8 @@ class Royal5utils {
    */
   createTrackInterface(trackJson) {
     let totalDraws = trackJson.trackInfo.totalDraws;
+    console.log("trackJson.trackInfo.totalDraws", trackJson);
+
     let output = "";
     let hidden;
     for (let i = 0; i < totalDraws; i++) {
@@ -605,6 +607,8 @@ class Royal5utils {
     </tr>`;
     }
     $(".track-data").html(output);
+    $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
+    $(".track__total__bets").text(trackJson.trackInfo.eachTotalBets)
   }
 
   /**
@@ -1228,11 +1232,11 @@ class Royal5utils {
      */
     setTrackJson(trackJsonData) {
       trackJsonData.deleted = []; //this will hold the index of the track data that will be unchecked (deleted).
-      trackJsonData.trackInfo.gameId = this.trackInfo.gameId;
-      trackJsonData.trackInfo.unitStaked = this.trackInfo.unitStaked;
-      trackJsonData.trackInfo.totalBets = this.trackInfo.totalBets;
-      trackJsonData.trackInfo.allSelections = this.trackInfo.allSelections;
-      trackJsonData.trackInfo.userSelections = this.trackInfo.userSelections;
+      // trackJsonData.trackInfo.gameId = this.trackInfo.gameId;
+      // trackJsonData.trackInfo.unitStaked = this.trackInfo.unitStaked;
+      // trackJsonData.trackInfo.totalBets = this.trackInfo.totalBets;
+      // trackJsonData.trackInfo.allSelections = this.trackInfo.allSelections;
+      // trackJsonData.trackInfo.userSelections = this.trackInfo.userSelections;
       this.trackJson = trackJsonData;
     }
 
@@ -2695,6 +2699,8 @@ const maxEntryValue = 9999; //maximum value allowed for input fields
 let lastId = 0;
 let initializedClasses = [];
 let cart = {};
+/** object to hold the track data */
+let track = {};
 let oldClass = "a5_joint";
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings('a5_joint'));
@@ -3078,15 +3084,7 @@ function ready(className) {
   /**Track Begins */
 
   game.$(".track").click(function () {
-    // alert('click')m-group-type
-    // m-group
-    // m-bet
-    // m-units
-    //TODO ========= get user bet data======================
-    // console.log(game.getSavedData());
-    // console.log(game.getBetType());
-
-    // console.log(selectTrackIds);
+    
 
     let defaultTrackDraws = 10; //total number tracks that will be shown when user clicks on track.
     let defaultTrackInputs = 1; //default input for .first-multiplier, .multiplyAfterEvery, .multiplyBy.
@@ -3122,7 +3120,7 @@ function ready(className) {
 
     // }, 5000);
 
-    game.setTrackContents(trackJson)
+    // game.setTrackContents(trackJson)
 
     game.setTrackJson(trackJson);
     game.setTrackJson(trackJson);
@@ -3177,7 +3175,7 @@ function ready(className) {
     // console.log(currentSelectOption.betId)
     // console.log(currentSelectOption.dateTime)
   })
-  $(".btn-track ").on("click", function () {
+  $(".btn-track").on("click", function () {
     const rows = document.querySelectorAll("tr.track-entry");
     const data = {};
     data["bets"] = {};
@@ -3210,8 +3208,57 @@ function ready(className) {
   })
 
   $(document).on("click", ".cart-btn-track", function () {
-    const row = document.querySelectorAll("tr.cart-row");
+    const row = document.querySelectorAll(".m-cart-row > th");
     console.log("cart track", row)
+    console.log("cart track", cart)
+    let track_table = $(document).find(".track-table-top");
+    let track_cart;
+    let i = 0;
+
+    for (const key in cart) {
+      console.log(cart[key].userSelections)
+      track_cart += `<tr class="track-table-top-items">
+          <th scope="row">${i+1}</th>
+          <td class="m-group-type">${row[i].innerText}</td>
+          <td class="text-truncate text-center"><span style="max-width: 80px" class="m-detail" >${truncateEllipsis(cart[key].userSelections)}</span></td>
+          <td class="m-bet">${cart[key].totalBets}</td>
+          <td class="m-units">${cart[key].unitStaked}</td>
+          <td>
+              <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${cart[key].totalBetAmt}</span>
+          </td>
+        </tr>`;
+        
+      // console.log(key)
+      // if (Object.hasOwnProperty.call(object, key)) {
+      //   const element = object[key];
+        
+      // }
+      
+      i++
+    }
+    track_table.html(track_cart);
+    let firstMultiplier = +$(".first-multiplier").val();
+    let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
+    let multiplyBy = +$(".multiplyBy").val();
+    let maxInput = +$(".total-draws").val();
+    let bet_amt = +$(".cart-total-bet-amt").text()
+    let total_bets = +$(".cart-total-bets").text()
+    console.log("bet_amt",bet_amt)
+    console.log("total_bets",total_bets)
+  
+    game.changeCurrentButton()
+    
+    game.generateSelectOptions(currentSelectOption.betId, game.addMinutes(currentSelectOption.dateTime, intervalMinutes));
+
+    let trackJson = game.createTrackJson(currentSelectOption.nextDateTime, currentSelectOption.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, bet_amt, total_bets);
+    game.createTrackInterface(trackJson)
+    game.setTrackJson(trackJson)
+    // $(".track__total__bets").text(total_bets);
+    // // $(".track__total__amt__to_pay").text(bet_amt);
+
+    track = cart;
+    showCartArea('track-tab')
+    console.log("track", track)
      
 
   })
@@ -3254,7 +3301,12 @@ function ready(className) {
       let multiplyBy = parseInt($(".multiplyBy").val());
       $(".track-data").children().hide();
       $(".track-data").children().slice(0, totalDraws).show();
-      let betAmt = game.calcBetAmt();
+      let betAmt = game.getTrackElement("trackInfo", "eachBetAmt");
+      
+      // let betAmt = game.calcBetAmt();
+      console.log("trackJson==========BEFORE========================", game.getTrackJson())
+      // console.log(trackInfo)
+
       let totalBets = game.calcTotalBets();
       let betDateTime = $("#first__draw__select :selected").data("date-to-start");
       let betId = $("#first__draw__select :selected").attr("value");
@@ -3271,9 +3323,10 @@ function ready(className) {
         totalBets
       );
       game.setTrackJson(trackJson);
-      console.log(trackJson);
+      console.log("trackJson======AFTER============================", trackJson)
+;
       game.createTrackInterface(trackJson);
-      game.setTrackContents(trackJson);
+      // game.setTrackContents(trackJson);
     });
 
   /**

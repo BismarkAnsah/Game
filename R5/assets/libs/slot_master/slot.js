@@ -682,27 +682,27 @@ let slotjs;
                     // e.reset();
                 
             // }
-            x = window.setInterval(function() {
-                if( a.speed === 0 && b.speed === 0 && c.speed === 0 && d.speed === 0 && e.speed === 0 && rollcompleted === 5) {
-                    // enableControl();
-                    // window.clearInterval(x);
-                    // printResult();
-                    console.log("rollcompleted", a.speed);
-                    console.log("rollcompleted", b.speed);
-                    console.log("rollcompleted", c.speed);
-                    console.log("rollcompleted", d.speed);
-                    console.log("rollcompleted", e.speed);
-                    console.log("interval completed", completed);
-// setTimeout(function() {
-                    a.reset();
-                    b.reset();
-                    c.reset();
-                    d.reset();
-                    e.reset();
-                    clearInterval(x)
-                    // }, timeinterval)
-                }
-            }, 100);
+//             x = window.setInterval(function() {
+//                 if( a.speed === 0 && b.speed === 0 && c.speed === 0 && d.speed === 0 && e.speed === 0 && rollcompleted === 5) {
+//                     // enableControl();
+//                     // window.clearInterval(x);
+//                     // printResult();
+//                     console.log("rollcompleted", a.speed);
+//                     console.log("rollcompleted", b.speed);
+//                     console.log("rollcompleted", c.speed);
+//                     console.log("rollcompleted", d.speed);
+//                     console.log("rollcompleted", e.speed);
+//                     console.log("interval completed", completed);
+// // setTimeout(function() {
+//                     a.reset();
+//                     b.reset();
+//                     c.reset();
+//                     d.reset();
+//                     e.reset();
+//                     clearInterval(x)
+//                     // }, timeinterval)
+//                 }
+//             }, 100);
         };
     }
 

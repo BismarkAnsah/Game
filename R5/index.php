@@ -1771,7 +1771,7 @@
                                     aria-labelledby="track-tab" tabindex="0">
                                     <div class="table-content track-table-content">
                                         <div class="card mb-2">
-                                            <div class="table-responsive">
+                                            <div class="table-responsive tableFixHead">
                                                 <table class="table table-borderless" aria-describedby>
                                                     <thead>
                                                         <tr>
@@ -1784,7 +1784,7 @@
                                                             <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
                                                         </tr>
                                                     </thead>
-                                                    <tbody class="">
+                                                    <tbody class="track-table-top">
                                                         <tr>
                                                             <th scope="row">1</th>
                                                             <!-- <td>All 5 Group 120</td>
