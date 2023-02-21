@@ -85,6 +85,7 @@ export class Royal5utils {
     return $(element);
   }
 
+
   /**
    *
    * gets current bet type
@@ -4246,15 +4247,16 @@ function getDrawNums(url = false, data = false) {
   // let url = '../generateRandom.php';
   //  url = url || '../receiver.php?action=getdrawnumber';
   // url = "demo/generator.php";
-  url =  "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-  data =  {
-    last_id: 0,
-  };
+  // url =  "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
+  url = "http://192.168.199.126/task/cron/draw_api.php";
+  // data =  {
+  //   last_id: 0,
+  // };
  $.ajax({
   url: url,
   dataType: "json",
   type: "post",
-  data: JSON.stringify(data),
+  // data: JSON.stringify(data),
   success: function (data) {
      console.log(data);
   }})
@@ -4263,11 +4265,7 @@ function getDrawNums(url = false, data = false) {
   // });
 }
 
-function showDrawNums(drawNums = getDrawNums()) {
-  $(".wining_num").each(function (index) {
-    $(this).html(drawNums[index]);
-  });
-}
+
 // showDrawNums([1,0,5,6,7]);
 
 $(function () {
@@ -4313,14 +4311,17 @@ function fetchData() {
 $().ready(function () {
   // let url = '../generateRandom.php';
   // let url = '../receiver.php?action=getdrawnumber';
-  let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-  // let url = "demo/generator.php";
-  let data = {
-    last_id: lastId,
-  };
-  data = JSON.stringify(data);
-  let req = $.post(url, data, function (response) {
-    response = JSON.parse(response);
+  // let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
+  // // let url = "demo/generator.php";
+  // let data = {
+  //   last_id: lastId,
+  // };
+  let url = "http://192.168.199.126/task/cron/draw_api.php";
+  // data = JSON.stringify(data);
+  let req = $.post(url, function (response) 
+  {
+    console.log(response);
+    // response = JSON.parse(response);
     lastId = response.id;
     if (response.numbers) {
       console.log("response received", response);
@@ -4347,12 +4348,14 @@ function drawNum() {
   // let url = '../generateRandom.php';
   console.log("lastId", lastId);
   // let url = "demo/generator.php";
-  let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-  let data = {
-    last_id: lastId,
-  };
-  data = JSON.stringify(data);
-  let req = $.post(url, data, function (response) {
+  // let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
+  // let data = {
+  //   last_id: lastId,
+  // };
+  let url = "http://192.168.199.126/task/cron/draw_api.php";
+  // data = JSON.stringify(data);
+  let req = $.get(url, function (response) {
+    console.log(response);
     response = JSON.parse(response);//
     if (response.numbers) {
       console.log("response received", response);
@@ -4791,3 +4794,5 @@ function settings(className, gameId) {
 
   return games[className];
 }
+
+console.log("hell")
