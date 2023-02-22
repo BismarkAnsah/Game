@@ -121,7 +121,6 @@ class Royal5utils {
     trackInfo["total_amt_to_pay"] = total_amt_to_pay;
     trackInfo["stop_if_win"] = stop_if_win;
     trackInfo["stop_if_not_win"] = stop_if_not_win;
-    Object.assign(trackInfo, this.trackInfo);
 
     // console.log(trackInfo);
     // console.log(this.trackInfo)
@@ -2700,7 +2699,7 @@ let lastId = 0;
 let initializedClasses = [];
 let cart = {};
 /** object to hold the track data */
-let track = {};
+let trackData = {};
 let oldClass = "a5_joint";
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings('a5_joint'));
@@ -3100,7 +3099,13 @@ function ready(className) {
     game.setTrackInfo(trackInfo);
     let betAmt = game.calcBetAmt();
     let totalBets = game.calcTotalBets();
-
+    trackData = {
+            gameId : savedData.gameId,
+            unitStaked : savedData.unitStaked,
+            totalBets : savedData.totalBets,
+            allSelections : savedData.allSelections,
+            userSelections : savedData.userSelections
+    }
     //next to lines hides existing tracks to match the default track no.
     $('.track-data').children().hide();
     $('.track-data').children().slice(0, defaultTrackDraws).show();
@@ -3121,8 +3126,8 @@ function ready(className) {
     // }, 5000);
 
     game.setTrackTopTableContents(trackJson)
-
-    game.setTrackJson(trackJson);
+    trackJson["trackData"] = trackData;
+    // game.setTrackJson(trackJson);
     game.setTrackJson(trackJson);
     game.createTrackInterface(trackJson);
   });
@@ -3175,36 +3180,36 @@ function ready(className) {
     // console.log(currentSelectOption.betId)
     // console.log(currentSelectOption.dateTime)
   })
-  $(".btn-track").on("click", function () {
-    const rows = document.querySelectorAll("tr.track-entry");
-    const data = {};
-    data["bets"] = {};
-    data["trackInfo"] = {};
+  
 
-    let i = 0;
-
-    for (const row of rows) {
-      const cells = row.querySelectorAll("td");
-      // console.log(cells)
-      const obj = {};
-      if ($(cells[1]).find(".slave").is(":checked")) {
-        obj["trackNo"] = cells[0].textContent;
-        obj["betId"] = cells[1].textContent.match(/\d/g).join("");
-        obj["multiplier"] = $(cells[2]).find(".track-multiplier").val();
-        obj["betAmt"] = cells[3].textContent;
+  $(".track-confirm").on("click", function () {   // when the button with class "btn-track" is clicked, run the following function
+    const rows = document.querySelectorAll("tr.track-entry");  // find all table rows with the class "track-entry" and store them in the 'rows' constant
+    const data = {};    // initialize an empty object called 'data'
+    data["bets"] = {};  // add an empty object called 'bets' to the 'data' object
+    data["trackInfo"] = {};  // add an empty object called 'trackInfo' to the 'data' object
+    let i = 0;  // initialize a counter variable called 'i' to 0
+    for (const row of rows) {   // loop over each table row in 'rows'
+      const cells = row.querySelectorAll("td");   // find all table cells in the current row and store them in the 'cells' constant
+      const obj = {};   // initialize an empty object called 'obj'
+      if ($(cells[1]).find(".slave").is(":checked")) {   // check if the second cell in the current row has a checked input field with class 'slave'
+        obj["trackNo"] = cells[0].textContent;  // add the text content of the first cell in the current row to the 'trackNo' property of 'obj'
+        obj["betId"] = cells[1].textContent.match(/\d/g).join("");   // extract all digits from the text content of the second cell in the current row and join them together into a single string, then add this string to the 'betId' property of 'obj'
+        obj["multiplier"] = $(cells[2]).find(".track-multiplier").val();   // get the value of the input field with class 'track-multiplier' in the third cell of the current row and add it to the 'multiplier' property of 'obj'
+        obj["betAmt"] = cells[3].textContent;   // add the text content of the fourth cell in the current row to the 'betAmt' property of 'obj'
         // obj["estimatedDrawTime"] = cells[4].textContent;
         //   obj["nextDay"] = cells[5].textContent;
-        data["bets"][i++] = obj;
+        data["bets"][i++] = obj;   // add the 'obj' to the 'bets' property of 'data' using the counter variable to increment the index of the 'bets' object for each row that has a checked input field with class 'slave'
       }
     }
-
-    data["trackInfo"] = game.getTrackInfo();
-    console.log(data);
-    // alert(JSON.stringify(data));
-    let callback = function (resp) {
+    // console.log("trackdaaaaaaaaaaaaaaaaaaaaaaaaaaaaata" ,trackData)
+    data["trackInfo"] = game.getTrackInfo();   // add the result of the 'game.getTrackInfo()' method to the 'trackInfo' property of 'data'
+    data["trackData"] = trackData;
+    
+    console.log(data);   // log the 'data' object to the console
+    let callback = function (resp) {   // create a callback function that logs the server response to the console
       console.log(resp)
     }
-    $.post("http://192.168.199.126/task/track.php", JSON.stringify(data), callback)
+    $.post("http://192.168.199.126/task/track.php", JSON.stringify(data), callback)  // send a POST request to the specified URL with the 'data' object as the request body and the callback function to handle the server response
   })
 
   $(document).on("click", ".cart-btn-track", function () {
@@ -3228,12 +3233,6 @@ function ready(className) {
           </td>
         </tr>`;
         
-      // console.log(key)
-      // if (Object.hasOwnProperty.call(object, key)) {
-      //   const element = object[key];
-        
-      // }
-      
       i++
     }
     track_table.html(track_cart);
@@ -3252,13 +3251,13 @@ function ready(className) {
 
     let trackJson = game.createTrackJson(currentSelectOption.nextDateTime, currentSelectOption.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, bet_amt, total_bets);
     game.createTrackInterface(trackJson)
+    trackData = {...cart};
     game.setTrackJson(trackJson)
     // $(".track__total__bets").text(total_bets);
     // // $(".track__total__amt__to_pay").text(bet_amt);
 
-    track = cart;
     showCartArea('track-tab')
-    console.log("track", track)
+    // console.log("track", track)
      
 
   })
@@ -3424,6 +3423,7 @@ function ready(className) {
   });
 
   game.$(".cart").click(function () {
+    console.log(trackData);
     game.pushToCart(cart);
     game.resetAllData();
   });
