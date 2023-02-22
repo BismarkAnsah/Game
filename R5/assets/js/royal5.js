@@ -737,14 +737,17 @@ export class Royal5utils {
    * fetches data asynchronously from server.
    * @param {string} url resource URL
    * @param {object} data data to send before fetching
+   * @param {callback} callback function to call when data is fetched successfully. first argument is the response object.
    * @returns response object from server
    */
-  fetchData(url, data) {
-    data = data || JSON.stringify(data);
-
+  fetchData(url, callback, data=[]) {
     return $.ajax({
       url: url,
+      success: callback,
       data: data,
+      error: function(){
+      console.log("There was an error.");
+      }
     });
   }
 
@@ -1232,11 +1235,11 @@ export class Royal5utils {
      */
     setTrackJson(trackJsonData) {
       trackJsonData.deleted = []; //this will hold the index of the track data that will be unchecked (deleted).
-      trackJsonData.trackInfo.gameId = this.trackInfo.gameId;
-      trackJsonData.trackInfo.unitStaked = this.trackInfo.unitStaked;
-      trackJsonData.trackInfo.totalBets = this.trackInfo.totalBets;
-      trackJsonData.trackInfo.allSelections = this.trackInfo.allSelections;
-      trackJsonData.trackInfo.userSelections = this.trackInfo.userSelections;
+      // trackJsonData.trackInfo.gameId = this.trackInfo.gameId;
+      // trackJsonData.trackInfo.unitStaked = this.trackInfo.unitStaked;
+      // trackJsonData.trackInfo.totalBets = this.trackInfo.totalBets;
+      // trackJsonData.trackInfo.allSelections = this.trackInfo.allSelections;
+      // trackJsonData.trackInfo.userSelections = this.trackInfo.userSelections;
       this.trackJson = trackJsonData;
     }
 
@@ -3377,6 +3380,10 @@ let lastId = 0;
 let initializedClasses = [];
 let cart = {};
 let oldClass = "a5_joint";
+const urls = {
+  balance: "http://192.168.199.126/task/receiver.php?action=userbalance",
+  draws: "http://192.168.199.126/task/cron/frontend_draw.php" 
+}
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings('a5_joint'));
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
@@ -3772,7 +3779,6 @@ function ready(className) {
     let defaultTrackDraws = 10; //total number tracks that will be shown when user clicks on track.
     let defaultTrackInputs = 1; //default input for .first-multiplier, .multiplyAfterEvery, .multiplyBy.
     // let current = "20230131000";
-    let inc = 1;
     let savedData = game.getSavedData();
     let trackInfo = {};
     trackInfo.gameId = savedData.gameId;
@@ -4344,6 +4350,16 @@ $().ready(function () {
   });
 });
 
+
+function drawsReceived(response)
+{
+  return JSON.parse(response);
+
+}
+
+console.log(drawsReceived("[1,2]"));
+
+
 function drawNum() {
   // let url = '../generateRandom.php';
   console.log("lastId", lastId);
@@ -4352,14 +4368,19 @@ function drawNum() {
   // let data = {
   //   last_id: lastId,
   // };
-  let url = "http://192.168.199.126/task/cron/draw_api.php";
+  let url = "http://192.168.199.126/task/cron/frontend_draw.php";
   // data = JSON.stringify(data);
+
   let req = $.get(url, function (response) {
-    console.log(response);
-    response = JSON.parse(response);//
-    if (response.numbers) {
-      console.log("response received", response);
-      lastId = response.id;
+    // console.log(response);
+    if (response) {
+      response = JSON.parse(response);//
+      let responseData = extractFromJson(responseData, -2);
+      // let responseData = response[lastTwoKeys][0];
+      // let timeLeft = response[lastTwoKeys][1];
+      console.log(response);
+      let lastTwoKeys = Object.keys(response).slice(-2)//Gets last two response data keys;
+      lastId = responseData.id;
       serverDrawNum = response
       currentSelectOption = serverDrawNum
       console.log(currentSelectOption)
@@ -4795,4 +4816,20 @@ function settings(className, gameId) {
   return games[className];
 }
 
-console.log("hell")
+console.log("hell");
+
+/**
+ * 
+ * @param {object} Json JSON to extract from.
+ * @param {number} slice the number of elements to extract. It uses same indexing as javascript slice() method.
+ * @returns {object} extracted elements from the json object.
+ */
+function extractFromJson(Json, sliceStart, sliceEnd) 
+{
+  let keys = Object.keys(Json).slice(sliceStart, sliceEnd);//Gets response data keys;
+  let extractedObj = {};
+  keys.forEach(key=>{
+    extractedObj[key] = Json[key];
+  });
+  return extractedObj;
+}
