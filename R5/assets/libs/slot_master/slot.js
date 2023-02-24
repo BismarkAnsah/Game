@@ -607,7 +607,6 @@ let slotjs;
             }, 100);
             // completed++;
             rollcompleted++
-            console.log("completed", completed);
 
         }
 

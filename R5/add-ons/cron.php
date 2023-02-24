@@ -15,7 +15,7 @@ class Database
      * @param string $password The password to connect to the database.
      * @param array $options An array of PDO options.
      */
-    public function __construct(array $options = [])
+    public function __construct(array $options = [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC])
     {
         $dsn = $this->dsn;
         $username = $this->username;
@@ -34,7 +34,7 @@ class Database
     {
         $stmt = $this->pdo->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
 
@@ -114,9 +114,13 @@ class Cron
     private array $nextDrawData = [];
     private array $nextTwoDraws;
     private $conn;
-    private const DEFAULT_INTERVAL = 60;
+    private const DEFAULT_INTERVAL = 60; //seconds
+    private const GAP_INTERVAL = 3600; // seconds
     private const TOTAL_RANDOM_NUMBERS = 5;
-
+    private const GAME_START = "00:00:00";
+    private const GAME_END = "24:00:00";
+    private const GAP_START = "04:59:00"; //1 hour gap
+    private const GAP_END = "06:00:00";
 
 
     public function __construct()
@@ -135,26 +139,88 @@ class Cron
         return $result;
     }
 
+    /**
+     * the number of seconds between 12 am today and the @$time provided
+     *
+     * @param string $time the time to calculate the number of seconds up to.
+     * @param string $start where to start calculating difference. default is 12 am today
+     * @return string the difference in seconds
+     */
+    function getSecondsElapsed($time, $start = "today")
+    {
+        $dateTime = DateTime::createFromFormat("H:i:s", $time);
+        $timeElapsed = $dateTime->getTimestamp() - strtotime($start);
+        return $timeElapsed;
+    }
+
+    /**
+     * gets the next draw datetime that comes immediately after the "$time" provided
+     *
+     * @param string  $time the datetime or time to start calculating from.
+     * @return string the next closest draw datetime to the "$time" provided
+     */
+    function getNextDrawTime($time)
+    {
+        $time = Date("H:i:s", strtotime($time));
+        //if the time requested is still between the gap ie if gap hasn't ended.
+        if (($this::GAP_START and $this::GAP_END) and $time >= $this::GAP_START and $time < $this::GAP_END) {
+            return date("Y-m-d") . ' ' . $this::GAP_END;
+        }
+
+        //if the last data has been drawn
+        if ($time >=  $this::GAME_END) {
+            $nextDay = strtotime("+$this::DEFAULT_INTERVAL seconds", strtotime($this::GAME_END));
+            return date("Y-m-d", $nextDay) . ' ' . $this::GAME_START;
+        }
+
+        //round the time up to the nearest draw time
+        $timeElapsed = $this->getSecondsElapsed($time, $this::GAME_START);
+        $surplusSeconds = $timeElapsed % $this::DEFAULT_INTERVAL;
+        $nextDrawInSecs = $timeElapsed - $surplusSeconds + $this::DEFAULT_INTERVAL;
+        $nextDrawTimestamp = $nextDrawInSecs + strtotime($this::GAME_START);
+        return date("Y-m-d H:i:s", $nextDrawTimestamp);
+    }
+
+    /**
+     * sets the information about the next draw. 
+     * information is in an array with keys draw_count and draw_time
+     *
+     * @return void
+     */
     public function setNextDrawData()
     {
         $currentTime = Date('H:i:s');
-        $SQL = "SELECT draw_id AS draw_count, draw_time FROM 1k1min WHERE draw_time > ? LIMIT 2";
-        $results = $this->conn->query($SQL, [$currentTime]);
+        $aboutToDrawDatetime = $this->getNextDrawTime($currentTime);
+        $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
+        $aboutToDrawHIS = $aboutToDrawData[1];
+        $SQL = "SELECT draw_id AS draw_count, draw_time FROM 1k1min WHERE draw_time = ? LIMIT 1";
+        $results = $this->conn->query($SQL, [$aboutToDrawHIS]);
         $nextDraw = $results[0];
-        $this->nextTwoDraws = $results[1];
+        $nextDraw["draw_time"] = $aboutToDrawDatetime;
         $nextDraw['draw_date'] = Date('Ymd') . str_pad($nextDraw['draw_count'],  4, "0", STR_PAD_LEFT);
-
         $nextDraw['draw_numbers'] = $this->generateRandomNumbers();
         $this->nextDrawData = $nextDraw;
     }
 
+    /**
+     * gets the difference between the current draw and the next draw after that.
+     *
+     * @return void
+     */
     public function getNextTwoDrawsSecs()
     {
-        return $this->getDifferenceInSecs($this->nextTwoDraws['draw_time'], $this->nextDrawData['draw_time']);
+        $nextDrawTime = $this->getNextDrawTime($this->nextDrawData['draw_time']);
+        $justDrawTime = $this->nextDrawData['draw_time'];
+        return $this->getDifferenceInSecs($nextDrawTime, $justDrawTime);
     }
 
 
 
+    /**
+     * inserts the current draw details into the database
+     *
+     * @return void
+     */
     public function insertDrawDetails()
     {
         $draw_date = $this->nextDrawData['draw_date'];
@@ -176,9 +242,9 @@ class Cron
      * gets the number of seconds between two dates.
      * this function only works if the difference in dates does not exceed 30 days;
      *
-     * @param [string] $time1 the first date time
-     * @param [string, bool] $time2 the second date time. if this isn't provided, current datetime will be used.
-     * @return [int] the number of seconds between the two dates provided.
+     * @param string $time1 the first date time
+     * @param mixed $time2 the second date time. if this isn't provided, current datetime will be used.
+     * @return int the number of seconds between the two dates provided.
      */
     public function getDifferenceInSecs($time1, $time2 = true)
     {
@@ -190,17 +256,22 @@ class Cron
     }
 
 
+    /**
+     * gets the seconds before the next draw
+     *
+     * @return int
+     */
     public  function getSecondsUntilNextDraw()
     {
         return $this->getDifferenceInSecs($this->nextDrawData['draw_time']);
     }
 
+
     function startCron()
     {
         $delay = $this->getSecondsUntilNextDraw();
         $response["nextRequestTime"] = $this->getSecondsUntilNextDraw();
-        if ($delay <= 60)
-        {
+        if ($delay <= 60) {
             sleep($delay);
             $this->insertDrawDetails();
             $response["nextRequestTime"] = $this->getNextTwoDrawsSecs();

@@ -10,8 +10,8 @@ require_once "conn.php";
  * @return int The true end time of the range, rounded up to the nearest multiple of the step size.
  */
 function getTrueEndTime($start, $end, $step) {
-    $interval = getTimeElapsed($end) - getTimeElapsed($start);
-    $trueEnd = (intdiv($interval, $step) * $step) + getTimeElapsed($start);
+    $interval = getSecondsElapsed($end) - getSecondsElapsed($start);
+    $trueEnd = (intdiv($interval, $step) * $step) + getSecondsElapsed($start);
     return $trueEnd;
 }
 
@@ -25,7 +25,7 @@ function getTrueEndTime($start, $end, $step) {
  * @return array An associative array of draw times, where the keys are IDs and the values are "HH:MM:SS" strings.
  */
 function generateDrawTimes($start, $end, $step, $startId = 1) {
-    $startToSec = getTimeElapsed($start);
+    $startToSec = getSecondsElapsed($start);
     $trueEnd = getTrueEndTime($start, $end, $step);
     $drawTimes = array();
 
@@ -43,7 +43,7 @@ function generateDrawTimes($start, $end, $step, $startId = 1) {
  * @param string $time The time to convert, in "HH:MM:SS" format.
  * @return int The number of seconds elapsed since midnight.
  */
-function getTimeElapsed($time) {
+function getSecondsElapsed($time) {
     $dateTime = DateTime::createFromFormat("H:i:s", $time);
     $timeElapsed = $dateTime->getTimestamp() - strtotime("today");
     return $timeElapsed;
@@ -61,7 +61,7 @@ function formatTimeElapsed($timeElapsed) {
     return $dateTime->format("H:i:s");
 }
 
-// echo $time = getTimeElapsed('12:00:59');
+// echo $time = getSecondsElapsed('12:00:59');
 // echo "<br/>";
 // echo gmdate("H:i:s", $time);
 

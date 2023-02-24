@@ -15,7 +15,7 @@ class Database
      * @param string $password The password to connect to the database.
      * @param array $options An array of PDO options.
      */
-    public function __construct(array $options = [])
+    public function __construct(array $options = [PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC])
     {
         $dsn = $this->dsn;
         $username = $this->username;
@@ -34,7 +34,7 @@ class Database
     {
         $stmt = $this->pdo->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
 
@@ -51,7 +51,7 @@ class Database
     {
         $stmt = $this->pdo->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetch(PDO::FETCH_OBJ) ?: null;
+        return $stmt->fetch() ?: null;
     }
 
     /**
