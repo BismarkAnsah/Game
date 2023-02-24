@@ -4357,44 +4357,54 @@ function drawsReceived(response) {
 
 }
 
-function getDraw() {
- 
+
+let getDraw = new Promise(function (resolve, reject) {
   let url = urls.draws;
   $.get(url, function (response) {
-    if (response) {
-      let responseObj = JSON.parse(response);
-      let timeLeft = responseObj.timeLeft; // gets time left until next draw.
-     requestAnimationFrame(() => {
-         progress(timeLeft-3, 60, $("#progressBar"));
-      });
-      let prettyResp = formatDrawResponse(responseObj); //formats the response in the best way for processing.
-      if (prettyResp.responseId != drawData.responseId) //if new data received
-      {
-        drawData = prettyResp;
-
-        slotjs(drawData.drawNumber);
-        setTimeout(getDraw, (timeLeft)*1000);
-      } else{
-        setTimeout(getDraw, (timeLeft)*1000);
-      } 
-    }else{
-      setTimeout(getDraw, (timeLeft)*1000);
+    let responseObj = JSON.parse(response);
+    let prettyResp = formatDrawResponse(responseObj); //formats the response in the best way for processing.
+    if (prettyResp.responseId != drawData.responseId) //if new data received
+    {
+      drawData = prettyResp;
+      resolve(prettyResp);
+    } else {
+      reject("No new data received");
     }
+  })
+    .fail(function () {
+      reject("An error occurred while fetching draw data");
+    })
+})
+
+
+
+getDraw.then(function (drawData) {
+  slotjs(drawData.drawNumber);
+})
+
+getDraw.then(function (drawData) {
+  console.log(drawData)
+  requestAnimationFrame(() => {
+    progress(drawData.timeLeft - 3, 60, $("#progressBar"));
   });
-}
+});
 
-getDraw();
 
+getDraw.catch(function (rejectMessage) {
+  console.log(rejectMessage);
+});
 
 function formatDrawResponse(response) {
-  let responseData = sliceFromJson(response, -2, -1); //gets the last but one  data in the object
+  let responseData = sliceFromJson(response, -2); //gets the last two  data in the object
   responseData = responseData[Object.keys(responseData)[0]]; // gets the first property of the object
+  let timeLeft = responseData[Object.keys(responseData)[1]]; // gets the time left property
   let drawNumber = responseData.draw_number.split(",").map(el => +el); // gets the draw numbers in an array as integers
   let formattedResponse = {
     responseId: responseData.id,
     drawId: responseData.draw_date,
     drawDatetime: responseData.draw_datetime,
     drawNumber: drawNumber,
+    timeLeft: timeLeft,
     nextDrawId: game.generateNextBetId(responseData.draw_date, responseData.draw_datetime, intervalMinutes),
     nextDrawDatetime: game.addMinutes(responseData.draw_datetime, intervalMinutes)
   }
@@ -4447,8 +4457,6 @@ class TotalBets {
   _combinations_totalBets(...rowsAndSamples) {
     let rows = [],
       samples = [];
-
-
     //dividing rows and samples
     rowsAndSamples.forEach((element) => {
       Array.isArray(element) ? rows.push(element) : samples.push(element);
@@ -4815,3 +4823,18 @@ function sliceFromJson(Json, sliceStart = undefined, sliceEnd = undefined) {
   });
   return extractedObj;
 }
+
+function isOnline() {
+
+  $.get("http://192.168.199.126/task/receiver.php?action=statuscode", function () {
+    console.log("online");
+  })
+    .fail(function () {
+      console.log("offline");
+    })
+}
+
+
+
+// let x = setInterval(function(){console.log("hello world")}, 1000);
+// setTimeout(function(){clearInterval(x);}, 5000);

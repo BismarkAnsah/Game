@@ -121,6 +121,7 @@ class Cron
     private const GAME_END = "24:00:00";
     private const GAP_START = "04:59:00"; //1 hour gap
     private const GAP_END = "06:00:00";
+    private array $dataToSend;
 
 
     public function __construct()
@@ -190,15 +191,19 @@ class Cron
     public function setNextDrawData()
     {
         $currentTime = Date('H:i:s');
+        $this->dataToSend["requestTime"] = $currentTime;
         $aboutToDrawDatetime = $this->getNextDrawTime($currentTime);
+        $this->dataToSend["aboutToDrawDatetime"] = $aboutToDrawDatetime;
         $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
         $aboutToDrawHIS = $aboutToDrawData[1];
         $SQL = "SELECT draw_id AS draw_count, draw_time FROM 1k1min WHERE draw_time = ? LIMIT 1";
         $results = $this->conn->query($SQL, [$aboutToDrawHIS]);
+        $this->dataToSend["SQL_Results"] = $results;
         $nextDraw = $results[0];
         $nextDraw["draw_time"] = $aboutToDrawDatetime;
         $nextDraw['draw_date'] = Date('Ymd') . str_pad($nextDraw['draw_count'],  4, "0", STR_PAD_LEFT);
         $nextDraw['draw_numbers'] = $this->generateRandomNumbers();
+        $this->dataToSend["dataInserted"] = $nextDraw;
         $this->nextDrawData = $nextDraw;
     }
 
@@ -270,12 +275,14 @@ class Cron
     function startCron()
     {
         $delay = $this->getSecondsUntilNextDraw();
+        $this->dataToSend["delay"] = $delay;
         $response["nextRequestTime"] = $this->getSecondsUntilNextDraw();
         if ($delay <= 60) {
             sleep($delay);
             $this->insertDrawDetails();
             $response["nextRequestTime"] = $this->getNextTwoDrawsSecs();
         }
+        $response["logs"] = $this->dataToSend;
         echo json_encode($response);
         die;
     }
