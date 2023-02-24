@@ -1,3 +1,4 @@
+import { formatDateString } from "../../js/main.js";
 // const ul = $(".ball-animation-ul");
 // // const liHeight = li.height();
 // let obj = {
@@ -16,7 +17,15 @@
 // // generate a random order of stops
 // let stops = [350, 350, 350, 350, 350];
 
-export function startAnimation(arr) {
+export function startAnimation(arr, betId, nextBetId) {
+  console.log("slot- animation called");
+
+  $("#last-bet-id").fadeOut(function() {
+    $(this).text(`${formatDateString(betId)}`).fadeIn();
+  });
+  $("#next_bet_id").fadeOut(function() {
+    $(this).text(`${formatDateString(nextBetId)}`).fadeIn();
+  });
     // Set up the HTML for the ball animation elements
   $(".slot-wrapper").html(`
         <ul class="ball-animation-ul ball-animation-ul-SSC">

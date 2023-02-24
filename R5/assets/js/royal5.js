@@ -328,7 +328,7 @@ class Royal5utils {
   let cartItemsBets = `<tr>
   <th>
       <h5>
-          Total <strong class="cart-total-bets total-bets">${total_bets}</strong> bets
+          Total <strong class="cart-total-bets total-bets">${game.sumBetAmtAndBets(cart)}</strong> bets
       </h5>
       <h6>Total amt. <strong class="text-danger  cart-total-bet-amt">${ total_amut }</strong></h6>
   </th>
@@ -350,6 +350,40 @@ class Royal5utils {
     $(".clear-cart").show();
     });
     // console.log("cart_amt", cart_amt)
+  }
+
+ /**
+  *
+  *
+  * @param {*} obj
+  * @return {*} 
+  * @memberof Royal5utils
+  */
+//  sumBetAmtAndBets(obj) {
+//     const results = [];
+    
+//     for (const key in obj) {
+//       const totalBetAmt = obj[key].totalBetAmt;
+//       const totalBets = obj[key].totalBets;
+//       const sum = totalBetAmt + totalBets;
+//       results.push(sum);
+//     }
+    
+//     return results;
+//   }
+  sumBetAmtAndBets(obj) {
+    let sumTotalBets = 0;
+    let sumTotalBetAmt = 0;
+    const results = [];
+    
+    for (const key in obj) {
+      const totalBetAmt = obj[key].totalBetAmt;
+      const totalBets = obj[key].totalBets;
+      sumTotalBets += totalBets;
+      sumTotalBetAmt += totalBetAmt;      
+    }
+    results.push(sumTotalBetAmt, sumTotalBets);    
+    return results;
   }
 
   removeFromCart(id){
@@ -422,8 +456,8 @@ class Royal5utils {
    */
   changeCurrentButton() {
     let currentBetId = $(document).find("table tbody.track-data tr.track-entry").attr("value");
-    console.log("Current bet ID:", currentBetId);
-    console.log("Next bet ID:", serverDrawNum.nextBetId);
+    // console.log("Current bet ID:", currentBetId);
+    // console.log("Next bet ID:", serverDrawNum.nextBetId);
 
     let btn_to_change = $(document).find("table tbody.track-data tr.track-entry .current:visible");
     if (currentBetId !== serverDrawNum.nextBetId) {
@@ -1413,6 +1447,10 @@ class a5_g5 extends Royal5utils {
 }
 
 class a5_g10 extends Royal5utils {
+  gameId = 8;
+  type = "All 5 group 10";
+  sample1 = 1;
+  sample2 = 1;
   labels = ["Three of a Kind", "One Pair"];
 
   constructor(pageId) {
@@ -1673,7 +1711,7 @@ class a5_g120 extends Royal5utils {
 
 class a5_joint extends Royal5utils {
   settings;
-  gameId = 59;
+  gameId = 1;
   type = "All 5 Straight(Joint)";
   // labels = ["1st", "2nd", "3rd", "4th", "5th"];
   // sample1 = 1;
@@ -3622,7 +3660,8 @@ $(function () {
   // Wait for the document to be ready
   fetchData().done((tooltipData) => {
     // Once the data is fetched, update the title attribute
-    const tooltipTitle = tooltipData[0]["5D"]["a5_joint"];
+    const tooltipTitle = JSON.parse(tooltipData)["1"];
+
     $('#tt').attr('data-bs-title', tooltipTitle);
     const tooltipTrigger = document.getElementById('how-to-play');
     const myTooltip = new bootstrap.Tooltip(tooltipTrigger, {title: tooltipTitle});
@@ -3640,16 +3679,21 @@ $(".nav-item-c ").on("click", function (e) {
   // console.log($(e.target).data("class"));
   // $(e.target).data("class");
   
-  const tooltipTitle = tooltipData[0]["5D"][`${$(e.currentTarget).data("class")}`];
+  const tooltipTitle = tooltipData[`${$(e.currentTarget).data("game-id")}`];
+  
     $('#tt').attr('data-bs-title', tooltipTitle);
     const tooltipTrigger = document.getElementById('how-to-play');
     const myTooltip = new bootstrap.Tooltip(tooltipTrigger, {title: tooltipTitle});
 });
 
 function fetchData() {
-  let url = "http://localhost/Game-main/R5/add-ons/returnjson.php";
+  // let url = "http://localhost/Game-main/R5/add-ons/returnjson.php";
+  let url = "http://192.168.199.126/task/receiver.php?action=gamerules";
   let callback = async function (resp) {
-    tooltipData = await resp;
+    tooltipData = await JSON.parse(resp);
+    
+    // console.log("tooltipData=================================", tooltipData["1"]);
+
   };
   return $.get(url, callback);
 }
@@ -3759,7 +3803,7 @@ function callAllFunctionsHere() {
   console.log(serverDrawNum.numbers.map(Number))
 
   // slotjs(serverDrawNum.numbers.map(Number));
-  startAnimation(serverDrawNum.numbers.map(Number))
+  startAnimation(serverDrawNum.numbers.map(Number), serverDrawNum.betId, serverDrawNum.nextBetId)
   // countdown(Math.abs(+serverDrawNum.timeLeft - 5));
   requestAnimationFrame(() => {
     progress((+serverDrawNum.timeLeft - 5), 60, $("#progressBar"));

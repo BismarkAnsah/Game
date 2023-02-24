@@ -49,6 +49,11 @@ export function checkRemainingSelectOptions(attr) {
   return count;
 }
 
+export function formatDateString(inputString) {
+  const year = inputString.substr(0, 8);
+  const suffix = inputString.substr(8);
+  return year  + "-" + suffix;
+}
 // selectTrackIds.push(trackJson[nextIndex].trackId);
 //     $('select[name="first_draw"]').append(
 //     `<option value="${trackJson[nextIndex].trackId}">${trackJson[nextIndex].trackId}</option>`
