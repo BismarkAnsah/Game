@@ -25,7 +25,7 @@
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
     <script src="assets/js/jquery-3.6.3.min.js"></script>
-    
+
 </head>
 
 <body>
@@ -81,30 +81,31 @@
             <div class="timer-box row">
                 <ul class="nav justify-content-center align-items-center ">
                     <li class="nav-item d-flex flex-column justify-content-center">
-                    <span class="timer-date-time">hours</span>
-                      <div class="d-inline text-center">
-                      <span class="timer-box-contents" id="hrs" ></span>
-                      </div>
+                        <span class="timer-date-time">hours</span>
+                        <div class="d-inline text-center">
+                            <span class="timer-box-contents" id="hrs"></span>
+                        </div>
                     </li>
                     <li class="nav-item d-flex flex-column justify-content-center mt-3">
-                    <span class="timer-date-time-colon">:</span>
+                        <span class="timer-date-time-colon">:</span>
                     </li>
                     <li class="nav-item d-flex flex-column justify-content-center">
-                    <span class="timer-date-time">minutes</span> <div class="d-inline text-center"><span class="timer-box-contents" id="mins" ></span></div>
+                        <span class="timer-date-time">minutes</span>
+                        <div class="d-inline text-center"><span class="timer-box-contents" id="mins"></span></div>
                     </li>
-                    
+
                     <li class="nav-item d-flex  mt-3">
-                    <span class="timer-date-time-colon">:</span>
+                        <span class="timer-date-time-colon">:</span>
                     </li>
                     <li class="nav-item d-flex flex-column justify-content-center">
-                    <span class="timer-date-time">seconds</span>
+                        <span class="timer-date-time">seconds</span>
                         <div class="d-inline text-center">
-                        <span class="timer-box-contents" id="secs" ></span>
+                            <span class="timer-box-contents" id="secs"></span>
                         </div>
-                        
+
                     </li>
                 </ul>
-                    <!-- <div class="col-sm-4">
+                <!-- <div class="col-sm-4">
                     <p class="timer-date-time">hours</p>
                     <h2 id="hrs" class="inline"></h2>
                     </div>
@@ -116,7 +117,7 @@
                     <p class="timer-date-time">seconds</p>
                     <h2 id="secs" class="inline"></h2>
                     </div> -->
-                
+
                 <!-- <div class="hrs">
                 <p class="timer-date-time">hours</p>
                 <h2 id="hrs" class="inline"></h2><span>:</span>
@@ -158,11 +159,7 @@
 
             <div class="draw-num-box container">
                 <div class="slot-wrapper">
-                    <div id="slot1" class="slot"></div>
-                    <div id="slot2" class="slot"></div>
-                    <div id="slot3" class="slot"></div>
-                    <div id="slot4" class="slot"></div>
-                    <div id="slot5" class="slot"></div>
+                    
                 </div>
                 <div><button id="control" style="display: none">Start</button></div>
             </div>
@@ -1277,7 +1274,8 @@
                             </div>
 
                             <div class="solo-play">
-                                <button id="how-to-play" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="Another one here too">How to play</button>
+                                <button id="how-to-play" data-bs-toggle="tooltip" data-bs-html="true"
+                                    data-bs-title="Another one here too">How to play</button>
                                 <button id="What_is_solo">What is solo?</button>
                             </div>
 
@@ -1636,7 +1634,7 @@
                             <div id="Group_3" class="col-c track " onclick="">
                                 <svg class="Path_3 path" viewBox="2771.25 1959.5 314.75 76.5">
                                     <style>
-                                    
+
                                     </style>
                                     <path id="Path_3" class="text"
                                         d="M 2824 1959.5 L 2805.5 1964.75 L 2783.75 1990 L 2771.25 2019.75 L 2774.25 2024 L 2825 2036 L 3033.5 2036 L 3052.5 2030.75 L 3074.25 2005.75 L 3086 1976 L 3082.5 1971.75 L 3033.5 1960.75 L 2824 1959.5 Z">
@@ -1657,15 +1655,15 @@
                                 </div>
                             </div>
                             <div id="Group_5" class="col-c cart disabled-svg" ">
-                                <svg class="Path_3_ib" viewBox="2771.25 1959.5 314.75 76.5">
-                                    <style>
-                                    .disabled-svg {
-                                        pointer-events: none;
-                                    }
-                                    </style>
-                                    <path id="Path_3_ib"
-                                        d="M 2824 1959.5 L 2805.5 1964.75 L 2783.75 1990 L 2771.25 2019.75 L 2774.25 2024 L 2825 2036 L 3033.5 2036 L 3052.5 2030.75 L 3074.25 2005.75 L 3086 1976 L 3082.5 1971.75 L 3033.5 1960.75 L 2824 1959.5 Z">
-                                    </path>
+                                <svg class=" Path_3_ib" viewBox="2771.25 1959.5 314.75 76.5">
+                                <style>
+                                .disabled-svg {
+                                    pointer-events: none;
+                                }
+                                </style>
+                                <path id="Path_3_ib"
+                                    d="M 2824 1959.5 L 2805.5 1964.75 L 2783.75 1990 L 2771.25 2019.75 L 2774.25 2024 L 2825 2036 L 3033.5 2036 L 3052.5 2030.75 L 3074.25 2005.75 L 3086 1976 L 3082.5 1971.75 L 3033.5 1960.75 L 2824 1959.5 Z">
+                                </path>
                                 </svg>
                                 <svg class="Path_3_ic" viewBox="2581.089 1959.5 68.033 77">
                                     <path id="Path_3_ic"
@@ -1792,11 +1790,14 @@
                                                             <td>252</td>
                                                             <td>2</td> -->
                                                             <td class="m-group-type">All 5 Group 120</td>
-                                                            <td class="text-truncate  text-center"><span style="max-width: 80px" class="m-detail" >0 1 2 3 4 5 6 7 8 9</span></td>
+                                                            <td class="text-truncate  text-center"><span
+                                                                    style="max-width: 80px" class="m-detail">0 1 2 3 4 5
+                                                                    6 7 8 9</span></td>
                                                             <td class="m-bet">252</td>
                                                             <td class="m-units">2</td>
                                                             <td>
-                                                                <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency"></span>
+                                                                <span class="m-currency-symbol">&yen;</span>&nbsp;<span
+                                                                    class="m-currency"></span>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -1833,8 +1834,9 @@
                                                             <label for="first_draw" class="form-label">
                                                                 First draw:&nbsp;&nbsp;
                                                             </label>
-                                                            <select name="first_draw" class="form-select draw-ids" id="first__draw__select">
-                                                                
+                                                            <select name="first_draw" class="form-select draw-ids"
+                                                                id="first__draw__select">
+
                                                             </select>
                                                         </div>
                                                         <!-- <div class="track-container">
@@ -1848,7 +1850,8 @@
                                                             </label>
                                                             <div class="col-sm-3">
                                                                 <input type="number" min="1" max="120"
-                                                                    class="form-control total-draws" id="inputPassword" value="10"/>
+                                                                    class="form-control total-draws" id="inputPassword"
+                                                                    value="10" />
                                                             </div>
                                                             <label for="inputPassword"
                                                                 class="current-draw col-md-7 col-form-label text-danger">
@@ -1863,8 +1866,9 @@
                                                                 class="col-sm-4 col-form-label">First Multi:
                                                             </label>
                                                             <div class="col-sm-4">
-                                                                <input type="number" min="1" class="form-control first-multiplier"
-                                                                    id="firstMulti" value="1"/>
+                                                                <input type="number" min="1"
+                                                                    class="form-control first-multiplier"
+                                                                    id="firstMulti" value="1" />
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -1872,8 +1876,9 @@
                                                                 class="col-sm-2 col-form-label">Every:
                                                             </label>
                                                             <div class="col-sm-4">
-                                                                <input type="number" min="1" class="form-control multiplyAfterEvery"
-                                                                    id="inputPassword" value="1"/>
+                                                                <input type="number" min="1"
+                                                                    class="form-control multiplyAfterEvery"
+                                                                    id="inputPassword" value="1" />
                                                             </div>
                                                             <label for="inputPassword"
                                                                 class="current-draw col-sm-2 col-form-label">draw(s)</label>
@@ -1883,8 +1888,9 @@
                                                                 class="col-sm-2 col-form-label text-danger">Multi x:
                                                             </label>
                                                             <div class="col-sm-2">
-                                                                <input type="number" min="1" class="form-control multiplyBy"
-                                                                    id="inputPassword" value="1"/>
+                                                                <input type="number" min="1"
+                                                                    class="form-control multiplyBy" id="inputPassword"
+                                                                    value="1" />
                                                             </div>
                                                             <label for="inputPassword"
                                                                 class="current-draw col-sm-7 col-form-label text-danger">Hint:
@@ -1905,9 +1911,10 @@
                                                                         <tr>
                                                                             <th scope="col">Track No.</th>
                                                                             <th scope="col">
-                                                                                <input class="form-check-input visually-hidden"
+                                                                                <input
+                                                                                    class="form-check-input visually-hidden"
                                                                                     type="checkbox" name="track_number"
-                                                                                    id="mmaster" checked/>
+                                                                                    id="mmaster" checked />
                                                                                 Track ID.
                                                                             </th>
                                                                             <th scope="col">Multi.</th>
@@ -1919,7 +1926,7 @@
                                                                     </thead>
                                                                     <tbody class="overflow-auto table-body track-data"
                                                                         style="max-height: 150px">
-                                                                      
+
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -1929,20 +1936,26 @@
                                                             <div class="total__bar col-sm-5">
                                                                 <span class="track__total me-3">
                                                                     Total track
-                                                                    <strong class="text-danger track__total__draws">10</strong> draw(s)
+                                                                    <strong
+                                                                        class="text-danger track__total__draws">10</strong>
+                                                                    draw(s)
                                                                 </span>
                                                                 <span class="total__bets">
                                                                     Total.
-                                                                    <strong class="text-danger track__total__bets">2345</strong> bet(s)
+                                                                    <strong
+                                                                        class="text-danger track__total__bets">2345</strong>
+                                                                    bet(s)
                                                                 </span>
                                                             </div>
                                                             <div class="total__track__bets col-sm-4">
                                                                 <span class="total__amount">Total Amt.
-                                                                    <strong class="text-danger track__total__amt__to_pay">2345</strong></span>
+                                                                    <strong
+                                                                        class="text-danger track__total__amt__to_pay">2345</strong></span>
                                                             </div>
                                                             <div class="total__amount__balance col-sm-3">
                                                                 <span class="total__balance">Balance:
-                                                                    <strong class="text-danger track__total__balance">2345</strong></span>
+                                                                    <strong
+                                                                        class="text-danger track__total__balance">2345</strong></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1962,7 +1975,8 @@
                                                                     Stop if not win
                                                                 </label>
                                                             </div>
-                                                            <button type="button" class="m-btn-orange btn-track track-confirm ms-3">
+                                                            <button type="button"
+                                                                class="m-btn-orange btn-track track-confirm ms-3">
                                                                 Track Confirm
                                                             </button>
                                                         </div>
@@ -1994,13 +2008,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="cart-items">
-                                                    
+
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="m-2"></div>
                                         <div class="balance-content">
-                                            <table class="table table-responsive table-borderless" style="height: 100%;" aria-describedby>
+                                            <table class="table table-responsive table-borderless" style="height: 100%;"
+                                                aria-describedby>
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">
@@ -2011,7 +2026,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="cart-items-track-bets">
-                                                    
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -2032,7 +2047,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr><th>no data</th></tr>
+                                            <tr>
+                                                <th>no data</th>
+                                            </tr>
 
                                         </tbody>
                                     </table>
@@ -2053,7 +2070,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr><th>no data</th></tr>
+                                            <tr>
+                                                <th>no data</th>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -2072,7 +2091,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <tr><th>no data</th></tr>
+                                            <tr>
+                                                <th>no data</th>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -2092,52 +2113,58 @@
         aria-hidden="true" data-keyboard="false">
 
         <div class="modal-dialog modal-dialog-centered" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true" data-keyboard="false">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="game-type">Royal 5</div>
-                <div class="modal-draw-number-container mb-3">
-                    Draw:&nbsp;<span class="modal-draw-number-id">No. 20202020-192 ~ No. 20202020-198</span>
+            aria-hidden="true" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="card">
-                    <div class="row gx-0">
-                        <div class="col-sm-6 me-0">
-                            <div class="card-header">Type</div>
-                            <div class="card-body">All 5 Group 120</div>
-                            <div class="card-header">Total track <span class="m-total-num-track-draws">2</span> draws
+                <div class="modal-body">
+                    <div class="game-type">Royal 5</div>
+                    <div class="modal-draw-number-container mb-3">
+                        Draw:&nbsp;<span class="modal-draw-number-id">No. 20202020-192 ~ No. 20202020-198</span>
+                    </div>
+                    <div class="card">
+                        <div class="row gx-0">
+                            <div class="col-sm-6 me-0">
+                                <div class="card-header">Type</div>
+                                <div class="card-body">All 5 Group 120</div>
+                                <div class="card-header">Total track <span class="m-total-num-track-draws">2</span>
+                                    draws
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 ms-0">
-                            <div class="card-header">Detail</div>
-                            <div class="card-body">56789</div>
-                            <div class="card-header">Total Amt: <span class="text-danger">0.0020</span></div>
+                            <div class="col-sm-6 ms-0">
+                                <div class="card-header">Detail</div>
+                                <div class="card-body">56789</div>
+                                <div class="card-header">Total Amt: <span class="text-danger">0.0020</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="m-btn-ash p-2" data-bs-dismiss="modal">
-                    Cancel
-                </button>
-                <button type="button" class="m-btn-orange button-type p-2">
-                    Save changes
-                </button>
+                <div class="modal-footer">
+                    <button type="button" class="m-btn-ash p-2" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" class="m-btn-orange button-type p-2">
+                        Save changes
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
     </div>
 
-    
+
 
     <script type="module" src="assets/js/demo.js"></script>
     <script type="module" src="assets/js/royal5.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-    <script src="assets/libs/slot_master/slot.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+
+
+    <!-- <script src="assets/libs/slot_master/slot.js"></script> -->
+    <script src="assets/libs/velocity/velocity.min.js"></script>
+    <script type="module" src="assets/libs/velocity/slot_animator.js"></script>
     <script type="module" src="assets/js/tracks-cart.js"></script>
     <script type="module" src="assets/js/timer.js"></script>
     <script type="module" src="assets/js/main.js"></script>

@@ -2,6 +2,7 @@ import * as $C from "../libs/combinatorics/combinatorics.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 import { showCartArea } from "./tracks-cart.js";
 import { progress } from "./timer.js";
+import { startAnimation } from "../libs/velocity/slot_animator.js";
 //todo: test next day.
 /**hides and shows balance */
 $(".eye, .eye-slash").click(function () {
@@ -3757,7 +3758,8 @@ function callAllFunctionsHere() {
   }
   console.log(serverDrawNum.numbers.map(Number))
 
-  slotjs(serverDrawNum.numbers.map(Number));
+  // slotjs(serverDrawNum.numbers.map(Number));
+  startAnimation(serverDrawNum.numbers.map(Number))
   // countdown(Math.abs(+serverDrawNum.timeLeft - 5));
   requestAnimationFrame(() => {
     progress((+serverDrawNum.timeLeft - 5), 60, $("#progressBar"));
