@@ -75,7 +75,8 @@
 
         <div class="row-c status-box">
             <div id="n_02212211287__">
-               <span>NO:</span> <span id="last-bet-id">202212211287 </span><span style="color: rgba(112, 112, 112, 1)"> 期・截止时间</span>
+                <span>NO:</span> <span id="last-bet-id">202212211287 </span><span style="color: rgba(112, 112, 112, 1)">
+                    期・截止时间</span>
             </div>
 
             <div class="timer-box row">
@@ -159,7 +160,7 @@
 
             <div class="draw-num-box container">
                 <div class="slot-wrapper">
-                    
+
                 </div>
                 <div><button id="control" style="display: none">Start</button></div>
             </div>
@@ -1783,23 +1784,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody class="track-table-top">
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <!-- <td>All 5 Group 120</td>
-                                                            <td style="display: block;  width: 100px !important;" class="text-truncate"><span  >0 1 2 3 4 5 6 7 8 9</span></td>
-                                                            <td>252</td>
-                                                            <td>2</td> -->
-                                                            <td class="m-group-type">All 5 Group 120</td>
-                                                            <td class="text-truncate  text-center"><span
-                                                                    style="max-width: 80px" class="m-detail">0 1 2 3 4 5
-                                                                    6 7 8 9</span></td>
-                                                            <td class="m-bet">252</td>
-                                                            <td class="m-units">2</td>
-                                                            <td>
-                                                                <span class="m-currency-symbol">&yen;</span>&nbsp;<span
-                                                                    class="m-currency"></span>
-                                                            </td>
-                                                        </tr>
+                                                        
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -1961,6 +1946,49 @@
                                                     </div>
                                                     <div class="card p-4 mt-2 bg-light text-dark">
                                                         <div class="d-flex justify-content-end align-content-center">
+                                                            <ul
+                                                                class="nav justify-content-between align-items-center m-track-timer text-danger">
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span
+                                                                            class="timer-box-content display-6 me-2">End
+                                                                            Time:</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span class="timer-box-content display-6"
+                                                                            id="hrs">0</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center me-3">
+                                                                    <span class="timer-date-time-colon">:</span>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center"><span
+                                                                            class="timer-box-content display-6"
+                                                                            id="mins">1</span></div>
+                                                                </li>
+
+                                                                <li class="nav-item d-flex  me-3">
+                                                                    <span class="timer-date-time-colon">:</span>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span
+                                                                            class="timer-box-content text text-small display-6"
+                                                                            id="secs">59</span>
+                                                                    </div>
+
+                                                                </li>
+                                                            </ul>
+                                                            <div class="m-auto"></div>
+
                                                             <div class="form-check m-2">
                                                                 <input class="form-check-input m-1" type="radio"
                                                                     name="flexRadioDefault" id="stop_if_win" />
@@ -1985,7 +2013,593 @@
                                             </div>
                                             <div class="tab-pane fade" id="profit-margin-chase-number-tab-pane"
                                                 role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                                                profit margin chase
+                                                <div class="draw-and-multibet-container">
+                                                    <div
+                                                        class="first-multi-draws first-multi-draws-negative-margin mb-3">
+                                                        <div class="row">
+                                                            <label for="firstMulti"
+                                                                class="col-sm-4 col-form-label">First Multi:
+                                                            </label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" min="1"
+                                                                    class="form-control profit-first-multiplier"
+                                                                    id="firstMulti" value="1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                        <label for="input__track_percentage"
+                                                                class="col-sm-6 col-form-label">Minimum yield:
+                                                            </label>
+                                                            <div class="col-sm-4 d-flex align-items-center">
+                                                                <input type="number" min="0"
+                                                                    class="form-control input__track_percentage" id="input__track_percentage"
+                                                                    value="50" />
+                                                                    <span class="ms-1">%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                        <div class="row flex-lg-nowrap ms-lg-5">
+                                                            <label for="inputPassword"
+                                                                class="col-sm-3 col-form-label mr-n3">Track draw:
+                                                            </label>
+                                                            <div class="col-sm-3">
+                                                                <input type="number" min="1" max="120"
+                                                                    class="form-control total-draws" id="inputPassword"
+                                                                    value="10">
+                                                            </div>
+                                                            <label for="inputPassword"
+                                                                class="current-draw col-md-7 col-form-label text-danger">
+                                                                draws (Maximum track 120 draws)</label>
+                                                        </div>
+                                                        </div>
+                                                        <!-- <label for="first_draw" class="text-danger">Multi x: </label>
+                                                            <input type="text" class="current-draw" />
+                                                            <span class="text-danger"
+                                                            >Hint: each draw times 1 implies equal track</span
+                                                        > -->
+                                                    </div>
+                                                    <div class="card m-0">
+                                                        <!-- <img class="card-img-top" src="holder.js/100x180/" alt="Title"> -->
+                                                        <div class="card-body m-0">
+                                                            <div class="table-responsive tableFixHead">
+                                                                <table class="table table-bordered" aria-describedby="">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">Track No.</th>
+                                                                            <th scope="col">
+                                                                                <input
+                                                                                    class="form-check-input visually-hidden"
+                                                                                    type="checkbox" name="track_number"
+                                                                                    id="mmaster" checked="">
+                                                                                Track ID.
+                                                                            </th>
+                                                                            <th scope="col">Multi.</th>
+                                                                            <th scope="col">Bet Amount</th>
+                                                                            <th scope="col">Estimate draw time</th>
+
+                                                                            <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="overflow-auto table-body track-profit-data"
+                                                                        style="max-height: 150px">
+                                                                        <tr data-index="0" class="track-entry"
+                                                                            value="202302160014">
+                                                                            <td class="trackNo">1</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="0"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160014">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current ">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="0" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:17:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="1" class="track-entry"
+                                                                            value="202302160015">
+                                                                            <td class="trackNo">2</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="1"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160015">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="1" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:22:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="2" class="track-entry"
+                                                                            value="202302160016">
+                                                                            <td class="trackNo">3</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="2"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160016">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="2" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:27:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="3" class="track-entry"
+                                                                            value="202302160017">
+                                                                            <td class="trackNo">4</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="3"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160017">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="3" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:32:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="4" class="track-entry"
+                                                                            value="202302160018">
+                                                                            <td class="trackNo">5</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="4"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160018">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="4" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:37:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="5" class="track-entry"
+                                                                            value="202302160019">
+                                                                            <td class="trackNo">6</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="5"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160019">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="5" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:42:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="6" class="track-entry"
+                                                                            value="202302160020">
+                                                                            <td class="trackNo">7</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="6"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160020">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="6" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:47:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="7" class="track-entry"
+                                                                            value="202302160021">
+                                                                            <td class="trackNo">8</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="7"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160021">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="7" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:52:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="8" class="track-entry"
+                                                                            value="202302160022">
+                                                                            <td class="trackNo">9</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="8"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160022">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="8" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                00:57:00</td>
+                                                                        </tr>
+                                                                        <tr data-index="9" class="track-entry"
+                                                                            value="202302160023">
+                                                                            <td class="trackNo">10</td>
+                                                                            <td>
+                                                                                <ul
+                                                                                    class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+                                                                                    <li class="col-md-2">
+                                                                                        <input data-index="9"
+                                                                                            class="form-check-input slave track-check"
+                                                                                            type="checkbox"
+                                                                                            name="track_number"
+                                                                                            id="track_number"
+                                                                                            checked="">
+                                                                                    </li>
+                                                                                    <li class="col-md-7">
+                                                                                        <input type="number"
+                                                                                            class="betId" id="betID"
+                                                                                            readonly=""
+                                                                                            value="202302160023">
+                                                                                    </li>
+                                                                                    <li class="col-md-3"><button
+                                                                                            class=" m-btn-orange p-2 current visually-hidden">current</button><button
+                                                                                            type="button"
+                                                                                            class="btn-next-day m-btn-indigo p-2 visually-hidden"
+                                                                                            data-toggle="button"
+                                                                                            aria-pressed="false"
+                                                                                            autocomplete="off">next
+                                                                                            day</button></li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td
+                                                                                class="d-flex justify-content-center align-content-center mt-2">
+                                                                                <div class="col-sm-4">
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control track-multiplier"
+                                                                                        data-index="9" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="betAmt">200000</td>
+                                                                            <td class="estimatedDrawTime">2023-02-16
+                                                                                01:02:00</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="row justify-content-center align-items-center g-2 mb-4">
+                                                            <div class="total__bar col-sm-5">
+                                                                <span class="track__total me-3">
+                                                                    Total track
+                                                                    <strong
+                                                                        class="text-danger track__total__draws">10</strong>
+                                                                    draw(s)
+                                                                </span>
+                                                                <span class="total__bets">
+                                                                    Total.
+                                                                    <strong
+                                                                        class="text-danger track__total__bets">100000</strong>
+                                                                    bet(s)
+                                                                </span>
+                                                            </div>
+                                                            <div class="total__track__bets col-sm-4">
+                                                                <span class="total__amount">Total Amt.
+                                                                    <strong
+                                                                        class="text-danger track__total__amt__to_pay">2000000</strong></span>
+                                                            </div>
+                                                            <div class="total__amount__balance col-sm-3">
+                                                                <span class="total__balance">Balance:
+                                                                    <strong
+                                                                        class="text-danger track__total__balance">500</strong></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card p-4 mt-2 bg-light text-dark">
+                                                        <div class="d-flex justify-content-end align-content-center">
+                                                            <ul
+                                                                class="nav justify-content-between align-items-center m-track-timer text-danger">
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span
+                                                                            class="timer-box-content display-6 me-2">End
+                                                                            Time:</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span class="timer-box-content display-6"
+                                                                            id="hrs">0</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center me-3">
+                                                                    <span class="timer-date-time-colon">:</span>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center"><span
+                                                                            class="timer-box-content display-6"
+                                                                            id="mins">1</span></div>
+                                                                </li>
+
+                                                                <li class="nav-item d-flex  me-3">
+                                                                    <span class="timer-date-time-colon">:</span>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span
+                                                                            class="timer-box-content text text-small display-6"
+                                                                            id="secs">59</span>
+                                                                    </div>
+
+                                                                </li>
+                                                            </ul>
+                                                            <div class="m-auto"></div>
+
+                                                            <div class="form-check m-2">
+                                                                <input class="form-check-input m-1" type="radio"
+                                                                    name="flexRadioDefault" id="stop_if_win">
+                                                                <label class="form-check-label" for="stop_if_win">
+                                                                    Stop if win
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check m-2">
+                                                                <input class="form-check-input m-1" type="radio"
+                                                                    name="flexRadioDefault" id="stop_if_not_win">
+                                                                <label class="form-check-label" for="stop_if_not_win">
+                                                                    Stop if not win
+                                                                </label>
+                                                            </div>
+                                                            <button type="button"
+                                                                class="m-btn-orange btn-track track-confirm ms-3">
+                                                                Track Confirm
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

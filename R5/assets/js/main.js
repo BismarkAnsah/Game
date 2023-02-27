@@ -54,6 +54,97 @@ export function formatDateString(inputString) {
   const suffix = inputString.substr(8);
   return year  + "-" + suffix;
 }
+
+$(document).ready(function() {
+  let quantityInput = $('#quantityInput');
+  let upButton = quantityInput.next('button');
+  let downButton = quantityInput.prev('button');
+
+  upButton.prop('disabled', true);
+  downButton.prop('disabled', true);
+});
+
+$(document).ready(function() {
+  // Get the input element
+  let input = $("#betID");
+  console.log(input)
+  // Set the readOnly property to true
+  input.readOnly = true;
+  $("#betID").on("input", function(e) {
+    e.preventDefault();
+    console.log("sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+    
+  })
+
+  let originalValue
+
+  $(document).on("focus", "#betID", function(e) {
+    originalValue = $(this).val()
+    console.log("originalValue", originalValue)
+
+  })
+
+  
+
+  $(document).on("keydown", "#betID", function(event) {
+    // Prevent the default behavior of the input field
+     originalValue = $(this).val();
+    event.preventDefault();
+    if ($(this).val() != originalValue) {
+      $(this).val(originalValue);
+    }
+    
+    
+
+  });
+  $(document).on("input", "#betID", function(event) {
+    // Prevent the default behavior of the input field
+    console.log("this",$(this).val())
+    // event.preventDefault();
+    if ($(this).val() != originalValue) {
+      $(this).val(originalValue);
+    console.log("keydown================================")
+
+    }
+
+  });
+});
+// let input = $(document).find("#betID");
+
+// let input = $("#betID")
+// let observer = new MutationObserver(function(mutationsList, observer) {
+//     // Loop through the mutationsList to check for changes to the input field's value
+//     for (let mutation of mutationsList) {
+//       if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+//         // The value of the input field has changed
+//         console.log("New value: " + input.val());
+//       }
+//     }
+  
+
+// });
+// // observer.observe(input, { attributes: true });
+
+
+// function addObserverIfDesiredNodeAvailable() {
+//   let inputs = document.querySelectorAll('#betID');
+
+
+//   if(!inputs) {
+//       //The node we need does not exist yet.
+//       //Wait 500ms and try again
+//       window.setTimeout(addObserverIfDesiredNodeAvailable,11500);
+//       return;
+//   }
+//   // let config = {childList: true};
+//   inputs.forEach(function(input) {
+//     observer.observe(input, { attributes: true });
+//   })
+// }
+// addObserverIfDesiredNodeAvailable();
+// observer.disconnect();
+
+
 // selectTrackIds.push(trackJson[nextIndex].trackId);
 //     $('select[name="first_draw"]').append(
 //     `<option value="${trackJson[nextIndex].trackId}">${trackJson[nextIndex].trackId}</option>`

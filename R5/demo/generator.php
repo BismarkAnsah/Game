@@ -14,7 +14,7 @@ $data = array
     "numbers" => generateRandom5(),
     "betId" => "202302160013",
     "dateTime" => "2023-02-16 00:12:00",
-    "timeLeft" => 20
+    "timeLeft" => 60
 );
 
 echo json_encode($data);

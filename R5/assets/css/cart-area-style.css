@@ -282,6 +282,16 @@ ul.multibetCounter {
   max-height: 200px;
 }
 
+.tableFixHead input[type=number]#betID::-webkit-inner-spin-button, 
+.tableFixHead input[type=number]#betID::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.tableFixHead input[type=number]#betID:focus, 
+.tableFixHead input[type=number]#betID:focus {
+  outline: none;
+}
+
 .tableFixHead table {
   border-collapse: collapse;
   width: 100%;
@@ -452,4 +462,15 @@ ul.multibetCounter {
   color: var(--white);
   border-radius: 0.3rem;
 
+}
+
+.m-track-timer{
+  background-color: transparent !important;
+  width: 200px;
+  font-weight: 100 !important;
+  font-size: 18px !important;
+}
+
+.m-track-timer .display-6{
+  font-size: 2rem !important;
 }

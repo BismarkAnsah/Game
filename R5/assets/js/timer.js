@@ -2,9 +2,9 @@
 # Timer JS
 --------------------------------------------------------------*/
 
-const hrs = document.getElementById("hrs");
-const mins = document.getElementById("mins");
-const secs = document.getElementById("secs");
+const hrs = $(document).find("#hrs");
+const mins = $(document).find("#mins");
+const secs = $(document).find("#secs");
 // const week = document.getElementById("week");
 
 /**
@@ -64,9 +64,18 @@ export let progress = (timeleft, timetotal, $element) => {
   if (timeleft >= 0) {
     let timeOut = setTimeout(function () {
       progress(timeleft - 1, timetotal, $element);
-      hrs.innerText = formatTime(hours);
-      mins.innerText = formatTime(minutes);
-      secs.innerText = formatTime(seconds);
+      hrs.each(function () {
+        $(this).html(formatTime(hours));
+      })
+      mins.each(function () {
+        $(this).html(formatTime(minutes));
+      })
+      secs.each(function () {
+        $(this).html(formatTime(seconds));
+      })
+      // hrs.innerText = formatTime(hours);
+      // mins.innerText = formatTime(minutes);
+      // secs.innerText = formatTime(seconds);
       clearTimeout(timeOut);
     }, 1000);
   }else{
