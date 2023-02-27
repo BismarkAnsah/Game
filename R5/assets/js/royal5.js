@@ -526,6 +526,40 @@ export class Royal5utils {
     return track;
   }
 
+
+  createTrackYield(totalDraws, eachMultiplier, bonus, singleBetAmt)
+  {
+    let yieldData = {};
+    yieldData.bets = {};
+    let totalAmount = 0;
+    let previousBetAmt = 0;
+    let currentAmt;
+    for(let i = 0; i < totalDraws; i++)
+    {
+      currentAmt = this.fixArithmetic(previousBetAmt + singleBetAmt);
+      yieldData.bets[i] = {
+        multiplier: eachMultiplier,
+        betAmt: this.fixArithmetic(eachMultiplier * singleBetAmt),
+        bonus: bonus,
+        currentAmt: currentAmt,
+        expectedAmt: this.fixArithmetic(currentAmt + singleBetAmt)
+      }
+      previousBetAmt = yieldData.bets[i].currentAmt;
+    }
+
+    yieldData.yieldInfo = {
+      totalDraws: totalDraws,
+      totalAmount: totalAmount
+    }
+
+    return yieldData;
+  }
+
+  getYieldMultiplier(minimumYield, bonus, previousPaid)
+  {
+      0.1 
+  }
+
   /**
    * Compares a single date with the current date and time
    * @param {string} date - The input date to compare, in the format "YYYY-MM-DDTHH:MM:SS"
@@ -740,8 +774,8 @@ export class Royal5utils {
    * @param {callback} callback function to call when data is fetched successfully. first argument is the response object.
    * @returns response object from server
    */
-  fetchData(url, callback, data = []) {
-    return $.ajax({
+  async fetchData(url, callback, data = []) {
+    let results = await $.ajax({
       url: url,
       success: callback,
       data: data,
@@ -749,6 +783,7 @@ export class Royal5utils {
         console.log("There was an error.");
       }
     });
+    return JSON.parse(results);
   }
 
   // deleteFromCart(id, cart) {
@@ -3410,6 +3445,9 @@ let serverDrawNum = {
 
 }
 let drawData = {};
+let totalRequests = {
+  getDrawData:0
+}
 let currentSelectOption = {}; // current select option in track
 
 let tooltipData; //tooltips data
@@ -3718,7 +3756,7 @@ function ready(className) {
     game.$("input.bet-amt").val("");
     showBetsInfo();
   });
-
+// console.warn("error")
   game.$("input.bet-amt").click(function () {
     // let betAmt = game.betAmt;
     // let unitAmt = game.betAmt?unitAmt:0;
@@ -3757,7 +3795,6 @@ function ready(className) {
     $(this).val(onlyNums);
     showBetsInfo();
   });
-
   //for manual bet
   game.$(".bet-box").on("input", function () {
     game.setAllBets();
@@ -4352,52 +4389,11 @@ function fetchData() {
 // });
 
 
-function drawsReceived(response) {
-  return JSON.parse(response);
-
-}
-
-
-let getDraw = new Promise(function (resolve, reject) {
-  let url = urls.draws;
-  $.get(url, function (response) {
-    let responseObj = JSON.parse(response);
-    let prettyResp = formatDrawResponse(responseObj); //formats the response in the best way for processing.
-    if (prettyResp.responseId != drawData.responseId) //if new data received
-    {
-      drawData = prettyResp;
-      resolve(prettyResp);
-    } else {
-      reject("No new data received");
-    }
-  })
-    .fail(function () {
-      reject("An error occurred while fetching draw data");
-    })
-})
-
-
-
-getDraw.then(function (drawData) {
-  slotjs(drawData.drawNumber);
-})
-
-getDraw.then(function (drawData) {
-  console.log(drawData)
-  requestAnimationFrame(() => {
-    progress(drawData.timeLeft - 3, 60, $("#progressBar"));
-  });
-});
-
-
-getDraw.catch(function (rejectMessage) {
-  console.log(rejectMessage);
-});
-
 function formatDrawResponse(response) {
-  let responseData = sliceFromJson(response, -2); //gets the last two  data in the object
-  responseData = responseData[Object.keys(responseData)[0]]; // gets the first property of the object
-  let timeLeft = responseData[Object.keys(responseData)[1]]; // gets the time left property
+
+  response = sliceFromJson(response, -2); //gets the last two  data in the object
+  let responseData = response[Object.keys(response)[0]]; // gets the last but one property of the object
+  let timeLeft = response[Object.keys(response)[1]]; // gets the time left property
   let drawNumber = responseData.draw_number.split(",").map(el => +el); // gets the draw numbers in an array as integers
   let formattedResponse = {
     responseId: responseData.id,
@@ -4410,6 +4406,66 @@ function formatDrawResponse(response) {
   }
   return formattedResponse;
 }
+
+
+ let getDrawData = async () => {
+  try
+  {
+    const response = await fetch(urls.draws);
+    if(!response.ok)
+    {
+      throw new Error("HTTP error: " + response.status);
+    }
+    const data = await response.json();
+    const prettyResp = formatDrawResponse(data); //formats the response in the best way for processing.
+    if (prettyResp.responseId != drawData.responseId) //if new data received
+    {
+      drawData = prettyResp;
+      slotjs(drawData.drawNumber);
+      requestAnimationFrame(() => {
+        progress(drawData.timeLeft - 3, 60, $("#progressBar"));
+      });
+      setTimeout(getDrawData, prettyResp.timeLeft*1000);
+    } else {
+      console.warn("No new data received");
+      if(totalRequests.getDrawData >= 100)
+        return;
+      totalRequests.getDrawData += 1;
+      setTimeout(getDrawData, 1000);
+    }
+  }catch(error)
+  {
+    console.error("Could not fetch draw data: "+error);
+  }
+}
+
+getDrawData();
+
+// let getDraw = new Promise(function (resolve, reject) {
+//   let url = urls.draws;
+//   $.get(url, function (response) {
+//     // console.log(response);
+//     let responseObj = JSON.parse(response);
+//     let prettyResp = formatDrawResponse(responseObj); //formats the response in the best way for processing.
+//     if (prettyResp.responseId != drawData.responseId) //if new data received
+//     {
+//       drawData = prettyResp;
+//       resolve(prettyResp);
+//     } else {
+//       reject("No new data received");
+//     }
+//   })
+//     .fail(function () {
+//       reject("An error occurred while fetching draw data");
+//     })
+// })
+
+
+  
+
+
+
+
 
 
 
