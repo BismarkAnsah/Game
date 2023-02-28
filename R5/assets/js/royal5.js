@@ -3821,22 +3821,19 @@ function drawNum() {
 
 /**call all your functions here */
 function callAllFunctionsHere() {
-  // const hrs = document.getElementById("hrs");
-  // const mins = document.getElementById("mins");
-  // const secs = document.getElementById("secs");
   let callDrawNum = setInterval(() => {
     drawNum();
     console.log((+serverDrawNum.timeLeft + 10) * 1000);
     clearInterval(callDrawNum);
-    // slotjs(serverDrawNum.numbers);
   }, +serverDrawNum.timeLeft * 1000);
+
   setNextDraws();
-  // let maxInput = game.getTrackElement('trackInfo', 'totalDraws');
-  // let firstMultiplier = game.getTrackElement();
+
   let firstMultiplier = +$(".first-multiplier").val();
   let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
   let multiplyBy = +$(".multiplyBy").val();
   let maxInput = +$(".total-draws").val();
+  
   if (game.getTrackJson()) {
     game.changeCurrentButton();
     setTimeout(() => {
