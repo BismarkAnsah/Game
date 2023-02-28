@@ -97,81 +97,80 @@ class Royal5utils {
   }
 
   /**
-   *
-   * used to retrieve the track data upon send
-   * @return {Object} track info
+   * Retrieves track information such as total draws, total amount of bets, and total amount to pay.
+   * @function
+   * @returns {Object} An object containing the track information.
    * @memberof Royal5utils
    */
   getTrackInfo() {
     let trackInfo = {};
-    let total_draws = $(".track__total__draws").text();
-    let total_amt_bets = $(".track__total__bets").text();
-    let total_amt_to_pay = $(".track__total__amt__to_pay").text();
+
+    // Retrieve the total number of draws from the track element with ID "trackInfo" and class "totalDraws".
+    let total_draws = game.getTrackElement("trackInfo", "totalDraws");
+
+    // Retrieve the total amount of bets from the track element with ID "trackInfo" and class "eachTotalBets",
+    // and multiply it by the total number of draws.
+    let total_amt_bets =
+      game.getTrackElement("trackInfo", "eachTotalBets") * total_draws;
+
+    // Retrieve the total amount to pay from the track element with ID "trackInfo" and class "totalBetAmt".
+    let total_amt_to_pay = game.getTrackElement("trackInfo", "totalBetAmt");
+
+    // Check if the "stop if win" checkbox is checked, and set the value of stop_if_win accordingly (1 if checked, 0 if not).
     let stop_if_win;
-    let stop_if_not_win;
     $("#stop_if_win").is(":checked") ? (stop_if_win = 1) : (stop_if_win = 0);
 
+    // Check if the "stop if not win" checkbox is checked, and set the value of stop_if_not_win accordingly (1 if checked, 0 if not).
+    let stop_if_not_win;
     $("#stop_if_not_win").is(":checked")
       ? (stop_if_not_win = 1)
       : (stop_if_not_win = 0);
-    // console.log(total_draws, total_amt_bets, total_amt_to_pay, stop_if_not_win, stop_if_win);
 
+    // Store the retrieved values in the trackInfo object using descriptive keys.
     trackInfo["total_draws"] = total_draws;
     trackInfo["total_amt_bets"] = total_amt_bets;
     trackInfo["total_amt_to_pay"] = total_amt_to_pay;
     trackInfo["stop_if_win"] = stop_if_win;
     trackInfo["stop_if_not_win"] = stop_if_not_win;
 
-    console.log(trackInfo);
-    console.log(this.trackInfo);
+    // Return the trackInfo object.
     return trackInfo;
   }
 
   /**
-   *
-   * used to display the track-table-top body contents when track button is clicked
-   * @param {*} trackJson
-   * @memberof Royal5utils
+   * Sets the contents of the top track table with the given track information.
+   * @function
+   * @param {Object} trackJson - An object containing the track information.
    */
   setTrackTopTableContents(trackJson) {
+    // Find the track table with class "track-table-top".
     let track_table = $(document).find(".track-table-top");
 
+    // Set the HTML contents of the track table row with the appropriate table columns,
+    // using values obtained from various game methods and the given trackJson object.
     track_table.html(`<tr class="track-table-top-items">
-          <th scope="row">${1}</th>
-          <td class="m-group-type">${game.getBetType()}</td>
-          <td class="text-truncate text-center"><span style="max-width: 80px" class="m-detail" >${truncateEllipsis(
-            game.getSavedData().userSelections
-          )}</span></td>
-          <td class="m-bet">${game.getSavedData().totalBets}</td>
-          <td class="m-units">${game.getSavedData().unitStaked}</td>
-          <td>
-              <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${
-                game.getSavedData().totalBetAmt
-              }</span>
-          </td>
-        </tr>`);
+    <th scope="row">${1}</th>
+    <td class="m-group-type">${game.getBetType()}</td>
+    <td class="text-truncate text-center"><span style="max-width: 80px" class="m-detail" >${truncateEllipsis(
+      game.getSavedData().userSelections
+    )}</span></td>
+    <td class="m-bet">${game.getSavedData().totalBets}</td>
+    <td class="m-units">${game.getSavedData().unitStaked}</td>
+    <td>
+      <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${
+        game.getSavedData().totalBetAmt
+      }</span>
+    </td>
+  </tr>`);
 
-    // i++
-
-    // $(".m-group-type").text(game.getBetType());
-    // $(".m-detail").text(
-    //   truncateEllipsis(
-    //     game
-    //       .getSavedData()
-    //       .userSelections
-    //   )
-    // );
-    // $(".m-bet").text(game.getSavedData().totalBets);
-    // $(".m-units").text(game.getSavedData().unitStaked);
-    // $(".m-currency").text(game.getSavedData().totalBetAmt);
-
-    // console.log((game.calcTotalBets())*10);
+    // Update the text contents of various elements on the track UI using values from the given trackJson object.
     $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
     $(".track__total__draws").text(trackJson.trackInfo.totalDraws);
     $(".track__total__bets").text(
       game.calcTotalBets() * trackJson.trackInfo.totalDraws
     );
 
+    // Set the text contents of the element with class "track__total__balance" to the value of the balance variable (which is not defined in this function).
     $(".track__total__balance").text(balance);
   }
 
@@ -198,7 +197,7 @@ class Royal5utils {
    */
   selectBig(row, effects = "active-btn") {
     this.$(row).removeClass(effects);
-    this.$(`${row}:nth-child(n+7)`).addClass((effects = "active-btn"));
+    this.$(`${row}:nth-child(n+7)`).addClass(effects);
   }
 
   /**
@@ -271,9 +270,9 @@ class Royal5utils {
   // }
 
   /**
-   * displays the selected game interface. something like switching tabs.
-   * @param label {,boolean, array}  the label names to display for each button row. specify false when no label is present. default is false
-   * @param manual {,boolean}  whether game interface is manual or not. default is false
+   * Hides all game interfaces and displays specific interface elements based on given parameters.
+   * @param {boolean} [label=false] - If false, shows only the first row of interface. If an array is provided, displays interface elements for each label in the array.
+   * @param {boolean} [manual=false] - If true, shows the manual game interface.
    */
   createGameInterface(label = false, manual = false) {
     this.$(".game-interface").hide();
@@ -308,78 +307,68 @@ class Royal5utils {
    * @param {number} index used to identify particular item in cart
    */
   appendRow(type, detail, bets, unit, multiplier, betAmt, index) {
-    let cartItem = `<tr id="cart-row${index}" class="m-cart-row">
-    <th scope="row">${type}</th>
-    <td class="cart-item-details" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="${detail}">${truncateEllipsis(
+    // Creates the HTML code for the cart row
+    let cartItem = `
+    <tr id="cart-row${index}" class="m-cart-row">
+      <th scope="row">${type}</th>
+      <td class="cart-item-details" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="${detail}">${truncateEllipsis(
       detail
     )}</td>
-    <td class="cart-item-bets">${bets}</td>
-    <td class="cart-item-unit">${unit}</td>
-    <td>
-      ${multiplier}
-      <div class="row visually-hidden">
-        <ul class="multibetCounter">
-          <li data-btn-type="decrement" class="cart-decrement" id="decrement">
-            <span class="romoveBtn"><i class="bi bi-dash"></i></span>
-          </li>
+      <td class="cart-item-bets">${bets}</td>
+      <td class="cart-item-unit">${unit}</td>
+      <td>
+        ${multiplier}
+        <div class="row visually-hidden">
+          <ul class="multibetCounter">
+            <li data-btn-type="decrement" class="cart-decrement" id="decrement">
+              <span class="romoveBtn"><i class="bi bi-dash"></i></span>
+            </li>
 
-          <input
-            class="input-multibet-counter text-center"
-            id="btnMultiBetCount"
-            name="multiBetCount"
-            type="text"
-            value="${multiplier}"
-            disabled
-          />
-          <li data-btn-type="increment" id="increment" class="cart-increment">
-            <span class="romoveBtn"><i class="bi bi-plus"></i></span>
-          </li>
-        </ul>
-      </div>
-    </td>
-    <td class="cart-item-betamt"><span class="fa-solid fa-yen-sign currency"></span>&nbsp;&nbsp;${betAmt}</td>
-    <td><span class="bi bi-trash3 delete-cart" data-id="${index}"></span></td>
-  </tr>`;
-    let cart_bet_amt = $(".cart-total-bet-amt").html();
-    let cart_total_bet = $(".cart-total-bets").html();
-    let total_amut =
-      cart_bet_amt === undefined
-        ? betAmt
-        : parseFloat(cart_bet_amt) + parseFloat(betAmt);
-    let total_bets =
-      cart_bet_amt === undefined
-        ? bets
-        : parseFloat(cart_total_bet) + parseFloat(bets);
-    console.log(cart_total_bet, cart_bet_amt);
-    let cartItemsBets = `<tr>
-  <th>
-      <h5>
-          Total <strong class="cart-total-bets total-bets">${
-            game.sumBetAmtAndBets(cart)[1]
-          }</strong> bets
-      </h5>
-      <h6>Total amt. <strong class="text-danger  cart-total-bet-amt">${
-        game.sumBetAmtAndBets(cart)[0]
-      }</strong></h6>
-  </th>
-</tr>
-<tr>
-  <th>
-      <button class="cart-btn-track m-btn-orange">Track</button>
-      <button class="btn-bet-now">Bet Now</button>
-  </th>
-</tr>`;
-    // console.log("amut", amut);
+            <input
+              class="input-multibet-counter text-center"
+              id="btnMultiBetCount"
+              name="multiBetCount"
+              type="text"
+              value="${multiplier}"
+              disabled
+            />
+            <li data-btn-type="increment" id="increment" class="cart-increment">
+              <span class="romoveBtn"><i class="bi bi-plus"></i></span>
+            </li>
+          </ul>
+        </div>
+      </td>
+      <td class="cart-item-betamt"><span class="fa-solid fa-yen-sign currency"></span>&nbsp;&nbsp;${betAmt}</td>
+      <td><span class="bi bi-trash3 delete-cart" data-id="${index}"></span></td>
+    </tr>`;
+
+    let cartItemsBets = `
+    <tr>
+      <th>
+          <h5>
+              Total <strong class="cart-total-bets total-bets">${
+                game.sumBetAmtAndBets(cart)[1]
+              }</strong> bets
+          </h5>
+          <h6>Total amt. <strong class="text-danger  cart-total-bet-amt">${
+            game.sumBetAmtAndBets(cart)[0]
+          }</strong></h6>
+      </th>
+    </tr>
+    <tr>
+      <th>
+          <button class="cart-btn-track m-btn-orange">Track</button>
+          <button class="btn-bet-now">Bet Now</button>
+      </th>
+    </tr>`;
 
     $(this).fadeIn("slow", function () {
       $(".cart-items").append(cartItem);
       $(".cart-items-track-bets").html(cartItemsBets);
       showCartArea("cart-tab");
-      console.log(cart);
       $("#cart-submit").show();
       $(".clear-cart").show();
     });
-    // console.log("cart_amt", cart_amt)
   }
 
   /**
@@ -401,51 +390,48 @@ class Royal5utils {
 
   //     return results;
   //   }
+  /**
+   * Calculates the sum of total bet amount and total bets of items in a cart
+   * @param {Object} cart - The cart object containing items with total bet amount and total bets
+   * @returns {Array} - Array containing sum of total bet amount and total bets
+   */
   sumBetAmtAndBets(cart) {
     let cartObject = cart;
     let sumTotalBets = 0;
     let sumTotalBetAmt = 0;
     const results = [];
-
+    // Iterate through each item in the cart object and calculate sum of total bets and total bet amount
     for (const key in cartObject) {
-      console.log(key);
-      console.log(
-        "--------------========CART========---------------------",
-        cartObject[key].totalBetAmt
-      );
-      console.log(
-        "--------------=========KEY=======---------------------",
-        cartObject
-      );
-
       const totalBetAmt = cartObject[key].totalBetAmt;
       const totalBets = cartObject[key].totalBets;
       sumTotalBets += totalBets;
       sumTotalBetAmt += totalBetAmt;
     }
+    // Add sum of total bet amount and total bets to the results array after fixing any arithmetic issues
     results.push(this.fixArithmetic(sumTotalBetAmt), sumTotalBets);
     return results;
   }
 
+  /**
+   * Removes an item from the cart object based on its ID.
+   * @param {number} id - The ID of the item to be removed.
+   */
   removeFromCart(id) {
     delete cart[id];
     // game.pushToCart(cart);
   }
+
   /**
-   *
-   *
-   * @param {string} [currentBetId="202301310001"]
-   * @param {string} [idDateTime="2023-01-31 23:20:45"]
-   * @memberof Royal5utils
+   *Generates select options for the first draw in a game based on the current bet id and date time.
+   *@param {string} [currentBetId="202301310001"] - The current bet id to start generating from.
+   *@param {string} [idDateTime="2023-01-31 23:20:45"] - The date time of the current bet id.
+   *@memberof Royal5utils
    */
   generateSelectOptions(
     currentBetId = currentSelectOption.betId,
     idDateTime = currentSelectOption.dateTime
   ) {
     let selectTrackIds = "";
-    // let curSele = $(document).find('select[name="first_draw"] :selected').val()
-    let idDateTimes;
-    // let currentBe
     for (let i = 0; i < 120; i++) {
       currentBetId = game.generateNextBetId(
         currentBetId,
@@ -453,7 +439,6 @@ class Royal5utils {
         intervalMinutes
       );
       idDateTime = game.addMinutes(idDateTime, intervalMinutes);
-      // console.log(idDateTime);
 
       selectTrackIds += `<option data-date-to-start="${
         game.getDate(idDateTime) + " " + game.getTime(idDateTime)
@@ -463,49 +448,22 @@ class Royal5utils {
     }
 
     $('select[name="first_draw"]').html(selectTrackIds);
-    // $('#first__draw__select select[name="first_draw"]') first__draw__select
-    // $(`#first__draw__select option[value=${curSele}]`).attr("selected", "selected");
-    // console.log(curSele);
-
-    // let mid = $("table tbody.track-data tr.track-entry:first-child");
   }
 
   /**
    *
-   * changes the position of the current button in the track table.
-   * @memberof Royal5utils
-   *
-   */
-  // changeCurrentButton() {
-  //   $(document)
-  //     .find("table tbody.track-data tr.track-entry:nth-child(2) .m-btn-orange")
-  //     .removeClass("visually-hidden");
-  //   let timeOut = setTimeout(() => {
-  //     $(document)
-  //       .find("table tbody.track-data tr.track-entry:first-child .m-btn-orange")
-  //       .addClass("visually-hidden");
-
-  //     clearTimeout(timeOut);
-  //   }, 500);
-  // }
-
-  // }
-
-  /**
-   *
-   *
+   * Changes the current button based on the current bet ID and the server's next bet ID.
    * @memberof Royal5utils
    */
   changeCurrentButton() {
     let currentBetId = $(document)
       .find("table tbody.track-data tr.track-entry")
       .attr("value");
-    // console.log("Current bet ID:", currentBetId);
-    // console.log("Next bet ID:", serverDrawNum.nextBetId);
 
     let btn_to_change = $(document).find(
       "table tbody.track-data tr.track-entry .current:visible"
     );
+    // If the current bet ID is not the same as the server's next bet ID, change the current button
     if (currentBetId !== serverDrawNum.nextBetId) {
       btn_to_change.addClass("visually-hidden");
       btn_to_change
@@ -514,8 +472,6 @@ class Royal5utils {
         .find(".m-btn-orange")
         .slice(0, 1)
         .removeClass("visually-hidden");
-      // console.log(btn_to_change.closest('tr.track-entry')
-      //   .find('.m-btn-orange').slice(0, 1));
     }
   }
   /**
@@ -642,29 +598,25 @@ class Royal5utils {
     let output = "";
     let hidden;
     for (let i = 0; i < totalDraws; i++) {
-      output += `<tr data-index="${i}" class="track-entry" value="${trackJson["bets"][i].betId}">
-      <td class="trackNo">${trackJson["bets"][i].trackNo}</td>
-      <td>
-        <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
-          <li class="col-md-2">
-            <input
-              data-index="${i}"
-              class="form-check-input slave track-check"
-              type="checkbox"
-              name="track_number"
-              id="track_number"
-              checked
-            />
-          </li>
+      output += `
+      <tr data-index="${i}" class="track-entry" value="${trackJson["bets"][i].betId}">
+        <td class="trackNo">${trackJson["bets"][i].trackNo}</td>
+        <td>
+          <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+            <li class="col-md-2">
+              <input
+                data-index="${i}"
+                class="form-check-input slave track-check"
+                type="checkbox"
+                name="track_number"
+                id="track_number"
+                checked
+              />
+            </li>
           <li class="col-md-7">
             <input type="number" class="betId" id="betID" readonly value="${trackJson["bets"][i].betId}">
           </li>
           <li class="col-md-3">`;
-      //TODO===========================check the current button=========
-      // console.log(typeof trackJson['bets'][i].betId)
-      // console.log(trackJson['bets'][i].betId)
-      // console.log("serverBetId", serverBetId)
-      // console.log(trackJson['bets'][i].betId === serverBetId)
       hidden = trackJson["bets"][i].current ? "" : "visually-hidden";
       output += `<button class=" m-btn-orange p-2 current ${hidden}">current</button>`;
       hidden =
@@ -672,22 +624,23 @@ class Royal5utils {
           ? ""
           : "visually-hidden"; // makes sure 'next day' and 'current' don't appear simultaneously.
       output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`;
-      output += `</li>
-        </ul>
-      </td>
-      <td class="d-flex justify-content-center align-content-center mt-2">
-        <div class="col-sm-4">
-          <input 
-            type="number"
-            min="1"
-            class="form-control track-multiplier"
-            data-index="${i}"
-          value="${trackJson["bets"][i].multiplier}"/>
-        </div>
-      </td>
-      <td class="betAmt">${trackJson["bets"][i].betAmt}</td>
-      <td class="estimatedDrawTime">${trackJson["bets"][i].estimatedDrawTime}</td>
-    </tr>`;
+      output += `
+      </li>
+          </ul>
+        </td>
+        <td class="d-flex justify-content-center align-content-center mt-2">
+          <div class="col-sm-4">
+            <input 
+              type="number"
+              min="1"
+              class="form-control track-multiplier"
+              data-index="${i}"
+            value="${trackJson["bets"][i].multiplier}"/>
+          </div>
+        </td>
+        <td class="betAmt">${trackJson["bets"][i].betAmt}</td>
+        <td class="estimatedDrawTime">${trackJson["bets"][i].estimatedDrawTime}</td>
+      </tr>`;
     }
     $(".track-data").html(output);
     $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
@@ -803,7 +756,12 @@ class Royal5utils {
     if (date1.getDate() != date2.getDate()) return true;
     return false;
   }
-
+  /**
+  * Checks if a given betId is the current bet.
+  * @param {string} betId - The betId to check.
+  * @param {string} currentBetId - The current betId to compare against. Default is serverDrawNum.nextBetId.
+  * @returns {boolean} - Returns true if the given betId is the current bet, false otherwise.
+  */
   isCurrent(betId, currentBetId = serverDrawNum.nextBetId) {
     return betId == currentBetId;
   }
@@ -1051,7 +1009,7 @@ class Royal5utils {
     return amt;
   }
 
-  ////////////////////////////////todo: comment this method
+  
   /**
    * all bets generated from user selections. (works for only two rows and one row games eg. all 5 group120, all 5 group5, all 5 group60 and not all 5 combo)
    * @param  {...,number, array} rowsAndSamples (row1, row2, sample1, sample2) or (row1, sample1, row2, sample2)
@@ -1097,10 +1055,7 @@ class Royal5utils {
 
   /******logics */
 
-  // totalBet()
-  // {
-
-  // }
+  
 
   increaseMultiplier(target) {
     let multiValue = this.getValue(target);
@@ -3193,8 +3148,10 @@ function ready(className) {
     showBetsInfo();
   });
   // console.log(game.createTrackJson("2023-01-31 20:24:55", 161, 120, 3, 4, 3, 0.002));
-  /**Track Begins */
 
+  /*--------------------------------------------------------------
+# Track Begins Here
+--------------------------------------------------------------*/
   game.$(".track").click(function () {
     let defaultTrackDraws = 10; //total number tracks that will be shown when user clicks on track.
     let defaultTrackInputs = 1; //default input for .first-multiplier, .multiplyAfterEvery, .multiplyBy.
@@ -3235,18 +3192,8 @@ function ready(className) {
       betAmt,
       totalBets
     );
-    console.log(currentSelectOption.betId);
     game.generateSelectOptions(currentSelectOption.betId);
     showCartArea("track-tab");
-    // setInterval(() => {
-
-    //   inc++;
-    //   let curSele = $(document).find('select[name="first_draw"] :selected').val()
-
-    // console.log(curSele);
-
-    // }, 5000);
-
     game.setTrackTopTableContents(trackJson);
     trackJson["trackData"] = trackData;
     // game.setTrackJson(trackJson);
@@ -3258,35 +3205,22 @@ function ready(className) {
     maxInput = checkRemainingSelectOptions("#first__draw__select");
     let hshs = $(".total-draws").val();
 
-    let currentSelected = $(document).find(
-      'select[name="first_draw"] :selected'
-    );
+    // let currentSelected = $(document).find(
+    //   'select[name="first_draw"] :selected'
+    // );
     let selectedIndex = $(this).prop("selectedIndex");
     let getprev = $(this)
       .find("option")
       .eq(selectedIndex - 1);
 
-    // console.log("nextBetId",serverDrawNum.nextBetId)
-    // console.log("betId",serverDrawNum.betId)
-    // console.log("currentSelect",currentSelected.text().replace(/\D+/g, ""))
-    // console.log(currentSelected.text().replace(/\D+/g, "") === serverDrawNum.nextBetId)
     let currentSelect;
     let currentSelectdateTime;
-    // if (currentSelected.text().replace(/\D+/g, "") === serverDrawNum.nextBetId) {
-    //   // console.log("come over here")
-    //   currentSelect = serverDrawNum.betId;
-    //   console.log("serverDrawNum.betId", serverDrawNum.betId)
-    //   console.log("serverDrawNum.dateTime", serverDrawNum.dateTime)
-    //   currentSelectdateTime = serverDrawNum.dateTime;
-    // }else{
+
     currentSelect = $(this).val();
 
     currentSelectdateTime = $(document)
       .find('select[name="first_draw"] :selected')
       .data("date-to-start");
-    // }
-
-    console.log(currentSelect, currentSelectdateTime);
 
     let firstMultiplier = +$(".first-multiplier").val();
     let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
@@ -3300,19 +3234,9 @@ function ready(className) {
       multiplyAfterEvery,
       multiplyBy,
       game.getTrackElement("trackInfo", "eachBetAmt"),
-      game.getTrackElement("trackInfo", "totalBets")
+      game.getTrackElement("trackInfo", "eachTotalBets")
     );
-
     game.createTrackInterface(trackJson);
-
-    // }
-    // let idDateTimes;
-    // console.log(gettt);
-    // console.log(gettt2);
-    // console.log("drawSelect", drawSelect);
-    // let currentBe
-    // console.log(currentSelectOption.betId)
-    // console.log(currentSelectOption.dateTime)
   });
 
   $(".track-confirm").on("click", function () {
@@ -3412,10 +3336,6 @@ function ready(className) {
       bet_amt,
       total_bets
     );
-    console.log(
-      "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^trackJson",
-      trackJson
-    );
 
     game.createTrackInterface(trackJson);
     trackData = { ...cart };
@@ -3446,8 +3366,6 @@ function ready(className) {
   //     console.log("multiplier")
   // });
 
-  /**Track Ends */
-
   /**Edit Track Begins */
   /**
    *  listens to inputs that changes the track
@@ -3472,14 +3390,6 @@ function ready(className) {
       $(".track-data").children().slice(0, totalDraws).show();
       let betAmt = game.getTrackElement("trackInfo", "eachBetAmt");
       // let betAmt = game.calcBetAmt();
-      console.log(
-        "eachBetAmt==========BEFORE========================",
-        game.getTrackElement("trackInfo", "eachBetAmt")
-      );
-      console.log(
-        "eachTotalBets==========BEFORE========================",
-        game.getTrackElement("trackInfo", "eachTotalBets")
-      );
       // console.log(trackInfo)
 
       let totalBets = game.getTrackElement("trackInfo", "eachTotalBets");
@@ -3500,10 +3410,6 @@ function ready(className) {
         totalBets
       );
       game.setTrackJson(trackJson);
-      console.log(
-        "trackJson======AFTER============================",
-        trackJson
-      );
 
       game.createTrackInterface(trackJson);
       // game.setTrackContents(trackJson);
@@ -3570,8 +3476,9 @@ function ready(className) {
     .click(function () {
       $(this).select();
     });
-  /**Edit Track Ends */
-
+  /*--------------------------------------------------------------
+# Track Ends Here
+--------------------------------------------------------------*/
   game.$(".plus").click(function () {
     game.increaseMultiplier(classNames.multiValue);
     $(this).addClass("active-btn");
@@ -3602,7 +3509,9 @@ function ready(className) {
     game.$(`.multiplier-select[value='${value}']`).addClass("active-btn");
     showBetsInfo();
   });
-
+  /*--------------------------------------------------------------
+# Cart Begins Here
+--------------------------------------------------------------*/
   game.$(".cart").click(function () {
     console.log(trackData);
     game.pushToCart(cart);
@@ -3705,6 +3614,10 @@ $(document).on("click", ".delete-cart", function () {
 
   deleteThisRow.remove();
 });
+
+/*--------------------------------------------------------------
+# Cart Ends Here
+--------------------------------------------------------------*/
 
 //display and hiding game type
 function hideAllExcept(hideAll, except) {
@@ -3924,7 +3837,6 @@ function callAllFunctionsHere() {
   let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
   let multiplyBy = +$(".multiplyBy").val();
   let maxInput = +$(".total-draws").val();
-  console.log("maxInput", maxInput);
   if (game.getTrackJson()) {
     game.changeCurrentButton();
     setTimeout(() => {
@@ -3962,8 +3874,6 @@ function callAllFunctionsHere() {
 }
 // countdown(30)
 // slotjs([0,1,2,3,4,5])
-
-//TODO ==========ask for duration time for progressbar from dollar
 
 class TotalBets {
   /**

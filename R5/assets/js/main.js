@@ -6,7 +6,7 @@
 
 const tooltipTriggerList = $(document).find('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(
-  (tooltipTriggerEl) => {console.log(tooltipTriggerList); new bootstrap.Tooltip(tooltipTriggerEl)}
+  (tooltipTriggerEl) =>  new bootstrap.Tooltip(tooltipTriggerEl)
 );
 
 // myTooltipEl.addEventListener('show.bs.tooltip', function () {
@@ -67,7 +67,6 @@ $(document).ready(function() {
 $(document).ready(function() {
   // Get the input element
   let input = $("#betID");
-  console.log(input)
   // Set the readOnly property to true
   input.readOnly = true;
   $("#betID").on("input", function(e) {

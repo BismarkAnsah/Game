@@ -1830,15 +1830,15 @@
                                                                 track 120 draws)
                                                                 </div> -->
                                                         <div class="row flex-lg-nowrap ms-lg-5">
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_draw_o"
                                                                 class="col-sm-3 col-form-label mr-n3">Track draw:
                                                             </label>
                                                             <div class="col-sm-3">
                                                                 <input type="number" min="1" max="120"
-                                                                    class="form-control total-draws" id="inputPassword"
+                                                                    class="form-control total-draws" id="input_track_draw_o"
                                                                     value="10" />
                                                             </div>
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_draw_o"
                                                                 class="current-draw col-md-7 col-form-label text-danger">
                                                                 draws (Maximum track 120 draws)</label>
                                                         </div>
@@ -1857,27 +1857,27 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_every_o"
                                                                 class="col-sm-2 col-form-label">Every:
                                                             </label>
                                                             <div class="col-sm-4">
                                                                 <input type="number" min="1"
                                                                     class="form-control multiplyAfterEvery"
-                                                                    id="inputPassword" value="1" />
+                                                                    id="input_track_every_o" value="1" />
                                                             </div>
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_every_o"
                                                                 class="current-draw col-sm-2 col-form-label">draw(s)</label>
                                                         </div>
                                                         <div class="row">
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_multi_o"
                                                                 class="col-sm-2 col-form-label text-danger">Multi x:
                                                             </label>
                                                             <div class="col-sm-2">
                                                                 <input type="number" min="1"
-                                                                    class="form-control multiplyBy" id="inputPassword"
+                                                                    class="form-control multiplyBy" id="input_track_multi_o"
                                                                     value="1" />
                                                             </div>
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_multi_o"
                                                                 class="current-draw col-sm-7 col-form-label text-danger">Hint:
                                                                 each draw times 1 implies equal track</label>
                                                         </div>
@@ -2039,15 +2039,15 @@
                                                         </div>
                                                         <div class="row">
                                                         <div class="row flex-lg-nowrap ms-lg-5">
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_draw_t"
                                                                 class="col-sm-3 col-form-label mr-n3">Track draw:
                                                             </label>
                                                             <div class="col-sm-3">
                                                                 <input type="number" min="1" max="120"
-                                                                    class="form-control total-draws" id="inputPassword"
+                                                                    class="form-control total-draws-t" id="input_track_draw_t"
                                                                     value="10">
                                                             </div>
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_draw_t"
                                                                 class="current-draw col-md-7 col-form-label text-danger">
                                                                 draws (Maximum track 120 draws)</label>
                                                         </div>
