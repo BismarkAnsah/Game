@@ -3711,7 +3711,7 @@ function showDrawNums(drawNums = getDrawNums()) {
 
 $(function () {
   // Wait for the document to be ready
-  fetchData().done((tooltipData) => {
+  fetchToolTipData().done((tooltipData) => {
     // Once the data is fetched, update the title attribute
     const tooltipTitle = JSON.parse(tooltipData)["1"];
 
@@ -3730,9 +3730,6 @@ $(function () {
 });
 
 $(".nav-item-c ").on("click", function (e) {
-  // console.log($(e.target).data("class"));
-  // $(e.target).data("class");
-
   const tooltipTitle = tooltipData[`${$(e.currentTarget).data("game-id")}`];
 
   $("#tt").attr("data-bs-title", tooltipTitle);
@@ -3742,7 +3739,7 @@ $(".nav-item-c ").on("click", function (e) {
   });
 });
 
-function fetchData() {
+function fetchToolTipData() {
   // let url = "http://localhost/Game-main/R5/add-ons/returnjson.php";
   let url = "http://192.168.199.126/task/receiver.php?action=gamerules";
   let callback = async function (resp) {
@@ -3833,7 +3830,7 @@ function callAllFunctionsHere() {
   let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
   let multiplyBy = +$(".multiplyBy").val();
   let maxInput = +$(".total-draws").val();
-  
+
   if (game.getTrackJson()) {
     game.changeCurrentButton();
     setTimeout(() => {
