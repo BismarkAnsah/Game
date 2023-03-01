@@ -555,9 +555,13 @@ export class Royal5utils {
     return yieldData;
   }
 
-  getYieldMultiplier(minimumYield, bonus, previousPaid)
+  // all possible 3 numbers between 0 - 9 such that the difference between the maximum and the minimum gives a certain value
+  getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt)
   {
-      0.1 
+    let dividend = this.fixArithmetic(minimumYield * previousPaid)+this.fixArithmetic(100 * previousPaid);
+    let divisor = this.fixArithmetic(100 * bonus) - this.fixArithmetic(100 * singleBetAmt) - this.fixArithmetic(minimumYield * singleBetAmt);
+    let multiplier = this.fixArithmetic(dividend/divisor);
+    return Math.ceil(multiplier);
   }
 
   /**
@@ -4139,27 +4143,7 @@ function ready(className) {
     });
   });
 
-  $("#cart-submit").click(function () {
-    let data = JSON.stringify(cart);
-    let url = "../nav.php";
-    console.log(data);
-    let req = $.post(url, data, function (response) {
-      // console.log(response);
-      response = JSON.parse(response);
-      if (response.title == "success") {
-        toastr.options.progressBar = true;
-        toastr.success(response.message, response.title);
-        $(".del").click();
-      } else {
-        toastr.options.progressBar = true;
-        toastr.warning(response.message, response.title);
-      }
-      req.fail(function () {
-        toastr.options.progressBar = true;
-        toastr.warning("Please check your internet connection", "Failed");
-      });
-    });
-  });
+ 
 
   $(".clear-cart").click(function () {
     let res = confirm("Do you want to clear all bets in cart?");
