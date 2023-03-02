@@ -1,6 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
-import  "../libs/HackTimer/HackTimerWorker.js"
-import  "../libs/HackTimer/HackTimer.js"
+import "../libs/HackTimer/HackTimerWorker.js"
+import "../libs/HackTimer/HackTimer.js"
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 import { showCartArea } from "./tracks-cart.js";
 import { progress } from "./timer.js";
@@ -529,15 +529,13 @@ export class Royal5utils {
   }
 
 
-  createTrackYield(totalDraws, eachMultiplier, bonus, singleBetAmt)
-  {
+  createTrackYield(totalDraws, eachMultiplier, bonus, singleBetAmt) {
     let yieldData = {};
     yieldData.bets = {};
     let totalAmount = 0;
     let previousBetAmt = 0;
     let currentAmt;
-    for(let i = 0; i < totalDraws; i++)
-    {
+    for (let i = 0; i < totalDraws; i++) {
       currentAmt = this.fixArithmetic(previousBetAmt + singleBetAmt);
       yieldData.bets[i] = {
         multiplier: eachMultiplier,
@@ -558,11 +556,10 @@ export class Royal5utils {
   }
 
   // all possible 3 numbers between 0 - 9 such that the difference between the maximum and the minimum gives a certain value
-  getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt)
-  {
-    let dividend = this.fixArithmetic(minimumYield * previousPaid)+this.fixArithmetic(100 * previousPaid);
+  getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
+    let dividend = this.fixArithmetic(minimumYield * previousPaid) + this.fixArithmetic(100 * previousPaid);
     let divisor = this.fixArithmetic(100 * bonus) - this.fixArithmetic(100 * singleBetAmt) - this.fixArithmetic(minimumYield * singleBetAmt);
-    let multiplier = this.fixArithmetic(dividend/divisor);
+    let multiplier = this.fixArithmetic(dividend / divisor);
     return Math.ceil(multiplier);
   }
 
@@ -3453,7 +3450,7 @@ let serverDrawNum = {
 }
 let drawData = {};
 let totalRequests = {
-  getDrawData:0
+  getDrawData: 0
 }
 let currentSelectOption = {}; // current select option in track
 
@@ -3763,7 +3760,7 @@ function ready(className) {
     game.$("input.bet-amt").val("");
     showBetsInfo();
   });
-// console.warn("error")
+  // console.warn("error")
   game.$("input.bet-amt").click(function () {
     // let betAmt = game.betAmt;
     // let unitAmt = game.betAmt?unitAmt:0;
@@ -4146,7 +4143,7 @@ function ready(className) {
     });
   });
 
- 
+
 
   $(".clear-cart").click(function () {
     let res = confirm("Do you want to clear all bets in cart?");
@@ -4395,38 +4392,82 @@ function formatDrawResponse(response) {
 }
 
 
- let getDrawData = async () => {
-  try
+let getDrawData = async () => {
+  const prettyResp = formatDrawResponse(data); //formats the response in the best way for processing.
+  if (prettyResp.responseId != drawData.responseId) //if new data received
   {
-    const response = await fetch(urls.draws);
-    if(!response.ok)
-    {
-      throw new Error("HTTP error: " + response.status);
-    }
-    const data = await response.json();
-    const prettyResp = formatDrawResponse(data); //formats the response in the best way for processing.
-    if (prettyResp.responseId != drawData.responseId) //if new data received
-    {
-      drawData = prettyResp;
-      slotjs(drawData.drawNumber);
-      // requestAnimationFrame(() => {
-        progress(drawData.timeLeft - 3, 60, $("#progressBar"));
-      // });
-      setTimeout(getDrawData, prettyResp.timeLeft*1000);
-    } else {
-      console.warn("No new data received");
-      if(totalRequests.getDrawData >= 100)
-        window.location.reload();
-      totalRequests.getDrawData += 1;
-      setTimeout(getDrawData, 1000);
-    }
-  }catch(error)
-  {
-    console.error("Could not fetch draw data: "+error);
+    drawData = prettyResp;
+    slotjs(drawData.drawNumber);
+    // requestAnimationFrame(() => {
+    progress(drawData.timeLeft - 3, 60, $("#progressBar"));
+    // });
+    setTimeout(getDrawData, prettyResp.timeLeft * 1000);
+  } else {
+    console.info("No new data received");
+    if (totalRequests.getDrawData >= 100)
+      window.location.reload();
+    totalRequests.getDrawData += 1;
+    setTimeout(getDrawData, 1000);
+
   }
 }
 
-getDrawData();
+function getDrawData(intervalTime) {
+  setTimeout(() => {
+    fetch(urls.draws)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      })
+      .then(data => {
+        const prettyResp = formatDrawResponse(data); //formats the response in the best way for processing.
+        if (prettyResp.responseId != drawData.responseId) //if new data received
+        {
+          drawData = prettyResp;
+          slotjs(drawData.drawNumber);
+          // requestAnimationFrame(() => {
+          progress(drawData.timeLeft - 3, 60, $("#progressBar"));
+          // });
+          setTimeout(getDrawData, prettyResp.timeLeft * 1000);
+          const nextIntervalTime = drawData.timeLeft;
+          getDrawData(nextIntervalTime);
+        } else {
+          console.info("No new data received");
+          reloadPageAfter(100, getDrawData)
+        }
+      })
+      .catch(error => {
+        console.error('There was a problem fetching the data:', error);
+        console.info("Retrying...");
+        const retryTime = 1000;
+        getDrawData(retryTime);
+      });
+  }, intervalTime);
+}
+
+/**
+ * refreshes the page after a number of failed ajax requests.
+ * @param {number} max the maximum number of times a request will be made if there's an error, before 
+ *  page refreshes.
+ * @param {string} callBackName the name of the function making the ajax calls. Function creates a global property 
+ * in the "@totalRequests" object to avoid conflicts. 
+ */
+function reloadPageAfter(max, callBackName) {
+
+  if (totalRequests[callBackName] >= max) {
+    window.location.reload();
+    totalRequests[callBackName] += 1;
+  }
+}
+// call getDrawData with an initial interval time
+getDrawData(10000); // initial interval time of 10 seconds
+
+
+
+
 
 // let getDraw = new Promise(function (resolve, reject) {
 //   let url = urls.draws;
@@ -4448,7 +4489,7 @@ getDrawData();
 // })
 
 
-  
+
 
 
 
