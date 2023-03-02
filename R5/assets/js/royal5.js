@@ -3422,6 +3422,7 @@ let oldClass = "a5_joint";
 const urls = {
   balance: "http://192.168.199.126/task/receiver.php?action=userbalance",
   draws: "http://192.168.199.126/task/cron/frontend_draw.php",
+  betNow: "http://192.168.199.126/task/nav.php"
   // drawsMock: "./demo/generator.php",
 }
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
@@ -3897,14 +3898,6 @@ function ready(className) {
     game.createTrackInterface(trackJson);
 
 
-    // }
-    // let idDateTimes;
-    // console.log(gettt);
-    // console.log(gettt2);
-    // console.log("drawSelect", drawSelect);
-    // let currentBe
-    // console.log(currentSelectOption.betId)
-    // console.log(currentSelectOption.dateTime)
   })
   $(".btn-track ").on("click", function () {
     // console.log("track btn clicked");
@@ -3946,31 +3939,7 @@ function ready(className) {
     }
     $.post("http://192.168.199.126/task/track.php", JSON.stringify(data), callback)
   })
-  // let json_to_send = game.trackJson
-  // console.log(json_to_send);
 
-  // console.log(game.trackJson);
-
-  // $(document).on("input", ".track-multiplier",function (e) {
-  //   console.log("multiplier")
-  //   console.log(e.target)
-  //   console.log(e.target.closest("tr"))
-  //   let tr = e.target.closest("tr");
-  //   console.log( $(tr).find("td:eq(0)").text())
-  //   console.log( $(tr).find("td:eq(1)").text())
-  //   console.log( $(tr).find("td:eq(2)").text())
-  // });
-
-  // document.querySelectorAll(".track-multiplier").forEach(function (el) {
-  //     console.log("multiplier")
-  // });
-
-  /**Track Ends */
-
-  /**Edit Track Begins */
-  /**
-   *  listens to inputs that changes the track
-   */
   game
     .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
     .on("input", function () {
@@ -4058,10 +4027,6 @@ function ready(className) {
     }
   });
 
-  // game.$(".track-confirm").on("click", function () {
-  //   console.log(game.readyTrackJson());
-  // });
-
   game
     .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
     .click(function () {
@@ -4093,7 +4058,6 @@ function ready(className) {
     }, 50);
     game.setMultiplier(value);
     game.setBetAmt(game.calcBetAmt());
-    ``;
     game.$("input.bet-amt").val("");
     game.$(".multiplier-select").removeClass("active-btn");
     game.$(`.multiplier-select[value='${value}']`).addClass("active-btn");
@@ -4107,16 +4071,11 @@ function ready(className) {
 
   game.$(".bet-now").click(function () {
     game.disableButtons(true, ".cart", "input.bet-amt");
-    game.$(".spinner").show();
-    // game.alertErrBets();
     let savedData = game.getSavedData();
     console.log(savedData);
     let data = JSON.stringify([savedData]);
-    // let url = '../nav.php';
-    let url = "http://192.168.199.126/task/nav.php";
-    let req = $.post(url, data, function (response) {
+    let req = $.post(urls.betNow, data, function (response) {
       // console.log(response);
-      game.$(".spinner").hide();
       response = JSON.parse(response);
       if (response.title == "success") {
         game.fetchData(balanceUrl).then((response) => {
@@ -4124,21 +4083,16 @@ function ready(className) {
           $(".user-balance").html(response.userBalance);
         });
         alert(response.message);
-        // toastr.options.progressBar = true;
-        // toastr.success(response.message, response.title);
         game.resetAllData();
         cart = [];
       } else {
-        // toastr.options.progressBar = true;
-        // toastr.warning(response.message, response.title);
+
         game.disableButtons(false, ".cart", ".bet-now");
         alert(response.message);
       }
 
       req.fail(function () {
         alert("failed");
-        // toastr.options.progressBar = true;
-        // toastr.warning('Please check your internet connection', 'Failed');
       });
     });
   });
@@ -4213,15 +4167,6 @@ $(".group-nav>li").click(function () {
   let pointsTo = $(this).attr("data-points-to");
   hideAllExcept(".game-nav-box", `.${pointsTo}.game-nav-box`);
   $(`.${pointsTo} .nav-item-c:first`).click();
-  // game = getClass(className, `#${pointsTo}`);
-  // if(oldClass != className){
-  // oldClass = className;
-  // ready(className);
-  // let hideAll = '.game-group.page';
-  // let except  = `#${pointsTo}`;
-  // hideAllExcept(hideAll, except);
-  // hideAllExcept('.game-nav', `.game-nav.${pointsTo}`);
-  //}
 });
 
 function getClass(className) {
@@ -4337,41 +4282,6 @@ function fetchData() {
   return $.get(url, callback);
 }
 
-// $().ready(function () {
-//   // let url = '../generateRandom.php';
-//   // let url = '../receiver.php?action=getdrawnumber';
-//   // let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-//   // // let url = "demo/generator.php";
-//   // let data = {
-//   //   last_id: lastId,
-//   // };
-//   let url = "http://192.168.199.126/task/cron/draw_api.php";
-//   // data = JSON.stringify(data);
-//   let req = $.post(url, function (response) {
-//     console.log(response);
-//     // response = JSON.parse(response);
-//     lastId = response.id;
-//     if (response.numbers) {
-//       console.log("response received", response);
-//       lastId = response.id;
-//       serverDrawNum = response
-//       currentSelectOption = serverDrawNum
-//       // $('#tt').tooltip();
-
-
-//       callAllFunctionsHere()
-//       $(".wining_num").each(function (index) {
-//         $(this).html(response.numbers[index]);
-//       });
-//     } else {
-//       drawNum();
-//     }
-//   });
-//   req.fail(function () {
-//     console.log("failed");
-//   });
-// });
-
 
 function formatDrawResponse(response) {
 
@@ -4392,25 +4302,22 @@ function formatDrawResponse(response) {
 }
 
 
-let getDrawData = async () => {
-  const prettyResp = formatDrawResponse(data); //formats the response in the best way for processing.
-  if (prettyResp.responseId != drawData.responseId) //if new data received
-  {
-    drawData = prettyResp;
-    slotjs(drawData.drawNumber);
-    // requestAnimationFrame(() => {
-    progress(drawData.timeLeft - 3, 60, $("#progressBar"));
-    // });
-    setTimeout(getDrawData, prettyResp.timeLeft * 1000);
-  } else {
-    console.info("No new data received");
-    if (totalRequests.getDrawData >= 100)
-      window.location.reload();
-    totalRequests.getDrawData += 1;
-    setTimeout(getDrawData, 1000);
-
+/**
+ * refreshes the page after a number of failed ajax requests.
+ * @param {number} max the maximum number of times a request will be made if there's an error, before 
+ *  page refreshes.
+ * @param {string} randomName this holds the number of times the ajax call has been made. Function creates a global property 
+ * in the "@totalRequests" object to avoid conflicts. Usually you can pass the function name as a string.
+ */
+ function reloadPageAfter(max, randomName) {
+  if(totalRequests[randomName] === undefined)
+    totalRequests[randomName] = 0;
+  if (totalRequests[randomName] >= max) {
+    window.location.reload();
+    totalRequests[randomName] += 1;
   }
 }
+
 
 function getDrawData(intervalTime) {
   setTimeout(() => {
@@ -4431,12 +4338,13 @@ function getDrawData(intervalTime) {
           // requestAnimationFrame(() => {
           progress(drawData.timeLeft - 3, 60, $("#progressBar"));
           // });
-          setTimeout(getDrawData, prettyResp.timeLeft * 1000);
-          const nextIntervalTime = drawData.timeLeft;
+          const nextIntervalTime = drawData.timeLeft * 1000;
           getDrawData(nextIntervalTime);
         } else {
           console.info("No new data received");
-          reloadPageAfter(100, getDrawData)
+          reloadPageAfter(100, "getDrawData");
+          const retryAfter = 1000;
+          getDrawData(retryAfter);
         }
       })
       .catch(error => {
@@ -4444,26 +4352,13 @@ function getDrawData(intervalTime) {
         console.info("Retrying...");
         const retryTime = 1000;
         getDrawData(retryTime);
+        reloadPageAfter(100, "getDrawData");
       });
   }, intervalTime);
 }
 
-/**
- * refreshes the page after a number of failed ajax requests.
- * @param {number} max the maximum number of times a request will be made if there's an error, before 
- *  page refreshes.
- * @param {string} callBackName the name of the function making the ajax calls. Function creates a global property 
- * in the "@totalRequests" object to avoid conflicts. 
- */
-function reloadPageAfter(max, callBackName) {
+getDrawData(0);
 
-  if (totalRequests[callBackName] >= max) {
-    window.location.reload();
-    totalRequests[callBackName] += 1;
-  }
-}
-// call getDrawData with an initial interval time
-getDrawData(10000); // initial interval time of 10 seconds
 
 
 
