@@ -1,4 +1,6 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
+import  "../libs/HackTimer/HackTimerWorker.js"
+import  "../libs/HackTimer/HackTimer.js"
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 import { showCartArea } from "./tracks-cart.js";
 import { progress } from "./timer.js";
@@ -3422,7 +3424,8 @@ let cart = {};
 let oldClass = "a5_joint";
 const urls = {
   balance: "http://192.168.199.126/task/receiver.php?action=userbalance",
-  draws: "http://192.168.199.126/task/cron/frontend_draw.php"
+  draws: "http://192.168.199.126/task/cron/frontend_draw.php",
+  // drawsMock: "./demo/generator.php",
 }
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings('a5_joint'));
@@ -4406,14 +4409,14 @@ function formatDrawResponse(response) {
     {
       drawData = prettyResp;
       slotjs(drawData.drawNumber);
-      requestAnimationFrame(() => {
+      // requestAnimationFrame(() => {
         progress(drawData.timeLeft - 3, 60, $("#progressBar"));
-      });
+      // });
       setTimeout(getDrawData, prettyResp.timeLeft*1000);
     } else {
       console.warn("No new data received");
       if(totalRequests.getDrawData >= 100)
-        return;
+        window.location.reload();
       totalRequests.getDrawData += 1;
       setTimeout(getDrawData, 1000);
     }

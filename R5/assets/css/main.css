@@ -2912,17 +2912,48 @@ text {
 
   border-radius: 3px;
 }
+.Rectangle_91_v {
+  overflow: hidden;
+  position: absolute;
+  width: 210px;
 
-#progressBar {
+  height: fit-content;
+  left: 68px;
+
+  top: 50px;
+
+  border: 2px solid var(--medGrey);
+
+  border-radius: 3px;
+}
+.Rectangle_92 {
+  overflow: hidden;
+  position: absolute;
+  width: 210px;
+
+  height: fit-content;
+  left: 68px;
+
+  top: 40px;
+
+  border: 2px solid var(--medGrey);
+
+  border-radius: 3px;
+}
+
+#progressBar, #jquery_progressBar,#velocity_progressBar {
   width: 100%;
   /* margin: 10px auto; */
   height: 5px;
   background-color: #3eb0f1;
 }
 
-#progressBar div {
+#progressBar div, #jquery_progressBar div,
+#velocity_progressBar div {
   height: 100%;
   text-align: right;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
   /* padding: 0 10px; */
   line-height: 22px; /* same as #progressBar height if we want text middle aligned */
   width: 0;

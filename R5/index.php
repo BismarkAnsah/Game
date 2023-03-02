@@ -14,6 +14,9 @@
     <!-- <script src="js/jquery-3.6.3.min.js"></script> -->
     <link rel="stylesheet" href="assets/css/cart-area-style.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <!-- <script src="./assets/libs/HackTimer/HackTimerWorker.js"></script> -->
+    <script src="https://cdn.rawgit.com/turuslan/HackTimer/master/HackTimer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
@@ -24,7 +27,7 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
-    <script src="assets/js/jquery-3.6.3.min.js"></script>
+    <script defer src="assets/js/jquery-3.6.3.min.js"></script>
     
 </head>
 
@@ -154,6 +157,22 @@
                 <div id="progressBar">
                     <div class="bar"></div>
                 </div>
+                <div class="current-px visually-hidden"></div>
+            </div>
+            <div class="Rectangle_92">
+                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
+                <!-- <span>jquery</span> -->
+                <div id="jquery_progressBar">
+                    <div class="bar"></div>
+                </div>
+                <div class="jcurrent-px visually-hidden"></div>
+            </div>
+            <div class="Rectangle_91_v">
+                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
+                <div id="velocity_progressBar">
+                    <div class="bar"></div>
+                </div>
+                <div class="vcurrent-px visually-hidden"></div>
             </div>
 
             <div class="draw-num-box container">
@@ -2409,6 +2428,7 @@
 
     <script type="module" src="assets/js/demo.js"></script>
     <script type="module" src="assets/js/royal5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/2.0.6/velocity.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="assets/libs/slot_master/slot.js"></script>
     <script type="module" src="assets/js/tracks-cart.js"></script>
