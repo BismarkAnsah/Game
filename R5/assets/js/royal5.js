@@ -161,8 +161,7 @@ export class Royal5utils {
     <td class="m-bet">${game.getSavedData().totalBets}</td>
     <td class="m-units">${game.getSavedData().unitStaked}</td>
     <td>
-      <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${
-        game.getSavedData().totalBetAmt
+      <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${game.getSavedData().totalBetAmt
       }</span>
     </td>
   </tr>`);
@@ -350,13 +349,11 @@ export class Royal5utils {
     <tr>
       <th>
           <h5>
-              Total <strong class="cart-total-bets total-bets">${
-                game.sumBetAmtAndBets(cart)[1]
-              }</strong> bets
+              Total <strong class="cart-total-bets total-bets">${game.sumBetAmtAndBets(cart)[1]
+      }</strong> bets
           </h5>
-          <h6>Total amt. <strong class="text-danger  cart-total-bet-amt">${
-            game.sumBetAmtAndBets(cart)[0]
-          }</strong></h6>
+          <h6>Total amt. <strong class="text-danger  cart-total-bet-amt">${game.sumBetAmtAndBets(cart)[0]
+      }</strong></h6>
       </th>
     </tr>
     <tr>
@@ -444,11 +441,9 @@ export class Royal5utils {
       );
       idDateTime = game.addMinutes(idDateTime, intervalMinutes);
 
-      selectTrackIds += `<option data-date-to-start="${
-        game.getDate(idDateTime) + " " + game.getTime(idDateTime)
-      }" value="${currentBetId}">${currentBetId} ${
-        i === 0 ? "Current" : ""
-      }</option>`;
+      selectTrackIds += `<option data-date-to-start="${game.getDate(idDateTime) + " " + game.getTime(idDateTime)
+        }" value="${currentBetId}">${currentBetId} ${i === 0 ? "Current" : ""
+        }</option>`;
     }
 
     $('select[name="first_draw"]').html(selectTrackIds);
@@ -469,7 +464,7 @@ export class Royal5utils {
       "table tbody.track-data tr.track-entry .current:visible, table tbody.track-data tr.track__entry_p .current:visible"
     );
     // If the current bet ID is not the same as the server's next bet ID, change the current button
-    if (currentBetId !== serverDrawNum.nextBetId) {
+    if (currentBetId !== drawData.nextBetId) {
       btn_to_change.addClass("visually-hidden");
       btn_to_change
         .closest("tr.track-entry")
@@ -509,7 +504,6 @@ export class Royal5utils {
     let multiplier = firstMultiplier;
     let totalBetAmt = firstBetAmt;
     let currentDrawDate = firstDrawDate;
-    console.log(firstDrawDate);
     let currentBetId = betId;
     let estimatedDrawTime =
       this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate);
@@ -539,7 +533,7 @@ export class Royal5utils {
         currentDrawDate,
         intervalMinutes
       );
-      console.log(currentBetId, currentDrawDate)
+
       //todo: fix draw date time well
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.fixArithmetic(multiplier * eachBetAmt);
@@ -595,23 +589,23 @@ export class Royal5utils {
     return yieldData;
   }
 
-  
- /**
- * Calculates the yield multiplier for a bet, based on the minimum yield, bonus, 
- * previous payout, and single bet amount.
- *
- * @param {number} minimumYield - The minimum yield for the bet.
- * @param {number} bonus - The bonus for the bet.
- * @param {number} previousPaid - The previous payout for the bet.
- * @param {number} singleBetAmt - The amount of the single bet.
- * @returns {number} The yield multiplier for the bet.
- */
-getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
-  let dividend = this.fixArithmetic(minimumYield * previousPaid) + this.fixArithmetic(100 * previousPaid);
-  let divisor = this.fixArithmetic(100 * bonus) - this.fixArithmetic(100 * singleBetAmt) - this.fixArithmetic(minimumYield * singleBetAmt);
-  let multiplier = this.fixArithmetic(dividend / divisor);
-  return Math.ceil(multiplier);
-}
+
+  /**
+  * Calculates the yield multiplier for a bet, based on the minimum yield, bonus, 
+  * previous payout, and single bet amount.
+  *
+  * @param {number} minimumYield - The minimum yield for the bet.
+  * @param {number} bonus - The bonus for the bet.
+  * @param {number} previousPaid - The previous payout for the bet.
+  * @param {number} singleBetAmt - The amount of the single bet.
+  * @returns {number} The yield multiplier for the bet.
+  */
+  getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
+    let dividend = this.fixArithmetic(minimumYield * previousPaid) + this.fixArithmetic(100 * previousPaid);
+    let divisor = this.fixArithmetic(100 * bonus) - this.fixArithmetic(100 * singleBetAmt) - this.fixArithmetic(minimumYield * singleBetAmt);
+    let multiplier = this.fixArithmetic(dividend / divisor);
+    return Math.ceil(multiplier);
+  }
 
 
   /**
@@ -1100,7 +1094,7 @@ getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
     return amt;
   }
 
-  
+
   /**
    * all bets generated from user selections. (works for only two rows and one row games eg. all 5 group120, all 5 group5, all 5 group60 and not all 5 combo)
    * @param  {...,number, array} rowsAndSamples (row1, row2, sample1, sample2) or (row1, sample1, row2, sample2)
@@ -1146,7 +1140,7 @@ getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
 
   /******logics */
 
-  
+
 
   increaseMultiplier(target) {
     let multiValue = this.getValue(target);
@@ -1193,7 +1187,7 @@ getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
     return this.pageId;
   }
   /****validations */
-  validateMoney() {}
+  validateMoney() { }
 
   setAllBets() {
     this.allBets = this.getBets();
@@ -1720,28 +1714,28 @@ class a5_g60 extends Royal5utils {
     this.createGameInterface(this.labels);
   }
   calcTotalBets() {
-    return this.total.calculateBet(
-      this.rows.row1,
-      this.sample1,
-      this.rows.row2,
-      this.sample2
-    );
-    // console.log(this.getTotalBets(this.rows.row1, this.sample1, this.rows.row2, this.sample2));
-    return this.getTotalBets(
-      this.rows.row1,
-      this.sample1,
-      this.rows.row2,
-      this.sample2
-    );
-    // let row1 = this.rows.row1;
-    // let row2 = this.rows.row2;
-    // let repeatedNums = row2.filter((element) => row1.includes(element));
-    // let repeat = repeatedNums.length;
-    // return (
-    //   ((row2.length * (row2.length - 1) * (row2.length - 2)) / 6) *
-    //   (row1.length - repeat) +
-    //   (repeat * (row2.length - 1) * (row2.length - 2) * (row2.length - 3)) / 6
+    // return this.total.calculateBet(
+    //   this.rows.row1,
+    //   this.sample1,
+    //   this.rows.row2,
+    //   this.sample2
     // );
+    // // console.log(this.getTotalBets(this.rows.row1, this.sample1, this.rows.row2, this.sample2));
+    // return this.getTotalBets(
+    //   this.rows.row1,
+    //   this.sample1,
+    //   this.rows.row2,
+    //   this.sample2
+    // );
+    let row1 = this.rows.row1;
+    let row2 = this.rows.row2;
+    let repeatedNums = row2.filter((element) => row1.includes(element));
+    let repeat = repeatedNums.length;
+    return (
+      ((row2.length * (row2.length - 1) * (row2.length - 2)) / 6) *
+      (row1.length - repeat) +
+      (repeat * (row2.length - 1) * (row2.length - 2) * (row2.length - 3)) / 6
+    );
   }
 
   pushToCart(cart) {
@@ -1828,9 +1822,7 @@ class a5_joint extends Royal5utils {
   settings;
   gameId = 1;
   type = "All 5 Straight(Joint)";
-  // labels = ["1st", "2nd", "3rd", "4th", "5th"];
-  // sample1 = 1;
-  // sample2 = 1;
+  labels = ["1st", "2nd", "3rd", "4th", "5th"];
   rows = {
     row1: [],
     row2: [],
@@ -1845,8 +1837,8 @@ class a5_joint extends Royal5utils {
     // this.label = settings.label;
     // this.gameId = settings.gameId;
     // this.type = settings.type;
-    this.settings = settings;
-    this.createGameInterface(this.settings.label);
+    // this.settings = settings;
+    this.createGameInterface(this.labels);
   }
 
   calcTotalBets() {
@@ -3524,7 +3516,7 @@ class any_place_three_out_of_five extends Royal5utils {
 /*--------------------End any_place class--------------------------------*/
 
 
-const intervalMinutes = 5; // Royal5 draw number intervals
+const intervalMinutes = 1; // Royal5 draw number intervals
 const maxEntryValue = 9999; //maximum value allowed for input fields
 let progressTime; //default seconds for progress bar and countdown.
 let lastId = 0;
@@ -3967,14 +3959,13 @@ function ready(className) {
     game.setTrackJson(trackJson);
     game.createTrackInterface(trackJson);
     game.createProfitTrackInterface(trackJson);
-    console.log("select currnet===============================----------", $(".current"))
   });
 
   $("#first__draw__select").on("change", function () {
     maxInput = checkRemainingSelectOptions("#first__draw__select");
     let hshs = $(".total-draws").val();
 
-    
+
     let selectedIndex = $(this).prop("selectedIndex");
     // let getprev = $(this)
     //   .find("option")
@@ -4062,14 +4053,13 @@ function ready(className) {
           <th scope="row">${i + 1}</th>
           <td class="m-group-type">${row[i].innerText}</td>
           <td class="text-truncate text-center"><span style="max-width: 80px" class="m-detail" >${truncateEllipsis(
-            cart[key].userSelections
-          )}</span></td>
+        cart[key].userSelections
+      )}</span></td>
           <td class="m-bet">${cart[key].totalBets}</td>
           <td class="m-units">${cart[key].unitStaked}</td>
           <td>
-              <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${
-                cart[key].totalBetAmt
-              }</span>
+              <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${cart[key].totalBetAmt
+        }</span>
           </td>
         </tr>`;
 
@@ -4447,7 +4437,7 @@ function formatDrawResponse(response) {
   let formattedResponse = {
     responseId: responseData.id,
     betId: responseData.draw_date,
-    drawDatetime: responseData.draw_datetime,
+    drawDatetime: responseData.draw_time,
     drawNumber: drawNumber,
     timeLeft: timeLeft,
     nextBetId: game.generateNextBetId(responseData.draw_date, responseData.draw_datetime, intervalMinutes),
@@ -4465,8 +4455,8 @@ function formatDrawResponse(response) {
  * @param {string} randomName this holds the number of times the ajax call has been made. Function creates a global property 
  * in the "@totalRequests" object to avoid conflicts. Usually you can pass the function name as a string.
  */
- function reloadPageAfter(max, randomName) {
-  if(totalRequests[randomName] === undefined)
+function reloadPageAfter(max, randomName) {
+  if (totalRequests[randomName] === undefined)
     totalRequests[randomName] = 0;
   if (totalRequests[randomName] >= max) {
     window.location.reload();
@@ -4482,7 +4472,7 @@ function getDrawData(intervalTime) {
     fetch(urls.draws)
       .then(response => {
         if (response.ok) {
-    
+
           return response.json();
         } else {
           throw new Error('Network response was not ok');
@@ -4500,11 +4490,25 @@ function getDrawData(intervalTime) {
             drawData.betId,
             drawData.nextBetId
           );
-  
+
           progress(drawData.timeLeft - 3, 60, $("#progressBar"));
-    
           const nextIntervalTime = drawData.timeLeft * 1000;
           getDrawData(nextIntervalTime);
+          if (game.getTrackJson()) {
+            game.changeCurrentButton();
+            setTimeout(() => {
+              let firstMultiplier = +$(".first-multiplier").val();
+              let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
+              let multiplyBy = +$(".multiplyBy").val();
+              let maxInput = +$(".total-draws").val();
+              let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "eachTotalBets"));
+              game.createTrackInterface(trackJson)
+              game.setTrackJson(trackJson)
+              game.generateSelectOptions(drawData.betId);
+            }, 1000);
+
+
+          }
         } else {
           console.info("No new data received");
           reloadPageAfter(50, "getDrawData");
