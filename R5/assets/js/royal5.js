@@ -4495,6 +4495,11 @@ function getDrawData(intervalTime) {
         {
           drawData = prettyResp;
           slotjs(drawData.drawNumber);
+          startAnimation(
+            drawData.drawNumber,
+            drawData.betId,
+            drawData.nextBetId
+          );
           // requestAnimationFrame(() => {
           progress(drawData.timeLeft - 3, 60, $("#progressBar"));
           // });
