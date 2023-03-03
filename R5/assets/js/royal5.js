@@ -849,7 +849,7 @@ getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
   * @param {string} currentBetId - The current betId to compare against. Default is serverDrawNum.nextBetId.
   * @returns {boolean} - Returns true if the given betId is the current bet, false otherwise.
   */
-  isCurrent(betId, currentBetId = serverDrawNum.nextBetId) {
+  isCurrent(betId, currentBetId = drawData.nextBetId) {
     return betId == currentBetId;
   }
   /**
