@@ -1,8 +1,8 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 import { showCartArea } from "./tracks-cart.js";
-import { countdown, progress } from "./timer.js";
-import { startAnimation } from "../libs/velocity/slot_animator.js";
+import { progress } from "./timer.js";
+import { startAnimation } from "../libs/slot_machine/slot_animator.js";
 import { chunkArray, getCombination } from "./utilityFunctions.js";
 //todo: test next day.
 /**hides and shows balance */

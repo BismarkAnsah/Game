@@ -2626,9 +2626,6 @@
 
     <script type="module" src="assets/js/demo.js"></script>
     <script type="module" src="assets/js/royal5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/2.0.6/velocity.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-    <script src="assets/libs/slot_master/slot.js"></script>
     <script type="module" src="assets/js/tracks-cart.js"></script>
     <script type="module" src="assets/js/timer.js"></script>
     <script type="module" src="assets/js/main.js"></script>
