@@ -4500,9 +4500,9 @@ function getDrawData(intervalTime) {
             drawData.betId,
             drawData.nextBetId
           );
-          // requestAnimationFrame(() => {
+  
           progress(drawData.timeLeft - 3, 60, $("#progressBar"));
-          // });
+    
           const nextIntervalTime = drawData.timeLeft * 1000;
           getDrawData(nextIntervalTime);
         } else {
