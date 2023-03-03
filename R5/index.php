@@ -11,10 +11,10 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Web 1920 - 1</title>
-    <!-- <script src="js/jquery-3.6.3.min.js"></script> -->
     <link rel="stylesheet" href="assets/css/cart-area-style.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script src="assets/libs/HackTimer/HackTimer.js"></script>
+    <script src="assets/libs/AnimeJs/anime.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -24,8 +24,8 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
-    <script src="assets/js/jquery-3.6.3.min.js"></script>
-
+    <script defer src="assets/js/jquery-3.6.3.min.js"></script>
+    
 </head>
 
 <body>
@@ -156,6 +156,22 @@
                 <div id="progressBar">
                     <div class="bar"></div>
                 </div>
+                <div class="current-px visually-hidden"></div>
+            </div>
+            <div class="Rectangle_92">
+                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
+                <!-- <span>jquery</span> -->
+                <div id="jquery_progressBar">
+                    <div class="bar"></div>
+                </div>
+                <div class="jcurrent-px visually-hidden"></div>
+            </div>
+            <div class="Rectangle_91_v">
+                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
+                <div id="velocity_progressBar">
+                    <div class="bar"></div>
+                </div>
+                <div class="vcurrent-px visually-hidden"></div>
             </div>
 
             <div class="draw-num-box container">
@@ -179,7 +195,7 @@
                             <li>First 2</li>
                             <li>Last 2</li>
                             <li data-points-to="fixed-place">Fixed place</li>
-                            <li>Any Place</li>
+                            <li data-points-to="any-place">Any Place</li>
                             <li>B/S/O/E</li>
                             <li>Fun</li>
                             <li>Pick 2</li>
@@ -1267,6 +1283,279 @@
                             </div>
                         </div>
                         <!-- fixed place -->
+
+                        <!-- Any place -->
+                              <!--All 3 -->
+                        <div class="any-place game-nav-box">
+                            <label for="">All 3:</label>
+                            <div class="group">
+                                <div class="active-svg nav-item-c" data-class="any_plce_one_out_of_first_three">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                            <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                                <path class="path-fill"
+                                                    d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                                </path>
+                                            </svg>
+                                    <div class="nav-text">
+                                        <span class="text label-space">Any place 1 out of First 3</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_two_out_of_first_three">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 2 out First 3</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_one_out_of_mid_three">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 1 out of Mid 3</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_two_out_of_mid_three">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 2 Out of Mid 3</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label for=""></label>
+                            <div class="group">
+                                <div class="nav-item-c" data-class="any_place_one_out_of_last_three">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 1 out of Last 3</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_two_out_of_last_last_three">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 2 out of Last 3</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                          </div>
+                           <!-- All 3  -->
+                            <!-- All 4 -->
+                            <div class="any-place game-nav-box">
+                            <label for="">All 4:</label>
+                            <div class="group">
+                                <div class="active-svg nav-item-c" data-class="any_place_one_out_of_first_four">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 1 out of First 4</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_two_out_of_first_four">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 2 out of First 4</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_three_out_of_first_four">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 3 out of First 4</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_one_out_of_last_four">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 1 out of Last 4</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label for=""></label>
+                            <div class="group">
+                                <div class="nav-item-c" data-class="any_place_two_out_of_last_four">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 2 out of Last 4</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_three_out_of_last_four">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 3 out of Last 4</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                           
+                            <label for="">All 5</label>
+                            <div class="group">
+                                <div class="nav-item-c" data-class="any_place_one_out_of_five">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 1 out of 5</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_two_out_of_five">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 2 out of 5</span>
+                                    </div>
+                                </div>
+                                <div class="nav-item-c" data-class="any_place_three_out_of_five">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text">Any Place 3 out of 5</span>
+                                    </div>
+                                </div>
+                                <!-- <br />
+                                <div class="nav-item-c" data-class="any_place">
+                                    <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
+                                        <path class="path-outline"
+                                            d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
+                                        </path>
+                                    </svg>
+                                    <svg class="path-fill-box" viewBox="1566.5 8196 354 52">
+                                        <path class="path-fill"
+                                            d="M 1582.5 8196 L 1566.5 8248 L 1899.5 8248 L 1920.5 8218 L 1899.5 8196 L 1582.5 8196 Z">
+                                        </path>
+                                    </svg>
+                                    <div class="nav-text">
+                                        <span class="text"> Last 4 Group 4</span>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                            <!-- All 4 -->
+
+                        <!-- Any place -->
                         <div class="row-c">
                             <div class="col-c active-game-box">
                                 <span class="active-game">All 5 straight(Joint)</span>
@@ -2353,14 +2642,9 @@
 
     <script type="module" src="assets/js/demo.js"></script>
     <script type="module" src="assets/js/royal5.js"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script> -->
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
-
-
-    <!-- <script src="assets/libs/slot_master/slot.js"></script> -->
-    <script src="assets/libs/velocity/velocity.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script type="module" src="assets/libs/velocity/slot_animator.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/2.0.6/velocity.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script src="assets/libs/slot_master/slot.js"></script>
     <script type="module" src="assets/js/tracks-cart.js"></script>
     <script type="module" src="assets/js/timer.js"></script>
     <script type="module" src="assets/js/main.js"></script>

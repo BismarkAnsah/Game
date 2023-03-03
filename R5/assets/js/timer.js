@@ -31,38 +31,64 @@ export function countdown(seconds) {
 
 /**
  * Updates a progress bar and a displayed countdown timer based on the time left and the total time.
- * @param {number} timeleft - The number of seconds left in the countdown.
+ * @param {number} timeLeft - The number of seconds left in the countdown.
  * @param {number} timetotal - The total number of seconds in the countdown.
  * @param {jQuery} $element - The jQuery object for the progress bar element.
  */
-export let progress = (timeleft, timetotal, $element) => {
-  // if (timeleft === 0) 
-  //   return;
-  
+export let progress = (timeLeft, timetotal, $element) => {
+  if(timeLeft <= -1)
+    return;
+  if (timeLeft < 0) 
+    timeLeft = 0;
   // Get the elements that will display hours, minutes, and seconds
   // let hrs = document.getElementById("hrs");
   // let mins = document.getElementById("mins");
   // let secs = document.getElementById("secs");
 
   // Calculate the total number of minutes remaining
-  let totalMinutes = Math.floor(timeleft / 60);
+  let totalMinutes = Math.floor(timeLeft / 60);
 
   // Calculate the number of seconds remaining, as well as the number of hours and minutes remaining
-  let seconds = timeleft % 60;
+  let seconds = timeLeft % 60;
   let hours = Math.floor(totalMinutes / 60);
   let minutes = totalMinutes % 60;
 
   // Calculate the current width of the progress bar based on the time left and the total time
-  let progressBarWidth = (timeleft * $element.width()) / timetotal;
-
+  let progressBarWidth = (timeLeft * $element.width()) / timetotal;
+  //  progressBarWidth = Math.floor(progressBarWidth)
   // Update the progress bar by animating its width
+  // $("#jquery_progressBar")
+  //   .find("div")
+  //   .animate({ width: progressBarWidth }, 500)
   $element
     .find("div")
-    .animate({ width: progressBarWidth }, 500)
+    .css( "width" , progressBarWidth  )
 
+    var progressBar = anime({
+      targets: '#jquery_progressBar .bar',
+      width: progressBarWidth,
+      easing: 'linear',
+      duration: 500,
+      autoplay: false,
+      // update: function(anim) {
+      //   var progress = Math.round(anim.progress);
+      //   // console.log(progress + '%');
+      // }
+    });
+    progressBar.play();
+    
+    // document.addEventListener('click', function() {
+      // });
+      Velocity($("#velocity_progressBar .bar"), {
+    width: progressBarWidth
+  }, {
+    duration: 500
+  });
+
+  $(".current-px").text(progressBarWidth)
   // Update the displayed time in hours, minutes, and seconds
   // Format the time to add a leading zero if the number is less than 10
-  if (timeleft >= 0) {
+  if (timeLeft >= 0) {
     let timeOut = setTimeout(function () {
       progress(timeleft - 1, timetotal, $element);
       hrs.each(function () {
@@ -80,10 +106,10 @@ export let progress = (timeleft, timetotal, $element) => {
       clearTimeout(timeOut);
     }, 1000);
   }else{
-    clearTimeout(timeleft);
+    clearTimeout(timeLeft);
 
   }
-  // console.log("timeleft", timeleft);
+  // console.log("timeLeft", timeLeft);
   // console.log("===============super==================")
 }
 
@@ -123,7 +149,7 @@ function updateProgressBar(startTime, duration, reduceAfter) {
   if (previousPercent >= percent) {
     // console.log("sjsjdds================================")
 
-    progressBar.animate({ width: percent }, 500);
+    progressBar.style.width = percent+"p0x";
     previousPercent = percent;
   }
   if (percent > 0) {

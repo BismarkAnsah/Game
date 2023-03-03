@@ -3,13 +3,16 @@ import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 import { showCartArea } from "./tracks-cart.js";
 import { countdown, progress } from "./timer.js";
 import { startAnimation } from "../libs/velocity/slot_animator.js";
+import { chunkArray, getCombination } from "./utilityFunctions.js";
 //todo: test next day.
 /**hides and shows balance */
+// import fixedPlace from "./c1`omponents/fixed_place.js";
+
 $(".eye, .eye-slash").click(function () {
   $(".balance-box").toggleClass("show-balance");
 });
 
-class Royal5utils {
+export class Royal5utils {
   /***
    *
    * README.md
@@ -82,6 +85,7 @@ class Royal5utils {
     // return element ? $(this.pageId).find(element) : this.$(this.pageId);
     return $(element);
   }
+
 
   /**
    *
@@ -428,8 +432,8 @@ class Royal5utils {
    *@memberof Royal5utils
    */
   generateSelectOptions(
-    currentBetId = currentSelectOption.betId,
-    idDateTime = currentSelectOption.dateTime
+    currentBetId = drawData.betId,
+    idDateTime = drawData.drawDatetime
   ) {
     let selectTrackIds = "";
     for (let i = 0; i < 120; i++) {
@@ -505,6 +509,7 @@ class Royal5utils {
     let multiplier = firstMultiplier;
     let totalBetAmt = firstBetAmt;
     let currentDrawDate = firstDrawDate;
+    console.log(firstDrawDate);
     let currentBetId = betId;
     let estimatedDrawTime =
       this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate);
@@ -534,6 +539,7 @@ class Royal5utils {
         currentDrawDate,
         intervalMinutes
       );
+      console.log(currentBetId, currentDrawDate)
       //todo: fix draw date time well
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.fixArithmetic(multiplier * eachBetAmt);
@@ -562,31 +568,51 @@ class Royal5utils {
     return track;
   }
 
-  /**
-   * Compares a single date with the current date and time
-   * @param {string} date - The input date to compare, in the format "YYYY-MM-DDTHH:MM:SS"
-   * @return {boolean} - Returns true if the input date is in the future, or false if it's in the past
-   */
-  isFutureDate(date) {
-    // Convert the input date to a JavaScript Date object
-    let inputDate = new Date(currentSelectOption.dateTime);
 
-    // Get the current date and time
-    let currentDate = new Date("2023-01-31 20:49:00"); //pass server time here
-
-    // Calculate the difference between the two dates
-    let diff = inputDate - currentDate;
-
-    // Return true if the input date is in the future, or false if it's in the past
-    if (diff >= 0) {
-      return true;
-    } else {
-      return false;
+  createTrackYield(totalDraws, eachMultiplier, bonus, singleBetAmt) {
+    let yieldData = {};
+    yieldData.bets = {};
+    let totalAmount = 0;
+    let previousBetAmt = 0;
+    let currentAmt;
+    for (let i = 0; i < totalDraws; i++) {
+      currentAmt = this.fixArithmetic(previousBetAmt + singleBetAmt);
+      yieldData.bets[i] = {
+        multiplier: eachMultiplier,
+        betAmt: this.fixArithmetic(eachMultiplier * singleBetAmt),
+        bonus: bonus,
+        currentAmt: currentAmt,
+        expectedAmt: this.fixArithmetic(currentAmt + singleBetAmt)
+      }
+      previousBetAmt = yieldData.bets[i].currentAmt;
     }
+
+    yieldData.yieldInfo = {
+      totalDraws: totalDraws,
+      totalAmount: totalAmount
+    }
+
+    return yieldData;
   }
-  //call the above like below
-  // let result = isFutureDate("2023-02-09T10:00:00");
-  // console.log(result); // outputs "true"
+
+  
+ /**
+ * Calculates the yield multiplier for a bet, based on the minimum yield, bonus, 
+ * previous payout, and single bet amount.
+ *
+ * @param {number} minimumYield - The minimum yield for the bet.
+ * @param {number} bonus - The bonus for the bet.
+ * @param {number} previousPaid - The previous payout for the bet.
+ * @param {number} singleBetAmt - The amount of the single bet.
+ * @returns {number} The yield multiplier for the bet.
+ */
+getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
+  let dividend = this.fixArithmetic(minimumYield * previousPaid) + this.fixArithmetic(100 * previousPaid);
+  let divisor = this.fixArithmetic(100 * bonus) - this.fixArithmetic(100 * singleBetAmt) - this.fixArithmetic(minimumYield * singleBetAmt);
+  let multiplier = this.fixArithmetic(dividend / divisor);
+  return Math.ceil(multiplier);
+}
+
 
   /**
    * creates a track interface by appending elements to HTML DOM.
@@ -811,7 +837,7 @@ class Royal5utils {
    * @param {string} checkDate does this date happens on the next day?
    * @returns true or false. true if nextDay
    */
-  isNextDay(checkDate, date = serverDrawNum.dateTime) {
+  isNextDay(checkDate, date = drawData.drawDatetime) {
     const date1 = new Date(date);
     const date2 = new Date(checkDate);
     if (date1.getDate() != date2.getDate()) return true;
@@ -846,15 +872,19 @@ class Royal5utils {
    * fetches data asynchronously from server.
    * @param {string} url resource URL
    * @param {object} data data to send before fetching
+   * @param {callback} callback function to call when data is fetched successfully. first argument is the response object.
    * @returns response object from server
    */
-  fetchData(url, data) {
-    data = data || JSON.stringify(data);
-
-    return $.ajax({
+  async fetchData(url, callback, data = []) {
+    let results = await $.ajax({
       url: url,
+      success: callback,
       data: data,
+      error: function () {
+        console.log("There was an error.");
+      }
     });
+    return JSON.parse(results);
   }
 
   // deleteFromCart(id, cart) {
@@ -1490,7 +1520,7 @@ class a5_g5 extends Royal5utils {
     return row2.length * (row1.length - repeat) + repeat * (row2.length - 1);
   }
 
-  pushToCart(cart) {
+  pushToCart() {
     let data = this.getSavedData();
     let key = Object.keys(cart).length;
     let type = this.type;
@@ -1817,7 +1847,6 @@ class a5_joint extends Royal5utils {
     // this.type = settings.type;
     this.settings = settings;
     this.createGameInterface(this.settings.label);
-    console.log(settings);
   }
 
   calcTotalBets() {
@@ -2817,14 +2846,699 @@ class fixed_place extends Royal5utils {
 
 /*--------------------End fixed_place class--------------------------------*/
 
+
+
+/*--------------------Begin any_place class--------------------------------*/
+
+//Any place one out of first three
+
+class any_plce_one_out_of_first_three extends Royal5utils {
+  sample1 = 1;
+  gameId = 100;
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1)
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+
+}
+
+
+//Any place 2 out of first three
+class any_place_two_out_of_first_three extends Royal5utils {
+
+  sample1 = 2;
+  gameId = 101;
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    const totalBets = getCombination(this.rows.row1.length, this.sample1)
+    return totalBets
+    //console.log("Total Bet ...", totalBets);
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+
+}
+
+//
+class any_place_one_out_of_mid_three extends Royal5utils {
+
+  sample1 = 1;
+  gameId = 103;
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+
+}
+
+//
+class any_place_two_out_of_mid_three extends Royal5utils {
+
+  sample1 = 2;
+  gameId = 104;
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+
+}
+
+//
+class any_place_one_out_of_last_three extends Royal5utils {
+
+  sample1 = 1
+  gameId = 105
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+
+class any_place_two_out_of_last_last_three extends Royal5utils {
+  sample1 = 2
+  gameId = 106
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+
+class any_place_one_out_of_first_four extends Royal5utils {
+  sample1 = 1
+  gameId = 107
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+class any_place_two_out_of_first_four extends Royal5utils {
+  sample1 = 2
+  gameId = 108
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+class any_place_three_out_of_first_four extends Royal5utils {
+  sample1 = 3
+  gameId = 109
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+class any_place_one_out_of_last_four extends Royal5utils {
+  sample1 = 1
+  gameId = 110
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+class any_place_two_out_of_last_four extends Royal5utils {
+  sample1 = 2
+  gameId = 111
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+class any_place_three_out_of_last_four extends Royal5utils {
+  sample1 = 3
+  gameId = 112
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+
+class any_place_one_out_of_five extends Royal5utils {
+  sample1 = 1
+  gameId = 113
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+class any_place_two_out_of_five extends Royal5utils {
+  sample1 = 2
+  gameId = 114
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+class any_place_three_out_of_five extends Royal5utils {
+  sample1 = 3
+  gameId = 115
+  type = "any place";
+  labels = [""];
+  rows = {
+    row1: [],
+  };
+
+  constructor(pageId) {
+    super(pageId);
+    this.createGameInterface(this.labels);
+  }
+
+  calcTotalBets() {
+    return getCombination(this.rows.row1.length, this.sample1)
+  }
+
+  pushToCart(cart) {
+    let data = this.getSavedData();
+    let key = cart.length;
+    let type = this.type;
+    let detail = data.userSelections;
+    let bets = data.totalBets;
+    let unit = data.unitStaked;
+    let multiplier = `x${data.multiplier}`;
+    let betAmt = `&#8373;${data.totalBetAmt}`;
+    this.appendRow(type, detail, bets, unit, multiplier, betAmt, index);
+    cart[key] = data;
+  }
+
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
+}
+
+/*--------------------End any_place class--------------------------------*/
+
+
 const intervalMinutes = 5; // Royal5 draw number intervals
 const maxEntryValue = 9999; //maximum value allowed for input fields
+let progressTime; //default seconds for progress bar and countdown.
 let lastId = 0;
 let initializedClasses = [];
 let cart = {};
 /** object to hold the track data */
 let trackData = {};
 let oldClass = "a5_joint";
+const urls = {
+  balance: "http://192.168.199.126/task/receiver.php?action=userbalance",
+  draws: "http://192.168.199.126/task/cron/frontend_draw.php",
+  // betNow: "http://192.168.199.126/task/nav.php"
+  drawsMock: "./demo/generator.php",
+}
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings("a5_joint"));
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
@@ -2847,21 +3561,19 @@ let serverDrawNum = {
   // dateTime: "2023-01-31 20:24:00",
   // nextBetId: "202301310002",
   // nextDateTime: "2023-01-31 20:29:00"
-};
+
+}
+let drawData = {};
+let totalRequests = {
+  getDrawData: 0
+}
 let currentSelectOption = {}; // current select option in track
 
 let tooltipData; //tooltips data
 
 function setNextDraws() {
-  serverDrawNum.nextBetId = game.generateNextBetId(
-    serverDrawNum.betId,
-    serverDrawNum.dateTime,
-    intervalMinutes
-  );
-  serverDrawNum.nextDateTime = game.addMinutes(
-    serverDrawNum.dateTime,
-    intervalMinutes
-  );
+  drawData.nextBetId = game.generateNextBetId(drawData.draw_date, drawData.draw_datetime, intervalMinutes);
+  drawData.nextDateTime = game.addMinutes(drawData.draw_datetime, intervalMinutes);
 }
 
 // let liveDrawNum = {
@@ -3163,7 +3875,7 @@ function ready(className) {
     game.$("input.bet-amt").val("");
     showBetsInfo();
   });
-
+  // console.warn("error")
   game.$("input.bet-amt").click(function () {
     // let betAmt = game.betAmt;
     // let unitAmt = game.betAmt?unitAmt:0;
@@ -3202,7 +3914,6 @@ function ready(className) {
     $(this).val(onlyNums);
     showBetsInfo();
   });
-
   //for manual bet
   game.$(".bet-box").on("input", function () {
     game.setAllBets();
@@ -3242,17 +3953,11 @@ function ready(className) {
       defaultTrackInputs
     );
     $(".total-draws").val(defaultTrackDraws);
-    let trackJson = game.createTrackJson(
-      currentSelectOption.nextDateTime,
-      currentSelectOption.nextBetId,
-      defaultTrackDraws,
-      1,
-      1,
-      1,
-      betAmt,
-      totalBets
-    );
-    console.log("===================NEXT DATE===========================", currentSelectOption.nextDateTime);
+    console.log(drawData.nextDrawDate)
+    let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
+    game.generateSelectOptions(drawData.betId);
+    showCartArea('track-tab')
+    // setInterval(() => {
 
     game.generateSelectOptions(currentSelectOption.betId);
     showCartArea("track-tab");
@@ -3370,67 +4075,9 @@ function ready(className) {
 
       i++;
     }
-    track_table.html(track_cart);
-    let firstMultiplier = +$(".first-multiplier").val();
-    let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
-    let multiplyBy = +$(".multiplyBy").val();
-    let maxInput = +$(".total-draws").val();
-    let bet_amt = +game.sumBetAmtAndBets({ ...cart })[0];
-    let total_bets = +game.sumBetAmtAndBets({ ...cart })[1];
-    console.log("bet_amt", bet_amt);
-    console.log("total_bets", total_bets);
+    $.post("http://192.168.199.126/task/track.php", JSON.stringify(data), callback)
+  })
 
-    game.changeCurrentButton();
-
-    game.generateSelectOptions(
-      currentSelectOption.betId,
-      game.addMinutes(currentSelectOption.dateTime, intervalMinutes)
-    );
-
-    let trackJson = game.createTrackJson(
-      currentSelectOption.nextDateTime,
-      currentSelectOption.nextBetId,
-      maxInput,
-      firstMultiplier,
-      multiplyAfterEvery,
-      multiplyBy,
-      bet_amt,
-      total_bets
-    );
-
-    game.createTrackInterface(trackJson);
-    trackData = { ...cart };
-    game.setTrackJson(trackJson);
-    // $(".track__total__bets").text(total_bets);
-    // // $(".track__total__amt__to_pay").text(bet_amt);
-
-    showCartArea("track-tab");
-    // console.log("track", track)
-  });
-
-  // let json_to_send = game.trackJson
-  // console.log(json_to_send);
-
-  // console.log(game.trackJson);
-
-  // $(document).on("input", ".track-multiplier",function (e) {
-  //   console.log("multiplier")
-  //   console.log(e.target)
-  //   console.log(e.target.closest("tr"))
-  //   let tr = e.target.closest("tr");
-  //   console.log( $(tr).find("td:eq(0)").text())
-  //   console.log( $(tr).find("td:eq(1)").text())
-  //   console.log( $(tr).find("td:eq(2)").text())
-  // });
-
-  // document.querySelectorAll(".track-multiplier").forEach(function (el) {
-  //     console.log("multiplier")
-  // });
-
-  /**Edit Track Begins */
-  /**
-   *  listens to inputs that changes the track
-   */
   game
     .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
     .on("input", function () {
@@ -3528,10 +4175,6 @@ function ready(className) {
     }
   });
 
-  // game.$(".track-confirm").on("click", function () {
-  //   console.log(game.readyTrackJson());
-  // });
-
   game
     .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
     .click(function () {
@@ -3564,7 +4207,6 @@ function ready(className) {
     }, 50);
     game.setMultiplier(value);
     game.setBetAmt(game.calcBetAmt());
-    ``;
     game.$("input.bet-amt").val("");
     game.$(".multiplier-select").removeClass("active-btn");
     game.$(`.multiplier-select[value='${value}']`).addClass("active-btn");
@@ -3581,16 +4223,11 @@ function ready(className) {
 
   game.$(".bet-now").click(function () {
     game.disableButtons(true, ".cart", "input.bet-amt");
-    game.$(".spinner").show();
-    // game.alertErrBets();
     let savedData = game.getSavedData();
     console.log(savedData);
     let data = JSON.stringify([savedData]);
-    // let url = '../nav.php';
-    let url = "http://192.168.199.126/task/nav.php";
-    let req = $.post(url, data, function (response) {
+    let req = $.post(urls.betNow, data, function (response) {
       // console.log(response);
-      game.$(".spinner").hide();
       response = JSON.parse(response);
       if (response.title == "success") {
         game.fetchData(balanceUrl).then((response) => {
@@ -3598,46 +4235,21 @@ function ready(className) {
           $(".user-balance").html(response.userBalance);
         });
         alert(response.message);
-        // toastr.options.progressBar = true;
-        // toastr.success(response.message, response.title);
         game.resetAllData();
         cart = [];
       } else {
-        // toastr.options.progressBar = true;
-        // toastr.warning(response.message, response.title);
+
         game.disableButtons(false, ".cart", ".bet-now");
         alert(response.message);
       }
 
       req.fail(function () {
         alert("failed");
-        // toastr.options.progressBar = true;
-        // toastr.warning('Please check your internet connection', 'Failed');
       });
     });
   });
 
-  $("#cart-submit").click(function () {
-    let data = JSON.stringify(cart);
-    let url = "../nav.php";
-    console.log(data);
-    let req = $.post(url, data, function (response) {
-      // console.log(response);
-      response = JSON.parse(response);
-      if (response.title == "success") {
-        toastr.options.progressBar = true;
-        toastr.success(response.message, response.title);
-        $(".del").click();
-      } else {
-        toastr.options.progressBar = true;
-        toastr.warning(response.message, response.title);
-      }
-      req.fail(function () {
-        toastr.options.progressBar = true;
-        toastr.warning("Please check your internet connection", "Failed");
-      });
-    });
-  });
+
 
   $(".clear-cart").click(function () {
     let res = confirm("Do you want to clear all bets in cart?");
@@ -3709,15 +4321,6 @@ $(".group-nav>li").click(function () {
   let pointsTo = $(this).attr("data-points-to");
   hideAllExcept(".game-nav-box", `.${pointsTo}.game-nav-box`);
   $(`.${pointsTo} .nav-item-c:first`).click();
-  // game = getClass(className, `#${pointsTo}`);
-  // if(oldClass != className){
-  // oldClass = className;
-  // ready(className);
-  // let hideAll = '.game-group.page';
-  // let except  = `#${pointsTo}`;
-  // hideAllExcept(hideAll, except);
-  // hideAllExcept('.game-nav', `.game-nav.${pointsTo}`);
-  //}
 });
 
 function getClass(className) {
@@ -3732,6 +4335,21 @@ function getClass(className) {
     a5_g10: a5_g10,
     a5_g5: a5_g5,
     fixed_place: fixed_place,
+    any_plce_one_out_of_first_three: any_plce_one_out_of_first_three,
+    any_place_two_out_of_first_three: any_place_two_out_of_first_three,
+    any_place_one_out_of_mid_three: any_place_one_out_of_mid_three,
+    any_place_two_out_of_mid_three: any_place_two_out_of_mid_three,
+    any_place_one_out_of_last_three: any_place_one_out_of_last_three,
+    any_place_two_out_of_last_last_three: any_place_two_out_of_last_last_three,
+    any_place_one_out_of_first_four: any_place_one_out_of_first_four,
+    any_place_two_out_of_first_four: any_place_two_out_of_first_four,
+    any_place_three_out_of_first_four: any_place_three_out_of_first_four,
+    any_place_one_out_of_last_four: any_place_one_out_of_last_four,
+    any_place_two_out_of_last_four: any_place_two_out_of_last_four,
+    any_place_three_out_of_last_four: any_place_three_out_of_last_four,
+    any_place_one_out_of_five: any_place_one_out_of_five,
+    any_place_two_out_of_five: any_place_two_out_of_five,
+    any_place_three_out_of_five: any_place_three_out_of_five,
     f4_joint: f4_joint,
     f4_manual: f4_manual,
     f4_combo: f4_combo,
@@ -3755,19 +4373,27 @@ function getClass(className) {
 function getDrawNums(url = false, data = false) {
   // let url = '../generateRandom.php';
   //  url = url || '../receiver.php?action=getdrawnumber';
-  url = "demo/generator.php";
-  // url = url || "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-  data = data || {
-    last_id: lastId,
-  };
-  return fetchData(url, data).numbers;
+  // url = "demo/generator.php";
+  // url =  "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
+  url = "http://192.168.199.126/task/cron/draw_api.php";
+  // data =  {
+  //   last_id: 0,
+  // };
+  $.ajax({
+    url: url,
+    dataType: "json",
+    type: "post",
+    // data: JSON.stringify(data),
+    success: function (data) {
+      console.log(data);
+    }
+  })
+  // game.fetchData(url, data).then(function(response){
+  //   console.log(response);
+  // });
 }
 
-function showDrawNums(drawNums = getDrawNums()) {
-  $(".wining_num").each(function (index) {
-    $(this).html(drawNums[index]);
-  });
-}
+
 // showDrawNums([1,0,5,6,7]);
 
 $(function () {
@@ -3811,139 +4437,124 @@ function fetchToolTipData() {
   return $.get(url, callback);
 }
 
-$().ready(function () {
-  // let url = '../generateRandom.php';
-  // let url = '../receiver.php?action=getdrawnumber';
-  // let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-  let url = "demo/generator.php";
-  let data = {
-    last_id: lastId,
-  };
-  data = JSON.stringify(data);
-  let req = $.post(url, data, function (response) {
-    response = JSON.parse(response);
-    lastId = response.id;
-    if (response.numbers) {
-      console.log("response received", response);
-      lastId = response.id;
-      serverDrawNum = response;
-      currentSelectOption = serverDrawNum;
-      // $('#tt').tooltip();
 
-      callAllFunctionsHere();
-      $(".wining_num").each(function (index) {
-        $(this).html(response.numbers[index]);
-      });
-    } else {
-      console.log("not changed");
-      drawNum();
-    }
-  });
-  req.fail(function () {
-    console.log("failed");
-  });
-});
+function formatDrawResponse(response) {
 
-function drawNum() {
-  // let url = '../generateRandom.php';
-  console.log("lastId", lastId);
-  let url = "demo/generator.php";
-  // let url = "http://192.168.199.126/task/receiver.php?action=getdrawnumber";
-  let data = {
-    last_id: lastId,
-  };
-  data = JSON.stringify(data);
-  let req = $.post(url, data, function (response) {
-    response = JSON.parse(response); //
-    if (response.numbers) {
-      console.log("response received", response);
-      lastId = response.id;
-      serverDrawNum = response;
-      currentSelectOption = serverDrawNum;
-      console.log(currentSelectOption);
-      callAllFunctionsHere();
-      $(".wining_num").each(function (index) {
-        $(this).html(response.numbers[index]);
-      });
-    } else {
-      console.log("not changed");
-      drawNum();
-    }
-  });
-  req.fail(function () {
-    console.log("failed");
-  });
+  response = sliceFromJson(response, -2); //gets the last two  data in the object
+  let responseData = response[Object.keys(response)[0]]; // gets the last but one property of the object
+  let timeLeft = response[Object.keys(response)[1]]; // gets the time left property
+  let drawNumber = responseData.draw_number.split(",").map(el => +el); // gets the draw numbers in an array as integers
+  let formattedResponse = {
+    responseId: responseData.id,
+    betId: responseData.draw_date,
+    drawDatetime: responseData.draw_datetime,
+    drawNumber: drawNumber,
+    timeLeft: timeLeft,
+    nextBetId: game.generateNextBetId(responseData.draw_date, responseData.draw_datetime, intervalMinutes),
+    nextDrawDatetime: game.addMinutes(responseData.draw_datetime, intervalMinutes)
+  }
+
+  return formattedResponse;
 }
 
-// console.log(serverDrawNum)
+
+/**
+ * refreshes the page after a number of failed ajax requests.
+ * @param {number} max the maximum number of times a request will be made if there's an error, before 
+ *  page refreshes.
+ * @param {string} randomName this holds the number of times the ajax call has been made. Function creates a global property 
+ * in the "@totalRequests" object to avoid conflicts. Usually you can pass the function name as a string.
+ */
+ function reloadPageAfter(max, randomName) {
+  if(totalRequests[randomName] === undefined)
+    totalRequests[randomName] = 0;
+  if (totalRequests[randomName] >= max) {
+    window.location.reload();
+  }
+  totalRequests[randomName] += 1;
+
+  console.log(totalRequests[randomName])
+}
+
+
+function getDrawData(intervalTime) {
+  setTimeout(() => {
+    fetch(urls.draws)
+      .then(response => {
+        if (response.ok) {
+    
+          return response.json();
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      })
+      .then(data => {
+        const prettyResp = formatDrawResponse(data); //formats the response in the best way for processing.
+        console.log(prettyResp);
+        if (prettyResp.responseId != drawData.responseId) //if new data received
+        {
+          drawData = prettyResp;
+          slotjs(drawData.drawNumber);
+          // requestAnimationFrame(() => {
+          progress(drawData.timeLeft - 3, 60, $("#progressBar"));
+          // });
+          const nextIntervalTime = drawData.timeLeft * 1000;
+          getDrawData(nextIntervalTime);
+        } else {
+          console.info("No new data received");
+          reloadPageAfter(50, "getDrawData");
+          const retryAfter = 1000;
+          getDrawData(retryAfter);
+        }
+      })
+      .catch(error => {
+        console.info("Retrying...");
+        console.error('There was a problem fetching the data:', error);
+        const retryTime = 1000;
+        getDrawData(retryTime);
+        reloadPageAfter(50, "getDrawData");
+      });
+  }, intervalTime);
+}
+
+getDrawData(0);
 
 /**call all your functions here */
 function callAllFunctionsHere() {
-  let callDrawNum = setInterval(() => {
-    drawNum();
-    console.log((+serverDrawNum.timeLeft + 10) * 1000);
-    clearInterval(callDrawNum);
-  }, 20* 1000);
-
-  setNextDraws();
-
   let firstMultiplier = +$(".first-multiplier").val();
   let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
   let multiplyBy = +$(".multiplyBy").val();
   let maxInput = +$(".total-draws").val();
-
   if (game.getTrackJson()) {
-    game.changeCurrentButton();
+    game.changeCurrentButton()
     setTimeout(() => {
-      game.generateSelectOptions(
-        currentSelectOption.betId,
-        game.addMinutes(currentSelectOption.dateTime, intervalMinutes)
-      );
+      game.generateSelectOptions(drawData.betId, game.addMinutes(draw
+        .datetime, intervalMinutes));
 
-      let trackJson = game.createTrackJson(
-        currentSelectOption.nextDateTime,
-        currentSelectOption.nextBetId,
-        maxInput,
-        firstMultiplier,
-        multiplyAfterEvery,
-        multiplyBy,
-        game.getTrackElement("trackInfo", "eachBetAmt"),
-        game.getTrackElement("trackInfo", "eachTotalBets")
-      );
-      game.createTrackInterface(trackJson);
-      game.setTrackJson(trackJson);
+      let trackJson = game.createTrackJson(drawData.nextDatetime, draw.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "totalBets"));
+      game.createTrackInterface(trackJson)
+      game.setTrackJson(trackJson)
     }, 1000);
   }
-  console.log(serverDrawNum.numbers.map(Number));
+  console.log("===========================", drawData)
 
-  // slotjs(serverDrawNum.numbers.map(Number));
-  startAnimation(
-    serverDrawNum.numbers.map(Number),
-    serverDrawNum.betId,
-    serverDrawNum.nextBetId
-  );
-  // countdown(Math.abs(+serverDrawNum.timeLeft -3));
-  // requestAnimationFrame(() => {
-    progress(+serverDrawNum.timeLeft - 3, 60, $("#progressBar"));
-    
-  // });
 }
 // countdown(30)
 // slotjs([0,1,2,3,4,5])
 
 class TotalBets {
+
   /**
-   * Calculates the total number of possible combinations of selections across two rows, taking into account repeated selections between the rows.
-   * @param {array} row1Selections - An array containing the selections for the first row.
-   * @param {number} row1Sample - An integer representing the number of selections that can be made from the first row.
-   * @param {array} [row2Selections=false] - An optional array containing the selections for the second row. Defaults to false if not provided.
-   * @param {number} [row2Sample=false] - An optional integer representing the number of selections that can be made from the second row. Defaults to false if not provided.
-   * @returns {number} - The total number of possible combinations of selections across both rows.
-   */
+ * Calculates the total number of possible combinations of selections across two rows, taking into account repeated selections between the rows.
+ * @param {array} row1Selections - An array containing the selections for the first row.
+ * @param {number} row1Sample - An integer representing the number of selections that can be made from the first row.
+ * @param {array} [row2Selections=false] - An optional array containing the selections for the second row. Defaults to false if not provided.
+ * @param {number} [row2Sample=false] - An optional integer representing the number of selections that can be made from the second row. Defaults to false if not provided.
+ * @returns {number} - The total number of possible combinations of selections across both rows.
+ */
   _combinations_totalBets(...rowsAndSamples) {
     let rows = [],
       samples = [];
-
     //dividing rows and samples
     rowsAndSamples.forEach((element) => {
       Array.isArray(element) ? rows.push(element) : samples.push(element);
@@ -3955,24 +4566,44 @@ class TotalBets {
     let row1Combinations = this.getCombination(row1Len, samples[0]); // Calculate number of combinations for first row
     let row2Combinations = this.getCombination(row2Len, samples[1]); // Calculate number of combinations for second row
     let totalCombinations = row1Combinations * row2Combinations; // Calculate total number of combinations
-    let repeatedSelections = rows[1].filter((element) =>
-      rows[0].includes(element)
-    ).length; // Count the number of repeated selections between the two rows
+    let repeatedSelections = rows[1].filter((element) => rows[0].includes(element)).length; // Count the number of repeated selections between the two rows
     let combinationsWithoutRepeats = -1; // Placeholder for variable to be calculated
-    if (samples[0] != 1) {
-      // If there is more than one selection in the first row
-      let repeatsToRemove =
-        this.getCombination(row1Len - 1, samples[0] - 1) * repeatedSelections; // Calculate number of combinations with repeated selections to remove
+    if (samples[0] != 1) { // If there is more than one selection in the first row
+      let repeatsToRemove = this.getCombination(row1Len - 1, samples[0] - 1) * repeatedSelections; // Calculate number of combinations with repeated selections to remove
       combinationsWithoutRepeats = totalCombinations - repeatsToRemove; // Calculate number of combinations without repeats
     }
-    if (samples[1] != 1) {
-      // If there is more than one selection in the second row
-      let repeatsToRemove =
-        this.getCombination(row2Len - 1, samples[1] - 1) * repeatedSelections; // Calculate number of combinations with repeated selections to remove
+    if (samples[1] != 1) { // If there is more than one selection in the second row
+      let repeatsToRemove = this.getCombination(row2Len - 1, samples[1] - 1) * repeatedSelections; // Calculate number of combinations with repeated selections to remove
       combinationsWithoutRepeats = totalCombinations - repeatsToRemove; // Calculate number of combinations without repeats
     }
     return combinationsWithoutRepeats;
   }
+
+
+  /**
+   * Multiplies a given value by the lengths of all the elements in an array.
+   * 
+   * @param {number} multiplyBy - The value to multiply with.
+   * @param {...Array} rows - A variable number of arrays whose lengths will be multiplied.
+   * @returns {number} The final result of multiplying the lengths of all the input arrays.
+   */
+  _multiply_totalBets(multiplyBy, ...rows) {
+    // Initialize the result to the input multiplyBy value
+    let result = multiplyBy;
+
+    // Store the number of input arrays
+    let totalElements = rows.length;
+
+    // Multiply the length of each array with the result
+    for (let i = 0; i < totalElements; i++) {
+      result *= rows[i].length;
+    }
+
+    return result;
+  }
+
+
+
 
   /**
    * gets the n combination r of selection
@@ -3999,6 +4630,7 @@ class TotalBets {
 }
 
 function settings(className, gameId) {
+
   let labels = {
     0: ["1st", "2nd", "3rd", "4th", "5th", "", ""],
     1: ["1st", "2nd", "3rd", "4th"],
@@ -4010,264 +4642,294 @@ function settings(className, gameId) {
   };
   let games = {
     a5_joint: {
-      label: labels[0].slice(0, 5),
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1, 1, 1, 1],
-      interface: 1,
+      "label": labels[0].slice(0, 5),
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1, 1, 1, 1],
+      "interface": 1
     },
     a5_manual: {
-      label: labels[6],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [],
-      interface: 1,
+      "label": labels[6],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [],
+      "interface": 1
     },
     a5_combo: {
-      label: labels[1],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1, 1, 1, 1],
-      interface: 1,
+      "label": labels[1],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1, 1, 1, 1],
+      "interface": 1
     },
     a5_g120: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [5],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [5],
+      "interface": 1
     },
     a5_g60: {
-      label: labels[2],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 3],
-      interface: 1,
+      "label": labels[2],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 3],
+      "interface": 1
     },
     a5_g30: {
-      label: labels[2],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [2, 1],
-      interface: 1,
+      "label": labels[2],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [2, 1],
+      "interface": 1
     },
     a5_g20: {
-      label: labels[3],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 2],
-      interface: 1,
+      "label": labels[3],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 2],
+      "interface": 1
     },
     a5_g10: {
-      label: labels[4],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1],
-      interface: 1,
+      "label": labels[4],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1],
+      "interface": 1
     },
     a5_g5: {
-      label: labels[5],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1],
-      interface: 1,
+      "label": labels[5],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1],
+      "interface": 1
     },
     f4_joint: {
-      label: labels[0].slice(0, 4),
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1, 1, 1],
-      interface: 1,
+      "label": labels[0].slice(0, 4),
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1, 1, 1],
+      "interface": 1
     },
     f4_manual: {
-      label: labels[6],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [],
-      interface: 1,
+      "label": labels[6],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [],
+      "interface": 1
     },
     f4_combo: {
-      label: labels[0].slice(0, 4),
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1, 1, 1],
-      interface: 1,
+      "label": labels[0].slice(0, 4),
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1, 1, 1],
+      "interface": 1
     },
     f4_g24: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [4],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [4],
+      "interface": 1
     },
     f4_g12: {
-      label: labels[2],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 2],
-      interface: 1,
+      "label": labels[2],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 2],
+      "interface": 1
     },
     f4_g6: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [2],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [2],
+      "interface": 1
     },
     f4_g4: {
-      label: labels[3],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1],
-      interface: 1,
+      "label": labels[3],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1],
+      "interface": 1
     },
     l4_joint: {
-      label: labels[0].slice(1, 5),
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1, 1, 1],
-      interface: 1,
+      "label": labels[0].slice(1, 5),
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1, 1, 1],
+      "interface": 1
     },
     l4_manual: {
-      label: labels[6],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [],
-      interface: 1,
+      "label": labels[6],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [],
+      "interface": 1
     },
     l4_combo: {
-      label: labels[0].slice(1, 5),
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1, 1, 1],
-      interface: 1,
+      "label": labels[0].slice(1, 5),
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1, 1, 1],
+      "interface": 1
     },
     l4_g24: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [4],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [4],
+      "interface": 1
     },
     l4_g12: {
-      label: labels[2],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 2],
-      interface: 1,
+      "label": labels[2],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 2],
+      "interface": 1
     },
     l4_g6: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [2],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [2],
+      "interface": 1
     },
     l4_g4: {
-      label: labels[3],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1],
-      interface: 1,
+      "label": labels[3],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1],
+      "interface": 1
     },
 
     //////All Behaviour Generalized Here///////
     select_1: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1],
+      "interface": 1
     },
     select_2: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [2],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [2],
+      "interface": 1
     },
     select_3: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [3],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [3],
+      "interface": 1
     },
     select_4: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [4],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [4],
+      "interface": 1
     },
     select_5: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [5],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [5],
+      "interface": 1
     },
     select_2_1: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [2, 1],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [2, 1],
+      "interface": 1
     },
     select_1_2: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 2],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 2],
+      "interface": 1
     },
     select_1_3: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 3],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 3],
+      "interface": 1
     },
     select_1_1: {
-      label: [],
-      totalBets: 1,
-      gameId: gameId,
-      allSelections: "raw",
-      samples: [1, 1],
-      interface: 1,
+      "label": [],
+      "totalBets": 1,
+      "gameId": gameId,
+      "allSelections": "raw",
+      "samples": [1, 1],
+      "interface": 1
     },
   };
 
   return games[className];
 }
+
+/**
+ * 
+ * @param {object} Json JSON to extract from.
+ * @param {number} slice the number of elements to extract. It uses same indexing as javascript slice() method.
+ * @returns {object} extracted elements from the json object.
+ */
+function sliceFromJson(Json, sliceStart = undefined, sliceEnd = undefined) {
+  let keys = Object.keys(Json).slice(sliceStart, sliceEnd);//Gets response data keys;
+  let extractedObj = {};
+  keys.forEach(key => {
+    extractedObj[key] = Json[key];
+  });
+  return extractedObj;
+}
+
+function isOnline() {
+
+  $.get("http://192.168.199.126/task/receiver.php?action=statuscode", function () {
+    console.log("online");
+  })
+    .fail(function () {
+      console.log("offline");
+    })
+}
+
+
+
+// let x = setInterval(function(){console.log("hello world")}, 1000);
+// setTimeout(function(){clearInterval(x);}, 5000);

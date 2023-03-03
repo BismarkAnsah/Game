@@ -607,7 +607,6 @@ let slotjs;
             }, 100);
             // completed++;
             rollcompleted++
-            console.log("completed", completed);
 
         }
 
@@ -714,11 +713,5 @@ let slotjs;
 
 
 
-/**
- * Slot machine controller
- */
-
-// $(document).ready(function () {
-setTimeout(() => {}, 2000);
 
 
