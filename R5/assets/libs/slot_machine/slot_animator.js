@@ -1,7 +1,6 @@
 import { formatDateString } from "../../js/main.js";
 
 export function startAnimation(arr, betId, nextBetId) {
-
   $("#last-bet-id").fadeOut(function() {
     $(this).text(`${formatDateString(betId)}`).fadeIn();
   });
