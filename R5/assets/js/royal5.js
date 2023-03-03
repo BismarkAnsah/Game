@@ -773,7 +773,7 @@ getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
     return (
       date.getFullYear() +
       String(date.getMonth() + 1).padStart(2, "0") +
-      date.getDate() +
+      String(date.getDate()).padStart(2, "0") +
       String(id).padStart(4, "0")
     );
   }
@@ -806,8 +806,8 @@ getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
     idDateTime,
     intervalMinutes = intervalMinutes
   ) {
-    let startId = "0001";
-    let appendedId = String(currentBetId).slice(-4);
+    let startId = 1;
+    let appendedId = +String(currentBetId).slice(-4);
     let nextGenerationDateTime = this.addMinutes(idDateTime, intervalMinutes);
     let id = this.isNextDay(idDateTime, nextGenerationDateTime)
       ? startId
