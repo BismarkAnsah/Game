@@ -4494,7 +4494,7 @@ function getDrawData(intervalTime) {
         if (prettyResp.responseId != drawData.responseId) //if new data received
         {
           drawData = prettyResp;
-          slotjs(drawData.drawNumber);
+          //slot animation
           startAnimation(
             drawData.drawNumber,
             drawData.betId,
