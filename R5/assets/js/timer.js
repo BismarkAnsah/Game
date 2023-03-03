@@ -90,7 +90,7 @@ export let progress = (timeLeft, timetotal, $element) => {
   // Format the time to add a leading zero if the number is less than 10
   if (timeLeft >= 0) {
     let timeOut = setTimeout(function () {
-      progress(timeleft - 1, timetotal, $element);
+      progress(timeLeft - 1, timetotal, $element);
       hrs.each(function () {
         $(this).html(formatTime(hours));
       })
