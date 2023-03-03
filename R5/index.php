@@ -158,22 +158,6 @@
                 </div>
                 <div class="current-px visually-hidden"></div>
             </div>
-            <div class="Rectangle_92">
-                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
-                <!-- <span>jquery</span> -->
-                <div id="jquery_progressBar">
-                    <div class="bar"></div>
-                </div>
-                <div class="jcurrent-px visually-hidden"></div>
-            </div>
-            <div class="Rectangle_91_v">
-                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
-                <div id="velocity_progressBar">
-                    <div class="bar"></div>
-                </div>
-                <div class="vcurrent-px visually-hidden"></div>
-            </div>
-
             <div class="draw-num-box container">
                 <div class="slot-wrapper">
 

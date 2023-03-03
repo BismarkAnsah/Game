@@ -40,10 +40,7 @@ export let progress = (timeLeft, timetotal, $element) => {
     return;
   if (timeLeft < 0) 
     timeLeft = 0;
-  // Get the elements that will display hours, minutes, and seconds
-  // let hrs = document.getElementById("hrs");
-  // let mins = document.getElementById("mins");
-  // let secs = document.getElementById("secs");
+
 
   // Calculate the total number of minutes remaining
   let totalMinutes = Math.floor(timeLeft / 60);
@@ -55,35 +52,18 @@ export let progress = (timeLeft, timetotal, $element) => {
 
   // Calculate the current width of the progress bar based on the time left and the total time
   let progressBarWidth = (timeLeft * $element.width()) / timetotal;
-  //  progressBarWidth = Math.floor(progressBarWidth)
-  // Update the progress bar by animating its width
-  // $("#jquery_progressBar")
-  //   .find("div")
-  //   .animate({ width: progressBarWidth }, 500)
-  $element
-    .find("div")
-    .css( "width" , progressBarWidth  )
 
-    var progressBar = anime({
-      targets: '#jquery_progressBar .bar',
+  // Update the progress bar by animating its width
+  let target = $element.find(".bar")
+    let progressBar = anime({
+      targets: target[0],
       width: progressBarWidth,
       easing: 'linear',
       duration: 500,
       autoplay: false,
-      // update: function(anim) {
-      //   var progress = Math.round(anim.progress);
-      //   // console.log(progress + '%');
-      // }
     });
     progressBar.play();
     
-    // document.addEventListener('click', function() {
-      // });
-      Velocity($("#velocity_progressBar .bar"), {
-    width: progressBarWidth
-  }, {
-    duration: 500
-  });
 
   $(".current-px").text(progressBarWidth)
   // Update the displayed time in hours, minutes, and seconds
