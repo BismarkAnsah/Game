@@ -1,21 +1,4 @@
 import { formatDateString } from "../../js/main.js";
-// const ul = $(".ball-animation-ul");
-// // const liHeight = li.height();
-// let obj = {
-//   0: "0px",
-//   1: "-35px",
-//   2: "-70px",
-//   3: "-105px",
-//   4: "-140px",
-//   5: "-175px",
-//   6: "-210px",
-//   7: "-245px",
-//   8: "-280px",
-//   9: "-315px",
-// };
-// // let arr = [3, 2, 5, 6, 9];
-// // generate a random order of stops
-// let stops = [350, 350, 350, 350, 350];
 
 export function startAnimation(arr, betId, nextBetId) {
   console.log("slot- animation called");
