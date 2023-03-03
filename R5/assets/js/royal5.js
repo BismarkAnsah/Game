@@ -1,7 +1,7 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 import { showCartArea } from "./tracks-cart.js";
-import { progress } from "./timer.js";
+import { countdown, progress } from "./timer.js";
 import { startAnimation } from "../libs/velocity/slot_animator.js";
 //todo: test next day.
 /**hides and shows balance */
@@ -457,11 +457,12 @@ class Royal5utils {
    */
   changeCurrentButton() {
     let currentBetId = $(document)
-      .find("table tbody.track-data tr.track-entry")
+      .find("table tbody.track-data tr.track-entry, table tbody.track-data tr.track__entry_p")
       .attr("value");
+    console.log("Changing current button to", currentBetId);
 
     let btn_to_change = $(document).find(
-      "table tbody.track-data tr.track-entry .current:visible"
+      "table tbody.track-data tr.track-entry .current:visible, table tbody.track-data tr.track__entry_p .current:visible"
     );
     // If the current bet ID is not the same as the server's next bet ID, change the current button
     if (currentBetId !== serverDrawNum.nextBetId) {
@@ -643,11 +644,71 @@ class Royal5utils {
       </tr>`;
     }
     $(".track-data").html(output);
+    // $(".track-profit-data").html(output);
     $(".track__total__amt__to_pay").text(trackJson.trackInfo.totalBetAmt);
     $(".track__total__bets").text(
       trackJson.trackInfo.eachTotalBets * totalDraws
     );
     $(".track__total__draws").text(totalDraws);
+  }
+
+  createProfitTrackInterface(trackJson) {
+    let totalDraws = trackJson.trackInfo.totalDraws;
+
+    let output = "";
+    let hidden;
+    for (let i = 0; i < totalDraws; i++) {
+      output += `
+      <tr data-index="${i}" class="track__entry_p" value="${trackJson["bets"][i].betId}">
+        <td class="trackNo">${trackJson["bets"][i].trackNo}</td>
+        <td>
+          <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
+            <li class="col-md-2">
+              <input
+                data-index="${i}"
+                class="form-check-input slave track-check"
+                type="checkbox"
+                name="track_number"
+                id="track_number"
+                checked hidden disabled
+              />
+            </li>
+          <li class="col-md-7">
+            <input type="number" class="betId_p" id="betID" readonly value="${trackJson["bets"][i].betId}">
+          </li>
+          <li class="col-md-3">`;
+      hidden = trackJson["bets"][i].current ? "" : "visually-hidden";
+      output += `<button class=" m-btn-orange p-2 mopy current ${hidden}">current</button>`;
+      hidden =
+        trackJson["bets"][i].nextDay && !trackJson["bets"][i].current
+          ? ""
+          : "visually-hidden"; // makes sure 'next day' and 'current' don't appear simultaneously.
+      output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`;
+      output += `
+      </li>
+          </ul>
+        </td>
+        <td class="d-flex justify-content-center align-content-center mt-2">
+          <div class="col-sm-4">
+            <input 
+              type="number"
+              min="1"
+              class="form-control track_multiplier_p"
+              data-index="${i}"
+            value="${trackJson["bets"][i].multiplier}"/>
+          </div>
+        </td>
+        <td class="betAmt_p">${trackJson["bets"][i].betAmt}</td>
+        <td class="estimatedDrawTime_p">${trackJson["bets"][i].estimatedDrawTime}</td>
+      </tr>`;
+    }
+    // $(".track-data").html(output);
+    $(".track-profit-data").html(output);
+    $(".track__total__amt__to_pay_p").text(trackJson.trackInfo.totalBetAmt);
+    $(".track__total__bets_p").text(
+      trackJson.trackInfo.eachTotalBets * totalDraws
+    );
+    $(".track__total__draws_p").text(totalDraws);
   }
 
   /**
@@ -3156,7 +3217,6 @@ function ready(className) {
     let defaultTrackDraws = 10; //total number tracks that will be shown when user clicks on track.
     let defaultTrackInputs = 1; //default input for .first-multiplier, .multiplyAfterEvery, .multiplyBy.
     // let current = "20230131000";
-    let inc = 1;
     let savedData = game.getSavedData();
     let trackInfo = {};
     trackInfo.gameId = savedData.gameId;
@@ -3192,6 +3252,8 @@ function ready(className) {
       betAmt,
       totalBets
     );
+    console.log("===================NEXT DATE===========================", currentSelectOption.nextDateTime);
+
     game.generateSelectOptions(currentSelectOption.betId);
     showCartArea("track-tab");
     game.setTrackTopTableContents(trackJson);
@@ -3199,19 +3261,19 @@ function ready(className) {
     // game.setTrackJson(trackJson);
     game.setTrackJson(trackJson);
     game.createTrackInterface(trackJson);
+    game.createProfitTrackInterface(trackJson);
+    console.log("select currnet===============================----------", $(".current"))
   });
 
   $("#first__draw__select").on("change", function () {
     maxInput = checkRemainingSelectOptions("#first__draw__select");
     let hshs = $(".total-draws").val();
 
-    // let currentSelected = $(document).find(
-    //   'select[name="first_draw"] :selected'
-    // );
+    
     let selectedIndex = $(this).prop("selectedIndex");
-    let getprev = $(this)
-      .find("option")
-      .eq(selectedIndex - 1);
+    // let getprev = $(this)
+    //   .find("option")
+    //   .eq(selectedIndex - 1);
 
     let currentSelect;
     let currentSelectdateTime;
@@ -3255,7 +3317,6 @@ function ready(className) {
         let multiplier = game.onlyNums(
           $(cells[2]).find(".track-multiplier").val()
         );
-        console.log($(cells[1]).find("#betID").val());
         obj["trackNo"] = cells[0].textContent; // add the text content of the first cell in the current row to the 'trackNo' property of 'obj'
         obj["betId"] = $(cells[1]).find("#betID").val(); // extract all digits from the text content of the second cell in the current row and join them together into a single string, then add this string to the 'betId' property of 'obj'
         obj["multiplier"] = multiplier; // get the value of the input field with class 'track-multiplier' in the third cell of the current row and add it to the 'multiplier' property of 'obj'
@@ -3822,7 +3883,7 @@ function callAllFunctionsHere() {
     drawNum();
     console.log((+serverDrawNum.timeLeft + 10) * 1000);
     clearInterval(callDrawNum);
-  }, +serverDrawNum.timeLeft * 1000);
+  }, 20* 1000);
 
   setNextDraws();
 
@@ -3847,7 +3908,7 @@ function callAllFunctionsHere() {
         multiplyAfterEvery,
         multiplyBy,
         game.getTrackElement("trackInfo", "eachBetAmt"),
-        game.getTrackElement("trackInfo", "totalBets")
+        game.getTrackElement("trackInfo", "eachTotalBets")
       );
       game.createTrackInterface(trackJson);
       game.setTrackJson(trackJson);
@@ -3861,10 +3922,11 @@ function callAllFunctionsHere() {
     serverDrawNum.betId,
     serverDrawNum.nextBetId
   );
-  // countdown(Math.abs(+serverDrawNum.timeLeft - 5));
-  requestAnimationFrame(() => {
-    progress(+serverDrawNum.timeLeft - 5, 60, $("#progressBar"));
-  });
+  // countdown(Math.abs(+serverDrawNum.timeLeft -3));
+  // requestAnimationFrame(() => {
+    progress(+serverDrawNum.timeLeft - 3, 60, $("#progressBar"));
+    
+  // });
 }
 // countdown(30)
 // slotjs([0,1,2,3,4,5])

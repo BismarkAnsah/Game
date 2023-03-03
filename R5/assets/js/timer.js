@@ -2,31 +2,32 @@
 # Timer JS
 --------------------------------------------------------------*/
 
-const hrs = $(document).find("#hrs");
-const mins = $(document).find("#mins");
-const secs = $(document).find("#secs");
+// Get the elements that will display hours, minutes, and seconds
+const hrs = $(document).find("#hrs, #track_hrs");
+const mins = $(document).find("#mins, #track_mins");
+const secs = $(document).find("#secs, #track_secs");
 // const week = document.getElementById("week");
 
 /**
  * This function implements a countdown timer.
  * @param {Number} seconds - The number of seconds for the countdown timer.
  */
-// export function countdown(seconds) {
-//   let intervalId = setInterval(function () {
-//     let hours = Math.floor(seconds / 3600);
-//     let minutes = Math.floor((seconds % 3600) / 60);
-//     let myseconds = seconds % 60;
-//     seconds--;
-//     updateProgressBar(seconds, 60, 1);
+export function countdown(seconds) {
+  let intervalId = setInterval(function () {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let myseconds = seconds % 60;
+    seconds--;
+    updateProgressBar(seconds, 60, 1);
 
-//     if (seconds < 0) {
-//       clearInterval(intervalId);
-//     }
-//     hrs.innerText = formatTime(hours);
-//     mins.innerText = formatTime(minutes);
-//     secs.innerText = formatTime(myseconds);
-//   }, 1000);
-// }
+    if (seconds < 0) {
+      clearInterval(intervalId);
+    }
+    hrs.innerText = formatTime(hours);
+    mins.innerText = formatTime(minutes);
+    secs.innerText = formatTime(myseconds);
+  }, 1000);
+}
 
 /**
  * Updates a progress bar and a displayed countdown timer based on the time left and the total time.
@@ -35,8 +36,8 @@ const secs = $(document).find("#secs");
  * @param {jQuery} $element - The jQuery object for the progress bar element.
  */
 export let progress = (timeleft, timetotal, $element) => {
-  if (timeleft === 0) 
-    return;
+  // if (timeleft === 0) 
+  //   return;
   
   // Get the elements that will display hours, minutes, and seconds
   // let hrs = document.getElementById("hrs");
