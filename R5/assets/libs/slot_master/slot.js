@@ -482,7 +482,7 @@ try {
     };
 
     function toArray(strg) {
-        console.log("toArray: " + strg);
+        // console.log("toArray: " + strg);
 
         strg = strg.replace(/left|top/g, '0px');
         strg = strg.replace(/right|bottom/g, '100%');
@@ -499,7 +499,7 @@ try {
             }
 
             start = toArray(start);
-            console.log("start: " + start);
+            // console.log(start);
 
             fx.start = [start[0], start[2]];
             var end = toArray(fx.end);
@@ -519,6 +519,7 @@ try {
 })(jQuery);
 
 let completed = 0;
+let rollcompleted = 0;
 
 // let drawNum = [0, 4, 5, 6, 7];
 
@@ -604,6 +605,9 @@ let slotjs;
                     _this.speed = 0;
                 }
             }, 100);
+            // completed++;
+            rollcompleted++
+
         }
 
         /**
@@ -611,12 +615,14 @@ let slotjs;
         * Reset a slot to initial state
         */
         reset = function() {
-            console.log($(this.el))
+            // console.log("eleme", $(this.el))
             let el_id = $(this.el).attr('id');
             $._spritely.instances[el_id].t = 0;
-            $(this.el).css('background-position', '0px -226px');
+            $(this.el).css('background-position', '0px -3px');
             this.speed = 0;
             completed = 0;
+            rollcompleted = 0;
+            console.log("done")
             // $('#result').html('');
         };
 
@@ -641,11 +647,12 @@ let slotjs;
         }
         static startStop = (drawNum, timeinterval = 3000) => {
             //create slot objects
+            let x
             let a = new Slot("#slot1", 30, 1);
             let b = new Slot("#slot2", 45, 5);
             let c = new Slot("#slot3", 70, 3);
             let d = new Slot("#slot4", 90, 4);
-            let e = new Slot("#slot5", 140, 5);
+            let e = new Slot("#slot5", 90, 5);
             a.start();
             b.start();
             c.start();
@@ -659,14 +666,42 @@ let slotjs;
                 c.stop(imgPos[drawNum[2]]);
                 d.stop(imgPos[drawNum[3]]);
                 e.stop(imgPos[drawNum[4]]);
-            }, timeinterval);
-            a.reset();
-            b.reset();
-            c.reset();
-            d.reset();
-            e.reset();
+                
+                    
+                
+                
 
-            
+            }, timeinterval);
+            // if (rollcompleted === 5) {
+                
+                    // a.reset();
+                    // b.reset();
+                    // c.reset();
+                    // d.reset();
+                    // e.reset();
+                
+            // }
+//             x = window.setInterval(function() {
+//                 if( a.speed === 0 && b.speed === 0 && c.speed === 0 && d.speed === 0 && e.speed === 0 && rollcompleted === 5) {
+//                     // enableControl();
+//                     // window.clearInterval(x);
+//                     // printResult();
+//                     console.log("rollcompleted", a.speed);
+//                     console.log("rollcompleted", b.speed);
+//                     console.log("rollcompleted", c.speed);
+//                     console.log("rollcompleted", d.speed);
+//                     console.log("rollcompleted", e.speed);
+//                     console.log("interval completed", completed);
+// // setTimeout(function() {
+//                     a.reset();
+//                     b.reset();
+//                     c.reset();
+//                     d.reset();
+//                     e.reset();
+//                     clearInterval(x)
+//                     // }, timeinterval)
+//                 }
+//             }, 100);
         };
     }
 
@@ -678,13 +713,5 @@ let slotjs;
 
 
 
-/**
- * Slot machine controller
- */
-
-// $(document).ready(function () {
-setTimeout(() => {}, 2000);
-//
-//dbatmecode
 
 

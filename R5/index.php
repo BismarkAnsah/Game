@@ -11,10 +11,10 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Web 1920 - 1</title>
-    <!-- <script src="js/jquery-3.6.3.min.js"></script> -->
     <link rel="stylesheet" href="assets/css/cart-area-style.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script src="assets/libs/HackTimer/HackTimer.js"></script>
+    <script src="assets/libs/AnimeJs/anime.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -24,7 +24,7 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
-    <script src="assets/js/jquery-3.6.3.min.js"></script>
+    <script defer src="assets/js/jquery-3.6.3.min.js"></script>
     
 </head>
 
@@ -75,36 +75,38 @@
 
         <div class="row-c status-box">
             <div id="n_02212211287__">
-                <span>202212211287 </span><span style="color: rgba(112, 112, 112, 1)"> 期・截止时间</span>
+                <span>NO:</span> <span id="last-bet-id">202212211287 </span><span style="color: rgba(112, 112, 112, 1)">
+                    期・截止时间</span>
             </div>
 
             <div class="timer-box row">
                 <ul class="nav justify-content-center align-items-center ">
                     <li class="nav-item d-flex flex-column justify-content-center">
-                    <span class="timer-date-time">hours</span>
-                      <div class="d-inline text-center">
-                      <span class="timer-box-contents" id="hrs" ></span>
-                      </div>
+                        <span class="timer-date-time">hours</span>
+                        <div class="d-inline text-center">
+                            <span class="timer-box-contents" id="hrs"></span>
+                        </div>
                     </li>
                     <li class="nav-item d-flex flex-column justify-content-center mt-3">
-                    <span class="timer-date-time-colon">:</span>
+                        <span class="timer-date-time-colon">:</span>
                     </li>
                     <li class="nav-item d-flex flex-column justify-content-center">
-                    <span class="timer-date-time">minutes</span> <div class="d-inline text-center"><span class="timer-box-contents" id="mins" ></span></div>
+                        <span class="timer-date-time">minutes</span>
+                        <div class="d-inline text-center"><span class="timer-box-contents" id="mins"></span></div>
                     </li>
-                    
+
                     <li class="nav-item d-flex  mt-3">
-                    <span class="timer-date-time-colon">:</span>
+                        <span class="timer-date-time-colon">:</span>
                     </li>
                     <li class="nav-item d-flex flex-column justify-content-center">
-                    <span class="timer-date-time">seconds</span>
+                        <span class="timer-date-time">seconds</span>
                         <div class="d-inline text-center">
-                        <span class="timer-box-contents" id="secs" ></span>
+                            <span class="timer-box-contents" id="secs"></span>
                         </div>
-                        
+
                     </li>
                 </ul>
-                    <!-- <div class="col-sm-4">
+                <!-- <div class="col-sm-4">
                     <p class="timer-date-time">hours</p>
                     <h2 id="hrs" class="inline"></h2>
                     </div>
@@ -116,7 +118,7 @@
                     <p class="timer-date-time">seconds</p>
                     <h2 id="secs" class="inline"></h2>
                     </div> -->
-                
+
                 <!-- <div class="hrs">
                 <p class="timer-date-time">hours</p>
                 <h2 id="hrs" class="inline"></h2><span>:</span>
@@ -144,7 +146,7 @@
             </div>
 
             <div class="bet-id">
-                <span>NO:</span><span style="color: rgba(207, 121, 119, 1)">20221108-246</span>
+                <span>NO: </span><span id="next_bet_id" style="color: rgba(207, 121, 119, 1)">20221108-246</span>
             </div>
             <div class="for-sale">
                 <span>For sale</span>
@@ -154,15 +156,11 @@
                 <div id="progressBar">
                     <div class="bar"></div>
                 </div>
+                <div class="current-px visually-hidden"></div>
             </div>
-
             <div class="draw-num-box container">
                 <div class="slot-wrapper">
-                    <div id="slot1" class="slot"></div>
-                    <div id="slot2" class="slot"></div>
-                    <div id="slot3" class="slot"></div>
-                    <div id="slot4" class="slot"></div>
-                    <div id="slot5" class="slot"></div>
+
                 </div>
                 <div><button id="control" style="display: none">Start</button></div>
             </div>
@@ -193,7 +191,7 @@
                         <div class="all5 game-nav-box">
                             <label for="">Straight:</label>
                             <div class="straight">
-                                <div class="active-svg nav-item-c" data-class="a5_joint">
+                                <div class="active-svg nav-item-c" data-class="a5_joint" data-game-id="1">
                                     <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
                                         <path class="path-outline"
                                             d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
@@ -208,7 +206,7 @@
                                         <span class="text">All 5 straight(Joint)</span>
                                     </div>
                                 </div>
-                                <div class="nav-item-c" data-class="a5_manual">
+                                <div class="nav-item-c" data-class="a5_manual" data-game-id="2">
                                     <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
                                         <path class="path-outline"
                                             d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
@@ -223,7 +221,7 @@
                                         <span class="text">All 5 straight(manual)</span>
                                     </div>
                                 </div>
-                                <div class="nav-item-c" data-class="a5_combo">
+                                <div class="nav-item-c" data-class="a5_combo" data-game-id="3">
                                     <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
                                         <path class="path-outline"
                                             d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
@@ -241,7 +239,7 @@
                             </div>
                             <label for="">Group:</label>
                             <div class="group">
-                                <div class="nav-item-c" data-class="a5_g120">
+                                <div class="nav-item-c" data-class="a5_g120" data-game-id="4">
                                     <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
                                         <path class="path-outline"
                                             d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
@@ -256,7 +254,7 @@
                                         <span class="text">All 5 Group 120</span>
                                     </div>
                                 </div>
-                                <div class="nav-item-c" data-class="a5_g60">
+                                <div class="nav-item-c" data-class="a5_g60" data-game-id="5">
                                     <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
                                         <path class="path-outline"
                                             d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
@@ -271,7 +269,7 @@
                                         <span class="text">All 5 Group 60</span>
                                     </div>
                                 </div>
-                                <div class="nav-item-c" data-class="a5_g30">
+                                <div class="nav-item-c" data-class="a5_g30" data-game-id="6">
                                     <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
                                         <path class="path-outline"
                                             d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
@@ -286,7 +284,7 @@
                                         <span class="text">All 5 Group 30</span>
                                     </div>
                                 </div>
-                                <div class="nav-item-c" data-class="a5_g20">
+                                <div class="nav-item-c" data-class="a5_g20" data-game-id="7">
                                     <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
                                         <path class="path-outline"
                                             d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
@@ -303,7 +301,7 @@
                                 </div>
                             </div>
                             <div class="group">
-                                <div class="nav-item-c" data-class="a5_g10">
+                                <div class="nav-item-c" data-class="a5_g10" data-game-id="8">
                                     <svg class="path-outline-box" viewBox="1082.685 756.5 371.083 56">
                                         <path class="path-outline"
                                             d="M 1114.059326171875 756.5 L 1432.5771484375 756.5 L 1453.767822265625 780.3448486328125 L 1432.676025390625 812.5 L 1098.060546875 812.5 L 1082.6845703125 792.1842041015625 L 1114.059326171875 756.5 Z M 1431.610595703125 758.7105712890625 L 1424.2998046875 758.7105712890625 L 1114.059326171875 758.7105712890625 L 1098.060546875 810.1053466796875 L 1431.610595703125 810.1053466796875 L 1451.019287109375 780.5499267578125 L 1451.019287109375 780.3448486328125 L 1431.610595703125 758.7105712890625 Z">
@@ -1550,7 +1548,8 @@
                             </div>
 
                             <div class="solo-play">
-                                <button id="how-to-play"><a href="#" data-bs-toggle="tooltip" data-bs-title="Another one here too">How to play</a></button>
+                                <button id="how-to-play" data-bs-toggle="tooltip" data-bs-html="true"
+                                    data-bs-title="Another one here too">How to play</button>
                                 <button id="What_is_solo">What is solo?</button>
                             </div>
 
@@ -1906,10 +1905,10 @@
                         </div>
 
                         <div class="row-c cart-track-bet" id="cart-track-bet">
-                            <div id="Group_3" class="col-c track " onclick="showCartArea('track-tab')">
+                            <div id="Group_3" class="col-c track " onclick="">
                                 <svg class="Path_3 path" viewBox="2771.25 1959.5 314.75 76.5">
                                     <style>
-                                    
+
                                     </style>
                                     <path id="Path_3" class="text"
                                         d="M 2824 1959.5 L 2805.5 1964.75 L 2783.75 1990 L 2771.25 2019.75 L 2774.25 2024 L 2825 2036 L 3033.5 2036 L 3052.5 2030.75 L 3074.25 2005.75 L 3086 1976 L 3082.5 1971.75 L 3033.5 1960.75 L 2824 1959.5 Z">
@@ -1929,16 +1928,16 @@
                                     <span class="text">Track</span>
                                 </div>
                             </div>
-                            <div id="Group_5" class="col-c cart disabled-svg" onclick="showCartArea('cart-tab')">
-                                <svg class="Path_3_ib" viewBox="2771.25 1959.5 314.75 76.5">
-                                    <style>
-                                    .disabled-svg {
-                                        pointer-events: none;
-                                    }
-                                    </style>
-                                    <path id="Path_3_ib"
-                                        d="M 2824 1959.5 L 2805.5 1964.75 L 2783.75 1990 L 2771.25 2019.75 L 2774.25 2024 L 2825 2036 L 3033.5 2036 L 3052.5 2030.75 L 3074.25 2005.75 L 3086 1976 L 3082.5 1971.75 L 3033.5 1960.75 L 2824 1959.5 Z">
-                                    </path>
+                            <div id="Group_5" class="col-c cart disabled-svg" ">
+                                <svg class=" Path_3_ib" viewBox="2771.25 1959.5 314.75 76.5">
+                                <style>
+                                .disabled-svg {
+                                    pointer-events: none;
+                                }
+                                </style>
+                                <path id="Path_3_ib"
+                                    d="M 2824 1959.5 L 2805.5 1964.75 L 2783.75 1990 L 2771.25 2019.75 L 2774.25 2024 L 2825 2036 L 3033.5 2036 L 3052.5 2030.75 L 3074.25 2005.75 L 3086 1976 L 3082.5 1971.75 L 3033.5 1960.75 L 2824 1959.5 Z">
+                                </path>
                                 </svg>
                                 <svg class="Path_3_ic" viewBox="2581.089 1959.5 68.033 77">
                                     <path id="Path_3_ic"
@@ -2044,7 +2043,7 @@
                                     aria-labelledby="track-tab" tabindex="0">
                                     <div class="table-content track-table-content">
                                         <div class="card mb-2">
-                                            <div class="table-responsive">
+                                            <div class="table-responsive tableFixHead">
                                                 <table class="table table-borderless" aria-describedby>
                                                     <thead>
                                                         <tr>
@@ -2057,21 +2056,8 @@
                                                             <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <!-- <td>All 5 Group 120</td>
-                                                            <td style="display: block;  width: 100px !important;" class="text-truncate"><span  >0 1 2 3 4 5 6 7 8 9</span></td>
-                                                            <td>252</td>
-                                                            <td>2</td> -->
-                                                            <td class="m-group-type">All 5 Group 120</td>
-                                                            <td class="text-truncate  text-center"><span style="max-width: 80px" class="m-detail" >0 1 2 3 4 5 6 7 8 9</span></td>
-                                                            <td class="m-bet">252</td>
-                                                            <td class="m-units">2</td>
-                                                            <td>
-                                                                <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency"></span>
-                                                            </td>
-                                                        </tr>
+                                                    <tbody class="track-table-top">
+                                                        
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -2106,8 +2092,9 @@
                                                             <label for="first_draw" class="form-label">
                                                                 First draw:&nbsp;&nbsp;
                                                             </label>
-                                                            <select name="first_draw" class="form-select draw-ids" id="first__draw__select">
-                                                                
+                                                            <select name="first_draw" class="form-select draw-ids"
+                                                                id="first__draw__select">
+
                                                             </select>
                                                         </div>
                                                         <!-- <div class="track-container">
@@ -2116,14 +2103,15 @@
                                                                 track 120 draws)
                                                                 </div> -->
                                                         <div class="row flex-lg-nowrap ms-lg-5">
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_draw_o"
                                                                 class="col-sm-3 col-form-label mr-n3">Track draw:
                                                             </label>
                                                             <div class="col-sm-3">
                                                                 <input type="number" min="1" max="120"
-                                                                    class="form-control total-draws" id="inputPassword" value="10"/>
+                                                                    class="form-control total-draws" id="input_track_draw_o"
+                                                                    value="10" />
                                                             </div>
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_draw_o"
                                                                 class="current-draw col-md-7 col-form-label text-danger">
                                                                 draws (Maximum track 120 draws)</label>
                                                         </div>
@@ -2136,30 +2124,33 @@
                                                                 class="col-sm-4 col-form-label">First Multi:
                                                             </label>
                                                             <div class="col-sm-4">
-                                                                <input type="number" min="1" class="form-control first-multiplier"
-                                                                    id="firstMulti" value="1"/>
+                                                                <input type="number" min="1"
+                                                                    class="form-control first-multiplier"
+                                                                    id="firstMulti" value="1" />
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_every_o"
                                                                 class="col-sm-2 col-form-label">Every:
                                                             </label>
                                                             <div class="col-sm-4">
-                                                                <input type="number" min="1" class="form-control multiplyAfterEvery"
-                                                                    id="inputPassword" value="1"/>
+                                                                <input type="number" min="1"
+                                                                    class="form-control multiplyAfterEvery"
+                                                                    id="input_track_every_o" value="1" />
                                                             </div>
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_every_o"
                                                                 class="current-draw col-sm-2 col-form-label">draw(s)</label>
                                                         </div>
                                                         <div class="row">
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_multi_o"
                                                                 class="col-sm-2 col-form-label text-danger">Multi x:
                                                             </label>
                                                             <div class="col-sm-2">
-                                                                <input type="number" min="1" class="form-control multiplyBy"
-                                                                    id="inputPassword" value="1"/>
+                                                                <input type="number" min="1"
+                                                                    class="form-control multiplyBy" id="input_track_multi_o"
+                                                                    value="1" />
                                                             </div>
-                                                            <label for="inputPassword"
+                                                            <label for="input_track_multi_o"
                                                                 class="current-draw col-sm-7 col-form-label text-danger">Hint:
                                                                 each draw times 1 implies equal track</label>
                                                         </div>
@@ -2178,9 +2169,10 @@
                                                                         <tr>
                                                                             <th scope="col">Track No.</th>
                                                                             <th scope="col">
-                                                                                <input class="form-check-input visually-hidden"
+                                                                                <input
+                                                                                    class="form-check-input visually-hidden"
                                                                                     type="checkbox" name="track_number"
-                                                                                    id="mmaster" checked/>
+                                                                                    id="mmaster" checked />
                                                                                 Track ID.
                                                                             </th>
                                                                             <th scope="col">Multi.</th>
@@ -2192,7 +2184,7 @@
                                                                     </thead>
                                                                     <tbody class="overflow-auto table-body track-data"
                                                                         style="max-height: 150px">
-                                                                      
+
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -2202,25 +2194,74 @@
                                                             <div class="total__bar col-sm-5">
                                                                 <span class="track__total me-3">
                                                                     Total track
-                                                                    <strong class="text-danger track__total__draws">10</strong> draw(s)
+                                                                    <strong
+                                                                        class="text-danger track__total__draws">00</strong>
+                                                                    draw(s)
                                                                 </span>
                                                                 <span class="total__bets">
                                                                     Total.
-                                                                    <strong class="text-danger track__total__bets">2345</strong> bet(s)
+                                                                    <strong
+                                                                        class="text-danger track__total__bets">000</strong>
+                                                                    bet(s)
                                                                 </span>
                                                             </div>
                                                             <div class="total__track__bets col-sm-4">
                                                                 <span class="total__amount">Total Amt.
-                                                                    <strong class="text-danger track__total__amt__to_pay">2345</strong></span>
+                                                                    <strong
+                                                                        class="text-danger track__total__amt__to_pay">000</strong></span>
                                                             </div>
                                                             <div class="total__amount__balance col-sm-3">
                                                                 <span class="total__balance">Balance:
-                                                                    <strong class="text-danger track__total__balance">2345</strong></span>
+                                                                    <strong
+                                                                        class="text-danger track__total__balance">000</strong></span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="card p-4 mt-2 bg-light text-dark">
                                                         <div class="d-flex justify-content-end align-content-center">
+                                                            <ul
+                                                                class="nav justify-content-between align-items-center m-track-timer text-danger">
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span
+                                                                            class="timer-box-content display-6 me-2">End
+                                                                            Time:</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span class="timer-box-content display-6"
+                                                                            id="track_hrs">00</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center me-3">
+                                                                    <span class="timer-date-time-colon">:</span>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center"><span
+                                                                            class="timer-box-content display-6"
+                                                                            id="track_mins">00</span></div>
+                                                                </li>
+
+                                                                <li class="nav-item d-flex  me-3">
+                                                                    <span class="timer-date-time-colon">:</span>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span
+                                                                            class="timer-box-content text text-small display-6"
+                                                                            id="track_secs">00</span>
+                                                                    </div>
+
+                                                                </li>
+                                                            </ul>
+                                                            <div class="m-auto"></div>
+
                                                             <div class="form-check m-2">
                                                                 <input class="form-check-input m-1" type="radio"
                                                                     name="flexRadioDefault" id="stop_if_win" />
@@ -2235,7 +2276,8 @@
                                                                     Stop if not win
                                                                 </label>
                                                             </div>
-                                                            <button type="button" class="m-btn-orange btn-track track-confirm ms-3">
+                                                            <button type="button"
+                                                                class="m-btn-orange btn-track track-confirm ms-3">
                                                                 Track Confirm
                                                             </button>
                                                         </div>
@@ -2244,7 +2286,174 @@
                                             </div>
                                             <div class="tab-pane fade" id="profit-margin-chase-number-tab-pane"
                                                 role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                                                profit margin chase
+                                                <div class="draw-and-multibet-container">
+                                                    <div
+                                                        class="first-multi-draws first-multi-draws-negative-margin mb-3">
+                                                        <div class="row">
+                                                            <label for="firstMulti"
+                                                                class="col-sm-4 col-form-label">First Multi:
+                                                            </label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" min="1"
+                                                                    class="form-control profit-first-multiplier"
+                                                                    id="firstMulti" value="1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                        <label for="input__track_percentage"
+                                                                class="col-sm-6 col-form-label">Minimum yield:
+                                                            </label>
+                                                            <div class="col-sm-4 d-flex align-items-center">
+                                                                <input type="number" min="0"
+                                                                    class="form-control input__track_percentage" id="input__track_percentage"
+                                                                    value="50" />
+                                                                    <span class="ms-1">%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                        <div class="row flex-lg-nowrap ms-lg-5">
+                                                            <label for="input_track_draw_t"
+                                                                class="col-sm-3 col-form-label mr-n3">Track draw:
+                                                            </label>
+                                                            <div class="col-sm-3">
+                                                                <input type="number" min="1" max="120"
+                                                                    class="form-control total-draws-t" id="input_track_draw_t"
+                                                                    value="10">
+                                                            </div>
+                                                            <label for="input_track_draw_t"
+                                                                class="current-draw col-md-7 col-form-label text-danger">
+                                                                draws (Maximum track 120 draws)</label>
+                                                        </div>
+                                                        </div>
+                                                        <!-- <label for="first_draw" class="text-danger">Multi x: </label>
+                                                            <input type="text" class="current-draw" />
+                                                            <span class="text-danger"
+                                                            >Hint: each draw times 1 implies equal track</span
+                                                        > -->
+                                                    </div>
+                                                    <div class="card m-0">
+                                                        <!-- <img class="card-img-top" src="holder.js/100x180/" alt="Title"> -->
+                                                        <div class="card-body m-0">
+                                                            <div class="table-responsive tableFixHead">
+                                                                <table class="table table-bordered" aria-describedby="">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">Track No.</th>
+                                                                            <th scope="col">
+                                                                                <input
+                                                                                    class="form-check-input visually-hidden"
+                                                                                    type="checkbox" name="track_number"
+                                                                                    id="mmaster" checked="">
+                                                                                Track ID.
+                                                                            </th>
+                                                                            <th scope="col">Multi.</th>
+                                                                            <th scope="col">Bet Amount</th>
+                                                                            <th scope="col">Estimate draw time</th>
+
+                                                                            <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="overflow-auto table-body track-profit-data"
+                                                                        style="max-height: 150px">
+                                                                        
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="row justify-content-center align-items-center g-2 mb-4">
+                                                            <div class="total__bar col-sm-5">
+                                                                <span class="track__total me-3">
+                                                                    Total track
+                                                                    <strong
+                                                                        class="text-danger track__total__draws_p">00</strong>
+                                                                    draw(s)
+                                                                </span>
+                                                                <span class="total__bets">
+                                                                    Total.
+                                                                    <strong
+                                                                        class="text-danger track__total__bets_p">00</strong>
+                                                                    bet(s)
+                                                                </span>
+                                                            </div>
+                                                            <div class="total__track__bets col-sm-4">
+                                                                <span class="total__amount">Total Amt.
+                                                                    <strong
+                                                                        class="text-danger track__total__amt__to_pay_p">000</strong></span>
+                                                            </div>
+                                                            <div class="total__amount__balance col-sm-3">
+                                                                <span class="total__balance">Balance:
+                                                                    <strong
+                                                                        class="text-danger track__total__balance">00</strong></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card p-4 mt-2 bg-light text-dark">
+                                                        <div class="d-flex justify-content-end align-content-center">
+                                                            <ul
+                                                                class="nav justify-content-between align-items-center m-track-timer text-danger">
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span
+                                                                            class="timer-box-content display-6 me-2">End
+                                                                            Time:</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span class="timer-box-content display-6"
+                                                                            id="hrs">0</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center me-3">
+                                                                    <span class="timer-date-time-colon">:</span>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center"><span
+                                                                            class="timer-box-content display-6"
+                                                                            id="mins">1</span></div>
+                                                                </li>
+
+                                                                <li class="nav-item d-flex  me-3">
+                                                                    <span class="timer-date-time-colon">:</span>
+                                                                </li>
+                                                                <li
+                                                                    class="nav-item d-flex flex-column justify-content-center">
+                                                                    <div class="d-inline text-center">
+                                                                        <span
+                                                                            class="timer-box-content text text-small display-6"
+                                                                            id="secs">59</span>
+                                                                    </div>
+
+                                                                </li>
+                                                            </ul>
+                                                            <div class="m-auto"></div>
+
+                                                            <div class="form-check m-2">
+                                                                <input class="form-check-input m-1" type="radio"
+                                                                    name="flexRadioDefault" id="stop_if_win">
+                                                                <label class="form-check-label" for="stop_if_win">
+                                                                    Stop if win
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check m-2">
+                                                                <input class="form-check-input m-1" type="radio"
+                                                                    name="flexRadioDefault" id="stop_if_not_win">
+                                                                <label class="form-check-label" for="stop_if_not_win">
+                                                                    Stop if not win
+                                                                </label>
+                                                            </div>
+                                                            <button type="button"
+                                                                class="m-btn-orange btn-track track-confirm ms-3">
+                                                                Track Confirm
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2253,7 +2462,7 @@
                                     tabindex="0">
                                     <div class="table-balance-container">
                                         <div class="table-content table-responsive sub-table">
-                                            <table class="table table-borderless" aria-describedby>
+                                            <table class="table table-borderless tableClassName" aria-describedby>
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Type</th>
@@ -2266,41 +2475,15 @@
                                                         <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>All 5 Group 120</td>
-                                                        <td>0 1 2 3 4 5 6 7 8 9</td>
-                                                        <td>252</td>
-                                                        <td>2</td>
-                                                        <td>
-                                                            <div class="row">
-                                                                <ul class="multibetCounter">
-                                                                    <li data-btn-type="decrement" class="cart-decrement"
-                                                                        id="decrement">
-                                                                        <span class="romoveBtn"><i
-                                                                                class="bi bi-dash"></i></span>
-                                                                    </li>
+                                                <tbody class="cart-items">
 
-                                                                    <input class="input-multibet-counter"
-                                                                        id="btnMultiBetCount" name="multiBetCount"
-                                                                        type="text" value="X1" disabled />
-                                                                    <li data-btn-type="increment" id="increment"
-                                                                        class="cart-increment">
-                                                                        <span class="romoveBtn"><i
-                                                                                class="bi bi-plus"></i></span>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                        <td><span class="currency">$</span>&nbsp;&nbsp;234</td>
-                                                        <td><span class="bi bi-trash3"></span></td>
-                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="m-2"></div>
                                         <div class="balance-content">
-                                            <table class="table table-responsive table-borderless" aria-describedby>
+                                            <table class="table table-responsive table-borderless" style="height: 100%;"
+                                                aria-describedby>
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">
@@ -2310,21 +2493,8 @@
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <th>
-                                                            <h5>
-                                                                Total <span class="total-bets">252</span> bets
-                                                            </h5>
-                                                            <h6>Total <span class="total-bets">504</span></h6>
-                                                        </th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>
-                                                            <button class="btn-track m-btn-orange">Track</button>
-                                                            <button class="btn-bet-now">Bet Now</button>
-                                                        </th>
-                                                    </tr>
+                                                <tbody class="cart-items-track-bets">
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -2345,7 +2515,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr><th>no data</th></tr>
+                                            <tr>
+                                                <th>no data</th>
+                                            </tr>
 
                                         </tbody>
                                     </table>
@@ -2366,7 +2538,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr><th>no data</th></tr>
+                                            <tr>
+                                                <th>no data</th>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -2385,7 +2559,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <tr><th>no data</th></tr>
+                                            <tr>
+                                                <th>no data</th>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -2405,53 +2581,52 @@
         aria-hidden="true" data-keyboard="false">
 
         <div class="modal-dialog modal-dialog-centered" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true" data-keyboard="false">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="game-type">Royal 5</div>
-                <div class="modal-draw-number-container mb-3">
-                    Draw:&nbsp;<span class="modal-draw-number-id">No. 20202020-192 ~ No. 20202020-198</span>
+            aria-hidden="true" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="card">
-                    <div class="row gx-0">
-                        <div class="col-sm-6 me-0">
-                            <div class="card-header">Type</div>
-                            <div class="card-body">All 5 Group 120</div>
-                            <div class="card-header">Total track <span class="m-total-num-track-draws">2</span> draws
+                <div class="modal-body">
+                    <div class="game-type">Royal 5</div>
+                    <div class="modal-draw-number-container mb-3">
+                        Draw:&nbsp;<span class="modal-draw-number-id">No. 20202020-192 ~ No. 20202020-198</span>
+                    </div>
+                    <div class="card">
+                        <div class="row gx-0">
+                            <div class="col-sm-6 me-0">
+                                <div class="card-header">Type</div>
+                                <div class="card-body">All 5 Group 120</div>
+                                <div class="card-header">Total track <span class="m-total-num-track-draws">2</span>
+                                    draws
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 ms-0">
-                            <div class="card-header">Detail</div>
-                            <div class="card-body">56789</div>
-                            <div class="card-header">Total Amt: <span class="text-danger">0.0020</span></div>
+                            <div class="col-sm-6 ms-0">
+                                <div class="card-header">Detail</div>
+                                <div class="card-body">56789</div>
+                                <div class="card-header">Total Amt: <span class="text-danger">0.0020</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="m-btn-ash p-2" data-bs-dismiss="modal">
-                    Cancel
-                </button>
-                <button type="button" class="m-btn-orange button-type p-2">
-                    Save changes
-                </button>
+                <div class="modal-footer">
+                    <button type="button" class="m-btn-ash p-2" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" class="m-btn-orange button-type p-2">
+                        Save changes
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
     </div>
 
-    
+
 
     <script type="module" src="assets/js/demo.js"></script>
     <script type="module" src="assets/js/royal5.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-    <script src="assets/libs/slot_master/slot.js"></script>
-    <script src="assets/js/tracks-cart.js"></script>
+    <script type="module" src="assets/js/tracks-cart.js"></script>
     <script type="module" src="assets/js/timer.js"></script>
     <script type="module" src="assets/js/main.js"></script>
 </body>

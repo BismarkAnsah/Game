@@ -1024,9 +1024,51 @@ color: rgba(112, 112, 112, 1);
   background-color: #bfd8f2;
   color: #707070;
   border-radius: 8px;
-
+  transition: opacity 0.3s;
   outline: none;
 }
+
+/* Tooltip container */
+/* .tooltip {
+  position: relative;
+  display: inline-block;
+} */
+
+/* Tooltip text */
+/* .tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  
+} */
+
+/* Tooltip arrow */
+/* .tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+} */
+
+/* Show the tooltip text when you mouse over the tooltip container */
+/* .tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+} */
 
 button {
   cursor: pointer;
@@ -2759,7 +2801,7 @@ text {
   font-weight: bold;
 }
 .bet-id {
-  left: 263px;
+  left: 256px;
 
   top: 41px;
 
@@ -2870,17 +2912,48 @@ text {
 
   border-radius: 3px;
 }
+.Rectangle_91_v {
+  overflow: hidden;
+  position: absolute;
+  width: 210px;
 
-#progressBar {
+  height: fit-content;
+  left: 68px;
+
+  top: 50px;
+
+  border: 2px solid var(--medGrey);
+
+  border-radius: 3px;
+}
+.Rectangle_92 {
+  overflow: hidden;
+  position: absolute;
+  width: 210px;
+
+  height: fit-content;
+  left: 68px;
+
+  top: 40px;
+
+  border: 2px solid var(--medGrey);
+
+  border-radius: 3px;
+}
+
+#progressBar, #jquery_progressBar,#velocity_progressBar {
   width: 100%;
   /* margin: 10px auto; */
   height: 5px;
   background-color: #3eb0f1;
 }
 
-#progressBar div {
+#progressBar div, #jquery_progressBar div,
+#velocity_progressBar div {
   height: 100%;
   text-align: right;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
   /* padding: 0 10px; */
   line-height: 22px; /* same as #progressBar height if we want text middle aligned */
   width: 0;
@@ -15688,4 +15761,46 @@ text {
   top: 29px;
 
   overflow: visible;
+}
+
+
+.slot-wrapper {
+  position: relative;
+  /* margin: 0 auto; */
+  width: 270px;
+  height: 100px;
+  overflow: hidden;
+}
+
+.ball-animation-ul {
+  height: 35px;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  position: relative;
+  list-style-type: none;
+  cursor: pointer;
+}
+.ball-animation-ul li {
+  position: relative;
+  color: #000;
+  font-size: 21.4px;
+  font-weight: 400;
+  margin-right: 5px;
+  margin-top: 0;
+}
+
+.ball-animation-ul li div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  font-weight: bold;
+  height: 35px;
+  width: 35px;
+  line-height: 35px;
+  text-align: center;
+  position: relative;
+  background: url("../libs/slot_machine/images/reel.png") no-repeat;
+  background-size: contain;
 }

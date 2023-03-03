@@ -1,20 +1,27 @@
 // console.log(timePassed);
+$(function () {
+let result;
 
-const decrementButton = document.getElementById("decrement");
-const incrementButton = document.getElementById("increment");
-const result = document.getElementById("btnMultiBetCount");
-let currentValue = 1;
+$(document).on("click", "#decrement", function (e) {
+  $(this).siblings()
+  let currentValue = $(this).siblings(".input-multibet-counter").val().replace(/\D/g, '');
+  // console.log($(document).find(".input-multibet-counter").val().replace(/\D/g, ''));
+  // console.log();
 
-decrementButton.addEventListener("click", function () {
+  result = $(this).siblings(".input-multibet-counter");
   if (currentValue > 1) {
-    currentValue -= 1;
-    result.value = "X" + currentValue;
+    currentValue --;
+    result.val("X" + currentValue);
   }
 });
 
-incrementButton.addEventListener("click", function () {
-  currentValue += 1;
-  result.value = "X" + currentValue;
+$(document).on("click", "#increment", function (e) {
+  let currentValue = $(this).siblings(".input-multibet-counter").val().replace(/\D/g, '');
+  console.log(currentValue);
+
+  result = $(this).siblings(".input-multibet-counter");
+  currentValue ++;
+  result.val( "X" + currentValue);
 });
 
 const button = document.querySelector(".btn-mask-balance");
@@ -37,7 +44,7 @@ button.addEventListener("click", function () {
 });
 
 
-
+})
 
 
 /**
@@ -62,7 +69,7 @@ const showModal = (title, button_type) => {
  * scroll to and shows the cart area
  * @param {*} id
  */
-const showCartArea = (id) => {
+export const showCartArea = (id) => {
   let triggerEl = document.getElementById(id);
   let tabTrigger = new bootstrap.Tab(triggerEl);
 
