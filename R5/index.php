@@ -11,13 +11,10 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Web 1920 - 1</title>
-    <!-- <script src="js/jquery-3.6.3.min.js"></script> -->
     <link rel="stylesheet" href="assets/css/cart-area-style.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    <!-- <script src="./assets/libs/HackTimer/HackTimerWorker.js"></script> -->
-    <script src="https://cdn.rawgit.com/turuslan/HackTimer/master/HackTimer.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script src="assets/libs/HackTimer/HackTimer.js"></script>
+    <script src="assets/libs/AnimeJs/anime.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />

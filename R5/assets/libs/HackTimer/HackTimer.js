@@ -1,5 +1,4 @@
 (function (workerScript) {
-	console.log("worrrrrrrrrrrrrrrrrrrrrrrrrrrking")
 	if (!/MSIE 10/i.test (navigator.userAgent)) {
 		try {
 			var blob = new Blob (["\

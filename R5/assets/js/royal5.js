@@ -1,6 +1,4 @@
 import * as $C from "../libs/combinatorics/combinatorics.js";
-import "../libs/HackTimer/HackTimerWorker.js"
-import "../libs/HackTimer/HackTimer.js"
 import { truncateEllipsis, checkRemainingSelectOptions } from "./main.js";
 import { showCartArea } from "./tracks-cart.js";
 import { progress } from "./timer.js";
@@ -371,8 +369,8 @@ export class Royal5utils {
    * @memberof Royal5utils
    */
   generateSelectOptions(
-    currentBetId = currentSelectOption.betId,
-    idDateTime = currentSelectOption.dateTime
+    currentBetId = drawData.betId,
+    idDateTime = drawData.drawDatetime
   ) {
     let selectTrackIds = "";
     // let curSele = $(document).find('select[name="first_draw"] :selected').val()
@@ -473,6 +471,7 @@ export class Royal5utils {
     let multiplier = firstMultiplier;
     let totalBetAmt = firstBetAmt;
     let currentDrawDate = firstDrawDate;
+    console.log(firstDrawDate);
     let currentBetId = betId;
     let estimatedDrawTime = this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate);
     track["trackInfo"] = {};
@@ -501,6 +500,7 @@ export class Royal5utils {
         currentDrawDate,
         intervalMinutes
       );
+      console.log(currentBetId, currentDrawDate)
       //todo: fix draw date time well
       multiplier = multiplier >= 99999 ? 99999 : multiplier;
       betAmt = this.fixArithmetic(multiplier * eachBetAmt);
@@ -555,41 +555,23 @@ export class Royal5utils {
     return yieldData;
   }
 
-  // all possible 3 numbers between 0 - 9 such that the difference between the maximum and the minimum gives a certain value
-  getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
-    let dividend = this.fixArithmetic(minimumYield * previousPaid) + this.fixArithmetic(100 * previousPaid);
-    let divisor = this.fixArithmetic(100 * bonus) - this.fixArithmetic(100 * singleBetAmt) - this.fixArithmetic(minimumYield * singleBetAmt);
-    let multiplier = this.fixArithmetic(dividend / divisor);
-    return Math.ceil(multiplier);
-  }
-
-  /**
-   * Compares a single date with the current date and time
-   * @param {string} date - The input date to compare, in the format "YYYY-MM-DDTHH:MM:SS"
-   * @return {boolean} - Returns true if the input date is in the future, or false if it's in the past
-   */
-  isFutureDate(date) {
-    // Convert the input date to a JavaScript Date object
-    let inputDate = new Date(currentSelectOption.dateTime);
-
-    // Get the current date and time
-    let currentDate = new Date("2023-01-31 20:49:00");//pass server time here
-
-    // Calculate the difference between the two dates
-    let diff = inputDate - currentDate;
-
-    // Return true if the input date is in the future, or false if it's in the past
-    if (diff >= 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  //call the above like below
-  // let result = isFutureDate("2023-02-09T10:00:00");
-  // console.log(result); // outputs "true"
-
-
+  
+ /**
+ * Calculates the yield multiplier for a bet, based on the minimum yield, bonus, 
+ * previous payout, and single bet amount.
+ *
+ * @param {number} minimumYield - The minimum yield for the bet.
+ * @param {number} bonus - The bonus for the bet.
+ * @param {number} previousPaid - The previous payout for the bet.
+ * @param {number} singleBetAmt - The amount of the single bet.
+ * @returns {number} The yield multiplier for the bet.
+ */
+getYieldMultiplier(minimumYield, bonus, previousPaid, singleBetAmt) {
+  let dividend = this.fixArithmetic(minimumYield * previousPaid) + this.fixArithmetic(100 * previousPaid);
+  let divisor = this.fixArithmetic(100 * bonus) - this.fixArithmetic(100 * singleBetAmt) - this.fixArithmetic(minimumYield * singleBetAmt);
+  let multiplier = this.fixArithmetic(dividend / divisor);
+  return Math.ceil(multiplier);
+}
 
 
   /**
@@ -744,7 +726,7 @@ export class Royal5utils {
    * @param {string} checkDate does this date happens on the next day?
    * @returns true or false. true if nextDay
    */
-  isNextDay(checkDate, date = drawData.datetime) {
+  isNextDay(checkDate, date = drawData.drawDatetime) {
     const date1 = new Date(date);
     const date2 = new Date(checkDate);
     if (date1.getDate() != date2.getDate()) return true;
@@ -3422,8 +3404,8 @@ let oldClass = "a5_joint";
 const urls = {
   balance: "http://192.168.199.126/task/receiver.php?action=userbalance",
   draws: "http://192.168.199.126/task/cron/frontend_draw.php",
-  betNow: "http://192.168.199.126/task/nav.php"
-  // drawsMock: "./demo/generator.php",
+  // betNow: "http://192.168.199.126/task/nav.php"
+  drawsMock: "./demo/generator.php",
 }
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings('a5_joint'));
@@ -3839,9 +3821,9 @@ function ready(className) {
 
     $(".first-multiplier, .multiplyAfterEvery, .multiplyBy").val(defaultTrackInputs);
     $(".total-draws").val(defaultTrackDraws);
-    let trackJson = game.createTrackJson(currentSelectOption.nextDateTime, currentSelectOption.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
-    console.log(currentSelectOption.betId)
-    game.generateSelectOptions(currentSelectOption.betId);
+    console.log(drawData.nextDrawDate)
+    let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
+    game.generateSelectOptions(drawData.betId);
     showCartArea('track-tab')
     // setInterval(() => {
 
@@ -4291,13 +4273,14 @@ function formatDrawResponse(response) {
   let drawNumber = responseData.draw_number.split(",").map(el => +el); // gets the draw numbers in an array as integers
   let formattedResponse = {
     responseId: responseData.id,
-    drawId: responseData.draw_date,
+    betId: responseData.draw_date,
     drawDatetime: responseData.draw_datetime,
     drawNumber: drawNumber,
     timeLeft: timeLeft,
-    nextDrawId: game.generateNextBetId(responseData.draw_date, responseData.draw_datetime, intervalMinutes),
+    nextBetId: game.generateNextBetId(responseData.draw_date, responseData.draw_datetime, intervalMinutes),
     nextDrawDatetime: game.addMinutes(responseData.draw_datetime, intervalMinutes)
   }
+
   return formattedResponse;
 }
 
@@ -4314,8 +4297,10 @@ function formatDrawResponse(response) {
     totalRequests[randomName] = 0;
   if (totalRequests[randomName] >= max) {
     window.location.reload();
-    totalRequests[randomName] += 1;
   }
+  totalRequests[randomName] += 1;
+
+  console.log(totalRequests[randomName])
 }
 
 
@@ -4324,6 +4309,7 @@ function getDrawData(intervalTime) {
     fetch(urls.draws)
       .then(response => {
         if (response.ok) {
+    
           return response.json();
         } else {
           throw new Error('Network response was not ok');
@@ -4331,6 +4317,7 @@ function getDrawData(intervalTime) {
       })
       .then(data => {
         const prettyResp = formatDrawResponse(data); //formats the response in the best way for processing.
+        console.log(prettyResp);
         if (prettyResp.responseId != drawData.responseId) //if new data received
         {
           drawData = prettyResp;
@@ -4342,58 +4329,22 @@ function getDrawData(intervalTime) {
           getDrawData(nextIntervalTime);
         } else {
           console.info("No new data received");
-          reloadPageAfter(100, "getDrawData");
+          reloadPageAfter(50, "getDrawData");
           const retryAfter = 1000;
           getDrawData(retryAfter);
         }
       })
       .catch(error => {
-        console.error('There was a problem fetching the data:', error);
         console.info("Retrying...");
+        console.error('There was a problem fetching the data:', error);
         const retryTime = 1000;
         getDrawData(retryTime);
-        reloadPageAfter(100, "getDrawData");
+        reloadPageAfter(50, "getDrawData");
       });
   }, intervalTime);
 }
 
 getDrawData(0);
-
-
-
-
-
-
-// let getDraw = new Promise(function (resolve, reject) {
-//   let url = urls.draws;
-//   $.get(url, function (response) {
-//     // console.log(response);
-//     let responseObj = JSON.parse(response);
-//     let prettyResp = formatDrawResponse(responseObj); //formats the response in the best way for processing.
-//     if (prettyResp.responseId != drawData.responseId) //if new data received
-//     {
-//       drawData = prettyResp;
-//       resolve(prettyResp);
-//     } else {
-//       reject("No new data received");
-//     }
-//   })
-//     .fail(function () {
-//       reject("An error occurred while fetching draw data");
-//     })
-// })
-
-
-
-
-
-
-
-
-
-
-// console.log(serverDrawNum)
-
 
 /**call all your functions here */
 function callAllFunctionsHere() {
