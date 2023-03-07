@@ -33,10 +33,10 @@ button.addEventListener("click", function () {
   if (isMasked) {
     mask_balance.classList.toggle("visually-hidden");
     unmask_balance.classList.toggle("visually-hidden");
-    button.className = "bi bi-eye";
+    button.className = "fa-solid fa-eye";
     isMasked = false;
   } else {
-    button.className = "bi bi-eye-slash";
+    button.className = "fa-solid fa-eye-slash eye-slash";
     mask_balance.classList.toggle("visually-hidden");
     unmask_balance.classList.toggle("visually-hidden");
     isMasked = true;
