@@ -4390,7 +4390,8 @@ $(function () {
   // Wait for the document to be ready
   fetchToolTipData().done((tooltipData) => {
     // Once the data is fetched, update the title attribute
-    const tooltipTitle = JSON.parse(tooltipData)["1"];
+    console.log("======================================", tooltipData);
+    const tooltipTitle = (tooltipData)["1"];
 
     $("#tt").attr("data-bs-title", tooltipTitle);
     const tooltipTrigger = document.getElementById("how-to-play");
@@ -4407,6 +4408,7 @@ $(function () {
 });
 
 $(".nav-item-c ").on("click", function (e) {
+  console.log("game id", $(e.currentTarget).data("game-id"))
   const tooltipTitle = tooltipData[`${$(e.currentTarget).data("game-id")}`];
 
   $("#tt").attr("data-bs-title", tooltipTitle);
@@ -4420,7 +4422,7 @@ function fetchToolTipData() {
   // let url = "http://localhost/Game-main/R5/add-ons/returnjson.php";
   let url = "http://192.168.199.126/task/receiver.php?action=gamerules";
   let callback = async function (resp) {
-    tooltipData = await JSON.parse(resp);
+    tooltipData = await resp;
 
     // console.log("tooltipData=================================", tooltipData["1"]);
   };
@@ -4650,7 +4652,8 @@ function settings(className, gameId) {
     6: "manual",
   };
   let games = {
-    a5_joint: {
+    
+    joint: {
       "label": labels[0].slice(0, 5),
       "totalBets": 1,
       "gameId": gameId,
