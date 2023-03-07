@@ -158,22 +158,6 @@
                 </div>
                 <div class="current-px visually-hidden"></div>
             </div>
-            <div class="Rectangle_92">
-                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
-                <!-- <span>jquery</span> -->
-                <div id="jquery_progressBar">
-                    <div class="bar"></div>
-                </div>
-                <div class="jcurrent-px visually-hidden"></div>
-            </div>
-            <div class="Rectangle_91_v">
-                <!-- <div class="Rectangle_37" style="height: 24px;"></div> -->
-                <div id="velocity_progressBar">
-                    <div class="bar"></div>
-                </div>
-                <div class="vcurrent-px visually-hidden"></div>
-            </div>
-
             <div class="draw-num-box container">
                 <div class="slot-wrapper">
 
@@ -2642,9 +2626,6 @@
 
     <script type="module" src="assets/js/demo.js"></script>
     <script type="module" src="assets/js/royal5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/2.0.6/velocity.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-    <script src="assets/libs/slot_master/slot.js"></script>
     <script type="module" src="assets/js/tracks-cart.js"></script>
     <script type="module" src="assets/js/timer.js"></script>
     <script type="module" src="assets/js/main.js"></script>
