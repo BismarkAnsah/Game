@@ -1905,7 +1905,7 @@
                         </div>
 
                         <div class="row-c cart-track-bet" id="cart-track-bet">
-                            <div id="Group_3" class="col-c track " onclick="">
+                            <div id="Group_3" class="col-c track disabled-svg" onclick="">
                                 <svg class="Path_3 path" viewBox="2771.25 1959.5 314.75 76.5">
                                     <style>
 

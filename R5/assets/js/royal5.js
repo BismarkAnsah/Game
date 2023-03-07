@@ -670,6 +670,7 @@ export class Royal5utils {
       trackJson.trackInfo.eachTotalBets * totalDraws
     );
     $(".track__total__draws").text(totalDraws);
+    $(".track__total__balance").text(balance.userBalance);
   }
 
   createProfitTrackInterface(trackJson) {
@@ -729,6 +730,7 @@ export class Royal5utils {
       trackJson.trackInfo.eachTotalBets * totalDraws
     );
     $(".track__total__draws_p").text(totalDraws);
+    $(".track__total__balance").text(balance.userBalance);
   }
 
   /**
@@ -878,7 +880,9 @@ export class Royal5utils {
         console.log("There was an error.");
       }
     });
-    return JSON.parse(results);
+    console.log( results);
+
+    return (results);
   }
 
   // deleteFromCart(id, cart) {
@@ -1164,19 +1168,29 @@ export class Royal5utils {
     this.$(target).val(multiValue);
   }
 
+  /**
+   * Disables or enables a set of buttons based on the given `disabled` boolean value.
+   *
+   * @param {boolean} disabled - A boolean value indicating whether to disable or enable the buttons.
+   * @param {...string} btnSelectors - An array of button selectors that will be disabled or enabled.
+   */
   disableButtons(disabled, ...btnSelectors) {
+    // If `disabled` is true, disable the buttons and add the 'disabled-svg' class to them.
     if (disabled) {
       btnSelectors.forEach((selector) => {
         this.$(selector).attr("disabled", disabled);
         this.$(selector).addClass("disabled-svg");
       });
-    } else {
+    } 
+    // If `disabled` is false, enable the buttons and remove the 'disabled-svg' class from them.
+    else {
       btnSelectors.forEach((selector) => {
         this.$(selector).attr("disabled", disabled);
         this.$(selector).removeClass("disabled-svg");
       });
     }
   }
+
 
   getRowFromClass(classNames) {
     let classIndex = classNames.indexOf("row");
@@ -3528,33 +3542,18 @@ let oldClass = "a5_joint";
 const urls = {
   balance: "http://192.168.199.126/task/receiver.php?action=userbalance",
   draws: "http://192.168.199.126/task/cron/frontend_draw.php",
-  // betNow: "http://192.168.199.126/task/nav.php"
+  betNow: "http://192.168.199.126/task/nav.php",
   drawsMock: "./demo/generator.php",
 }
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
 let game = new a5_joint(settings("a5_joint"));
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
-// let balance = await game.fetchData(balanceUrl) || 500;
-let balance = 500;
+let balance = await game.fetchData(balanceUrl) || 500;
+// let balance = 500;
 
 /** max input length for the track draw*/
 let maxInput = 120;
-// $('.user-balance').html(JSON.parse(balance).userBalance);
-// let dateTime = ;
-/** variable to store the next betId from server */
-let serverBetId = "202301310002";
 
-/** variable to store the next betId from server */
-let serverTime = "2023-01-31 20:24:00";
-
-/** variable to store current betId & current dateTime and generate the next betid & nextDateTime */
-let serverDrawNum = {
-  // betId: "202301310001",
-  // dateTime: "2023-01-31 20:24:00",
-  // nextBetId: "202301310002",
-  // nextDateTime: "2023-01-31 20:29:00"
-
-}
 let drawData = {};
 let totalRequests = {
   getDrawData: 0
@@ -3567,12 +3566,6 @@ function setNextDraws() {
   drawData.nextBetId = game.generateNextBetId(drawData.draw_date, drawData.draw_datetime, intervalMinutes);
   drawData.nextDateTime = game.addMinutes(drawData.draw_datetime, intervalMinutes);
 }
-
-// let liveDrawNum = {
-
-//   nextBetId: game.getNextBetId(serverDrawNum.betId),
-//   nextDateTime: "2023-01-31 20:29:00"
-// }
 
 /** selects all class names  */
 let classNames = {
@@ -3621,7 +3614,7 @@ function ready(className) {
     if (!totalBets) {
       game.$("div.least-bet").show();
       game.$("div.bet-info").hide();
-      game.disableButtons(true, ".cart", ".bet-now");
+      game.disableButtons(true, ".cart", ".bet-now", ".track");
       return 0;
     }
 
@@ -3635,8 +3628,8 @@ function ready(className) {
     game.$("span.actual-amt").html(actualAmt);
     game.$("div.least-bet").hide();
     game.$("div.bet-info").show();
-    game.disableButtons(false, ".cart", ".bet-now");
-    if (!unitAmt) game.disableButtons(true, ".cart", ".bet-now");
+    game.disableButtons(false, ".cart", ".bet-now", ".track");
+    if (!unitAmt) game.disableButtons(true, ".cart", ".bet-now", ".track");
   }
 
   initializedClasses.push(className);
@@ -3951,14 +3944,14 @@ function ready(className) {
     showCartArea('track-tab')
     // setInterval(() => {
 
-    game.generateSelectOptions(currentSelectOption.betId);
-    showCartArea("track-tab");
+    game.disableButtons(true, ".track", "input.bet-amt");
     game.setTrackTopTableContents(trackJson);
     trackJson["trackData"] = trackData;
     // game.setTrackJson(trackJson);
     game.setTrackJson(trackJson);
     game.createTrackInterface(trackJson);
     game.createProfitTrackInterface(trackJson);
+    game.resetAllData();
   });
 
   $("#first__draw__select").on("change", function () {
@@ -4217,7 +4210,8 @@ function ready(className) {
     console.log(savedData);
     let data = JSON.stringify([savedData]);
     let req = $.post(urls.betNow, data, function (response) {
-      // console.log(response);
+      console.log("=====================URL====================",urls.betNow);
+      console.log("=========================================",response);
       response = JSON.parse(response);
       if (response.title == "success") {
         game.fetchData(balanceUrl).then((response) => {
@@ -4404,6 +4398,7 @@ $(function () {
     // Hide the tooltip
     myTooltip.hide();
   });
+  $(".user-balance").html(balance.userBalance);
 });
 
 $(".nav-item-c ").on("click", function (e) {
