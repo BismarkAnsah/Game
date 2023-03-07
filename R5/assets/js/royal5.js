@@ -366,31 +366,13 @@ export class Royal5utils {
     $(this).fadeIn("slow", function () {
       $(".cart-items").append(cartItem);
       $(".cart-items-track-bets").html(cartItemsBets);
+      $(".cart__table_balance").html(balance.userBalance);
       showCartArea("cart-tab");
       $("#cart-submit").show();
       $(".clear-cart").show();
     });
   }
 
-  /**
-   *
-   *
-   * @param {*} obj
-   * @return {*}
-   * @memberof Royal5utils
-   */
-  //  sumBetAmtAndBets(obj) {
-  //     const results = [];
-
-  //     for (const key in obj) {
-  //       const totalBetAmt = obj[key].totalBetAmt;
-  //       const totalBets = obj[key].totalBets;
-  //       const sum = totalBetAmt + totalBets;
-  //       results.push(sum);
-  //     }
-
-  //     return results;
-  //   }
   /**
    * Calculates the sum of total bet amount and total bets of items in a cart
    * @param {Object} cart - The cart object containing items with total bet amount and total bets
