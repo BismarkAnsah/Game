@@ -4400,7 +4400,7 @@ $(function () {
   // Wait for the document to be ready
   fetchToolTipData().done((tooltipData) => {
     // Once the data is fetched, update the title attribute
-    const tooltipTitle = JSON.parse(tooltipData)["1"];
+    const tooltipTitle = (tooltipData)["1"];
 
     $("#tt").attr("data-bs-title", tooltipTitle);
     const tooltipTrigger = document.getElementById("how-to-play");
@@ -4430,7 +4430,7 @@ function fetchToolTipData() {
   // let url = "http://localhost/Game-main/R5/add-ons/returnjson.php";
   let url = "http://192.168.199.126/task/receiver.php?action=gamerules";
   let callback = async function (resp) {
-    tooltipData = await JSON.parse(resp);
+    tooltipData = await (resp);
 
     // console.log("tooltipData=================================", tooltipData["1"]);
   };
