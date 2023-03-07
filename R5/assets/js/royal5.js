@@ -3532,6 +3532,7 @@ const urls = {
   drawsMock: "./demo/generator.php",
 }
 let balanceUrl = "http://192.168.199.126/task/receiver.php?action=userbalance";
+
 let game = new a5_joint(settings("a5_joint"));
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
 // let balance = await game.fetchData(balanceUrl) || 500;
@@ -3621,7 +3622,7 @@ function ready(className) {
     if (!totalBets) {
       game.$("div.least-bet").show();
       game.$("div.bet-info").hide();
-      game.disableButtons(true, ".cart", ".bet-now");
+      game.disableButtons(true, ".cart", ".bet-now", ".track");
       return 0;
     }
 
@@ -3635,8 +3636,8 @@ function ready(className) {
     game.$("span.actual-amt").html(actualAmt);
     game.$("div.least-bet").hide();
     game.$("div.bet-info").show();
-    game.disableButtons(false, ".cart", ".bet-now");
-    if (!unitAmt) game.disableButtons(true, ".cart", ".bet-now");
+    game.disableButtons(false, ".cart", ".bet-now", ".track");
+    if (!unitAmt) game.disableButtons(true, ".cart", ".bet-now", ".track");
   }
 
   initializedClasses.push(className);
