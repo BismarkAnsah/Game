@@ -545,27 +545,68 @@ export class Royal5utils {
   }
 
 
-  createTrackYield(totalDraws, eachMultiplier, bonus, singleBetAmt) {
+  /**
+   * gets all the information in a track yield table.
+   * @param {number} totalDraws the total number of bets to show in the track table.
+   * @param {number} startMultiplier the basic multiplier to start the track with. Default is 1.
+   * @param {number} bonus the bonus based on the "@singleBetAmt".
+   * @param {number} singleBetAmt the amount based on the bet chosen. Don't multiply by the chosen multiplier.
+   * @param {number} minimumYield the minimum yield selected by the user.
+   * @returns a json object representing the minimum yield track.
+   */
+  createTrackYield(totalDraws, startMultiplier, singleBetAmt, bonus,  minimumYield) {
     let yieldData = {};
     yieldData.bets = {};
-    let totalAmount = 0;
-    let previousBetAmt = 0;
+    let previousBetAmt;
     let currentAmt;
-    for (let i = 0; i < totalDraws; i++) {
-      currentAmt = this.fixArithmetic(previousBetAmt + singleBetAmt);
-      yieldData.bets[i] = {
-        multiplier: eachMultiplier,
-        betAmt: this.fixArithmetic(eachMultiplier * singleBetAmt),
-        bonus: bonus,
-        currentAmt: currentAmt,
-        expectedAmt: this.fixArithmetic(currentAmt + singleBetAmt)
-      }
-      previousBetAmt = yieldData.bets[i].currentAmt;
+    const constantBonus = bonus;
+    const basicBonus = this.fixArithmetic(bonus * startMultiplier);
+    const basicMultiplier = startMultiplier;
+    const basicBetAmt = basicMultiplier * singleBetAmt;
+    const basicCurrentAmt = basicBetAmt;
+    const basicExpectedProfit = constantBonus - basicCurrentAmt//expected profit for the first bet on track.
+    const basicPercentageProfit = this.truncate(this.fixArithmetic(basicExpectedProfit/basicCurrentAmt*100), 4); //profit percentage for the first bet on track
+  
+  /**
+   * treating the first bet in track separately
+   */
+    yieldData.bets[0] = {
+      multiplier:basicMultiplier,
+      betAmt:basicBetAmt,
+      bonus: basicBonus,
+      currentAmt: basicCurrentAmt,
+      expectedProfit:basicExpectedProfit,
+      percentageProfit:basicPercentageProfit
     }
 
+    /**
+     * all the other elements in the track starts from here
+     */
+    let i = 1;
+    let multiplier, expectedProfit, percentageProfit, currentBonus, previousMultiplier;
+    for (i; i < totalDraws; i++) {
+
+      previousBetAmt = yieldData.bets[i-1]["currentAmt"];
+      previousMultiplier = yieldData.bets[i-1]["multiplier"];
+      multiplier = this.getYieldMultiplier(minimumYield, constantBonus, previousBetAmt, singleBetAmt);//generates the multiplier for the current bet in the track.
+      multiplier = multiplier < previousMultiplier ? previousMultiplier : multiplier; //makes sure the generated multiplier isn't less than the start multiplier.
+      currentBonus = constantBonus * multiplier;
+      currentAmt = this.fixArithmetic(previousBetAmt + (singleBetAmt * multiplier));
+      expectedProfit = this.fixArithmetic(currentBonus - currentAmt);
+      percentageProfit = this.truncate(this.fixArithmetic(expectedProfit/currentAmt*100), 4);
+      yieldData.bets[i] = {
+        multiplier: multiplier,
+        betAmt: this.fixArithmetic(multiplier * singleBetAmt),
+        bonus: currentBonus,
+        currentAmt: currentAmt,
+        expectedProfit: expectedProfit,
+        percentageProfit:percentageProfit
+      }
+    }
+    
     yieldData.yieldInfo = {
       totalDraws: totalDraws,
-      totalAmount: totalAmount
+      totalAmount: previousBetAmt = yieldData.bets[i-1]["currentAmt"]
     }
 
     return yieldData;
@@ -4359,7 +4400,7 @@ function getDrawNums(url = false, data = false) {
   //   console.log(response);
   // });
 }
-
+console.log(game.createTrackYield(120, 2, 193800, 2, 1000000));
 
 // showDrawNums([1,0,5,6,7]);
 
@@ -4448,7 +4489,7 @@ function reloadPageAfter(max, randomName) {
 
 function getDrawData(intervalTime) {
   setTimeout(() => {
-    fetch(urls.draws)
+    fetch(urls.drawsMock)
       .then(response => {
         if (response.ok) {
 
