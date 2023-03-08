@@ -2264,14 +2264,14 @@
 
                                                             <div class="form-check m-2">
                                                                 <input class="form-check-input m-1" type="radio"
-                                                                    name="flexRadioDefault" id="stop_if_win" />
+                                                                    name="stop_if_win" id="stop_if_win" />
                                                                 <label class="form-check-label" for="stop_if_win">
                                                                     Stop if win
                                                                 </label>
                                                             </div>
                                                             <div class="form-check m-2">
                                                                 <input class="form-check-input m-1" type="radio"
-                                                                    name="flexRadioDefault" id="stop_if_not_win" />
+                                                                    name="stop_if_win" id="stop_if_not_win" />
                                                                 <label class="form-check-label" for="stop_if_not_win">
                                                                     Stop if not win
                                                                 </label>

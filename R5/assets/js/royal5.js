@@ -95,6 +95,13 @@ export class Royal5utils {
       console.log("==================BET_ID================", bet_id)
       this.betId = `${bet_id}`;
     }
+  /**
+   * @param {String} bet_id
+   */
+    getBetID() {
+      console.log("==================BET_ID================", bet_id)
+      return this.betId;
+    }
 
   /**
    *
@@ -3755,19 +3762,13 @@ function ready(className) {
 
   // $('.cart').hide();
   // $('.cart-items').hide();
-  function selectedBetID(betPeriod){
-    game.setBetID(betPeriod)
+  
 
-  }
-
-  $(".draw__period").on("change", function () {
-    let selectedIndex = $(this).prop("selectedIndex");
-    // console.log(draw_period[selectedIndex])
-    // game.draw_periods = draw_period[selectedIndex];
-    // selectedBetID(draw_period[selectedIndex])
-    game.setBetID(draw_period[selectedIndex])
-    // console.log("-----------------------------------------------",game.draw_periods)
-  })
+  // $(".draw__period").on("change", function () {
+  //   let selectedIndex = $(this).prop("selectedIndex");
+  //   game.setBetID(draw_period[selectedIndex])
+  //   // console.log("-----------------------------------------------",game.draw_periods)
+  // })
 
   game.$(classNames.allBtn).click(function () {
     let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -4062,7 +4063,7 @@ function ready(className) {
       defaultTrackInputs
     );
     $(".total-draws").val(defaultTrackDraws);
-    console.log(drawData.nextDrawDate)
+    // console.log(drawData.nextDrawDate)
     let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
     game.generateSelectOptions(drawData.betId);
     showCartArea('track-tab')
@@ -4360,15 +4361,14 @@ function ready(className) {
   game.$(".bet-now").click(function () {
     game.disableButtons(true, ".cart", "input.bet-amt", ".track");
     let savedData = game.getSavedData();
+    savedData.betId = $(".draw__period :selected").attr("value");
     console.log(savedData);
     let data = JSON.stringify([savedData]);
     let req = $.post(urls.betNow, data, function (response) {
-      console.log("=====================URL====================",urls.betNow);
-      console.log("=========================================",response);
-      response = JSON.parse(response);
+      // response = JSON.parse(response);
       if (response.title == "success") {
         game.fetchData(balanceUrl).then((response) => {
-          response = JSON.parse(response);
+          // response = JSON.parse(response);
           $(".user-balance").html(response.userBalance);
         });
         alert(response.message);
@@ -4644,7 +4644,6 @@ function getDrawData(intervalTime) {
           const nextIntervalTime = drawData.timeLeft * 1000;
           getDrawData(nextIntervalTime);
           game.generateDrawPeriods();
-          game.setBetID(draw_period[0])
           console.log(game.betId);
           if (game.getTrackJson()) {
             game.changeCurrentButton();
