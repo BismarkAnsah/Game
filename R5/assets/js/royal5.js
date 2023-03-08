@@ -4148,6 +4148,7 @@ function ready(className) {
     let callback = function (resp) {
       // create a callback function that logs the server response to the console
       console.log(resp);
+      alert(resp);
     };
     $.post(
       "http://192.168.199.126/task/track.php",
