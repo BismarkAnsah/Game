@@ -4088,12 +4088,13 @@ function ready(className) {
     game.setTrackInfo(trackInfo);
     let betAmt = game.calcBetAmt();
     let totalBets = game.calcTotalBets();
-    trackData = {
+    trackData = {0:{
       gameId: savedData.gameId,
       unitStaked: savedData.unitStaked,
       totalBets: savedData.totalBets,
       allSelections: savedData.allSelections,
-      userSelections: savedData.userSelections,
+      userSelections: savedData.userSelections
+    }
     };
     //next to lines hides existing tracks to match the default track no.
     $(".track-data").children().hide();
