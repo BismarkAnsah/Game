@@ -4489,7 +4489,7 @@ function reloadPageAfter(max, randomName) {
 
 function getDrawData(intervalTime) {
   setTimeout(() => {
-    fetch(urls.drawsMock)
+    fetch(urls.draws)
       .then(response => {
         if (response.ok) {
 
