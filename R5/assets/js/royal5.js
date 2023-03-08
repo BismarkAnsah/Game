@@ -91,17 +91,17 @@ export class Royal5utils {
   /**
    * @param {String} bet_id
    */
-    setBetID(bet_id) {
-      console.log("==================BET_ID================", bet_id)
-      this.betId = `${bet_id}`;
-    }
+  setBetID(bet_id) {
+    console.log("==================BET_ID================", bet_id)
+    this.betId = `${bet_id}`;
+  }
   /**
    * @param {String} bet_id
    */
-    getBetID() {
-      console.log("==================BET_ID================", bet_id)
-      return this.betId;
-    }
+  getBetID() {
+    console.log("==================BET_ID================", bet_id)
+    return this.betId;
+  }
 
   /**
    *
@@ -581,6 +581,8 @@ export class Royal5utils {
 
   /**
    * gets all the information in a track yield table.
+   * @param {string} firstDrawDate the first estimated draw date of the first bet in the track table.
+   * @param {string} betId the first bet id of the first bet in the track table.
    * @param {number} totalDraws the total number of bets to show in the track table.
    * @param {number} startMultiplier the basic multiplier to start the track with. Default is 1.
    * @param {number} bonus the bonus based on the "@singleBetAmt".
@@ -588,59 +590,84 @@ export class Royal5utils {
    * @param {number} minimumYield the minimum yield selected by the user.
    * @returns a json object representing the minimum yield track.
    */
-  createTrackYield(totalDraws, startMultiplier, singleBetAmt, bonus,  minimumYield) {
+  createTrackYield(firstDrawDate, betId, totalDraws, startMultiplier, singleBetAmt, bonus, minimumYield) {
     let yieldData = {};
     yieldData.bets = {};
     let previousBetAmt;
     let currentAmt;
+    let currentDrawDate = firstDrawDate;
+    let estimatedDrawTime = this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate);
+    let currentBetId = betId;
+    let nextDay = false;
     const constantBonus = bonus;
     const basicBonus = this.fixArithmetic(bonus * startMultiplier);
     const basicMultiplier = startMultiplier;
     const basicBetAmt = basicMultiplier * singleBetAmt;
     const basicCurrentAmt = basicBetAmt;
     const basicExpectedProfit = constantBonus - basicCurrentAmt//expected profit for the first bet on track.
-    const basicPercentageProfit = this.truncate(this.fixArithmetic(basicExpectedProfit/basicCurrentAmt*100), 4); //profit percentage for the first bet on track
-  
-  /**
-   * treating the first bet in track separately
-   */
+    const basicPercentageProfit = this.truncate(this.fixArithmetic(basicExpectedProfit / basicCurrentAmt * 100), 4); //profit percentage for the first bet on track
+
+    /**
+     * treating the first bet in track separately
+     */
     yieldData.bets[0] = {
-      multiplier:basicMultiplier,
-      betAmt:basicBetAmt,
+      betId: currentBetId,
+      estimatedDrawTime: estimatedDrawTime,
+      nextDay: this.isNextDay(estimatedDrawTime),
+      current: this.isCurrent(currentBetId),
+      multiplier: basicMultiplier,
+      betAmt: basicBetAmt,
       bonus: basicBonus,
       currentAmt: basicCurrentAmt,
-      expectedProfit:basicExpectedProfit,
-      percentageProfit:basicPercentageProfit
+      expectedProfit: basicExpectedProfit,
+      percentageProfit: basicPercentageProfit
     }
 
     /**
      * all the other elements in the track starts from here
      */
-    let i = 1;
+    let nextDrawDate, i = 1;
     let multiplier, expectedProfit, percentageProfit, currentBonus, previousMultiplier;
     for (i; i < totalDraws; i++) {
-
-      previousBetAmt = yieldData.bets[i-1]["currentAmt"];
-      previousMultiplier = yieldData.bets[i-1]["multiplier"];
+      
+      previousBetAmt = yieldData.bets[i - 1]["currentAmt"];
+      previousMultiplier = yieldData.bets[i - 1]["multiplier"];
       multiplier = this.getYieldMultiplier(minimumYield, constantBonus, previousBetAmt, singleBetAmt);//generates the multiplier for the current bet in the track.
       multiplier = multiplier < previousMultiplier ? previousMultiplier : multiplier; //makes sure the generated multiplier isn't less than the start multiplier.
       currentBonus = constantBonus * multiplier;
       currentAmt = this.fixArithmetic(previousBetAmt + (singleBetAmt * multiplier));
       expectedProfit = this.fixArithmetic(currentBonus - currentAmt);
-      percentageProfit = this.truncate(this.fixArithmetic(expectedProfit/currentAmt*100), 4);
+      percentageProfit = this.truncate(this.fixArithmetic(expectedProfit / currentAmt * 100), 4);
+      
+      nextDrawDate = new Date(
+        this.addMinutes(currentDrawDate, intervalMinutes)
+      );
+      estimatedDrawTime = this.getDate(nextDrawDate) + " " + this.getTime(nextDrawDate);
+      currentBetId = this.generateNextBetId(
+        currentBetId,
+        currentDrawDate,
+        intervalMinutes
+      );
       yieldData.bets[i] = {
+        betId: currentBetId,
+        estimatedDrawTime: estimatedDrawTime,
+        nextDay: this.isNextDay(estimatedDrawTime),
+        current: this.isCurrent(currentBetId),
         multiplier: multiplier,
         betAmt: this.fixArithmetic(multiplier * singleBetAmt),
         bonus: currentBonus,
         currentAmt: currentAmt,
         expectedProfit: expectedProfit,
-        percentageProfit:percentageProfit
+        percentageProfit: percentageProfit
       }
+
+      if (!nextDay) nextDay = this.isNextDay(nextDrawDate);
+      currentDrawDate = nextDrawDate;
     }
-    
+
     yieldData.yieldInfo = {
       totalDraws: totalDraws,
-      totalAmount: previousBetAmt = yieldData.bets[i-1]["currentAmt"]
+      totalAmount: previousBetAmt = yieldData.bets[i - 1]["currentAmt"]
     }
 
     return yieldData;
@@ -890,7 +917,7 @@ export class Royal5utils {
    * @param {string} checkDate does this date happens on the next day?
    * @returns true or false. true if nextDay
    */
-  isNextDay(checkDate, date = drawData.drawDatetime) {
+  isNextDay(checkDate, date = drawData.drawDatetime||"2023-03-08") {
     const date1 = new Date(date);
     const date2 = new Date(checkDate);
     if (date1.getDate() != date2.getDate()) return true;
@@ -902,7 +929,7 @@ export class Royal5utils {
   * @param {string} currentBetId - The current betId to compare against. Default is serverDrawNum.nextBetId.
   * @returns {boolean} - Returns true if the given betId is the current bet, false otherwise.
   */
-  isCurrent(betId, currentBetId = drawData.nextBetId) {
+  isCurrent(betId, currentBetId = drawData.nextBetId||"202303081295") {
     return betId == currentBetId;
   }
   /**
@@ -937,7 +964,7 @@ export class Royal5utils {
         console.log("There was an error.");
       }
     });
-    console.log( results);
+    console.log(results);
 
     return (results);
   }
@@ -1238,7 +1265,7 @@ export class Royal5utils {
         this.$(selector).attr("disabled", disabled);
         this.$(selector).addClass("disabled-svg");
       });
-    } 
+    }
     // If `disabled` is false, enable the buttons and remove the 'disabled-svg' class from them.
     else {
       btnSelectors.forEach((selector) => {
@@ -1619,7 +1646,7 @@ class a5_g5 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-   
+
 }
 
 class a5_g10 extends Royal5utils {
@@ -2028,7 +2055,7 @@ class a5_combo extends Royal5utils {
   // multiplier = 1;
   // unitAmt = 1;
   betAmt = "";
-  
+
   labels = ["1st", "2nd", "3rd", "4th", "5th"];
   rows = {
     row1: [],
@@ -2082,7 +2109,7 @@ class a5_combo extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class f4_joint extends Royal5utils {
@@ -2091,7 +2118,7 @@ class f4_joint extends Royal5utils {
   labels = ["1st", "2nd", "3rd", "4th"];
   // sample1 = 1;
   // sample2 = 1;
-  
+
   rows = {
     row1: [],
     row2: [],
@@ -2141,7 +2168,7 @@ class f4_joint extends Royal5utils {
     return readyData;
   }
 
-  
+
 }
 
 class f4_manual extends Royal5utils {
@@ -2149,7 +2176,7 @@ class f4_manual extends Royal5utils {
   type = "First 4 group Straight(Manual)";
   // sample1 = 1;
   // sample2 = 1;
-  
+
   rows = {
     row1: [],
     row2: [],
@@ -2196,7 +2223,7 @@ class f4_manual extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class f4_combo extends Royal5utils {
@@ -2207,7 +2234,7 @@ class f4_combo extends Royal5utils {
   // multiplier = 1;
   // unitAmt = 1;
   betAmt = "";
-  
+
   labels = ["1st", "2nd", "3rd", "4th"];
   rows = {
     row1: [],
@@ -2259,14 +2286,14 @@ class f4_combo extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class f4_g24 extends Royal5utils {
   gameId = 13;
   type = "First 4 group 24";
   // sample1 = 1;
-  
+
   // sample2 = 1;
   sample1 = 4;
   rows = {
@@ -2315,14 +2342,14 @@ class f4_g24 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class f4_g12 extends Royal5utils {
   gameId = 14;
   type = "First 4 group 12";
   sample1 = 1;
-  
+
   sample2 = 2;
   labels = ["One Pair", "One No."];
   rows = {
@@ -2361,7 +2388,7 @@ class f4_g12 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 
   pushToCart(cart) {
     let data = this.getSavedData();
@@ -2381,7 +2408,7 @@ class f4_g6 extends Royal5utils {
   gameId = 15;
   type = "First 4 group 6";
   sample1 = 2;
-  
+
   labels = ["One Pair"];
   rows = {
     row1: [],
@@ -2428,7 +2455,7 @@ class f4_g6 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class f4_g4 extends Royal5utils {
@@ -2436,7 +2463,7 @@ class f4_g4 extends Royal5utils {
   type = "First 4 group 4";
   sample1 = 1;
   sample2 = 1;
-  
+
   labels = ["Three of a Kind", "One No."];
   rows = {
     row1: [],
@@ -2485,7 +2512,7 @@ class f4_g4 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class l4_joint extends Royal5utils {
@@ -2493,7 +2520,7 @@ class l4_joint extends Royal5utils {
   type = "Last 4 Straight(Joint)";
   labels = ["2nd", "3rd", "4th", "5th"];
   // sample1 = 1;
-  
+
   // sample2 = 1;
   rows = {
     row1: [],
@@ -2543,7 +2570,7 @@ class l4_joint extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class l4_manual extends Royal5utils {
@@ -2551,7 +2578,7 @@ class l4_manual extends Royal5utils {
   type = "All 4 group Straight(Manual)";
   // sample1 = 1;
   // sample2 = 1;
-  
+
   rows = {
     row1: [],
     row2: [],
@@ -2598,14 +2625,14 @@ class l4_manual extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class l4_combo extends Royal5utils {
   gameId = 19;
   type = "Last 4 Straight(Combo)";
   // sample1 = 1;
-  
+
   // sample2 = 1;
   // multiplier = 1;
   // unitAmt = 1;
@@ -2661,14 +2688,14 @@ class l4_combo extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class l4_g24 extends Royal5utils {
   gameId = 20;
   type = "Last 4 group 24";
   // sample1 = 1;
-  
+
   // sample2 = 1;
   sample1 = 4;
   rows = {
@@ -2718,14 +2745,14 @@ class l4_g24 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class l4_g12 extends Royal5utils {
   gameId = 21;
   type = "Last 4 group 12";
   sample1 = 1;
-  
+
   sample2 = 2;
   labels = ["One Pair", "One No."];
   rows = {
@@ -2764,7 +2791,7 @@ class l4_g12 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 
   pushToCart(cart) {
     let data = this.getSavedData();
@@ -2785,7 +2812,7 @@ class l4_g6 extends Royal5utils {
   type = "Last 4 group 6";
   labels = ["One Pair"];
   sample1 = 2;
-  
+
   rows = {
     row1: [],
   };
@@ -2831,7 +2858,7 @@ class l4_g6 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class l4_g4 extends Royal5utils {
@@ -2839,7 +2866,7 @@ class l4_g4 extends Royal5utils {
   type = "Last 4 group 4";
   sample1 = 1;
   sample2 = 1;
-  
+
   labels = ["Three of a Kind", "One No."];
   rows = {
     row1: [],
@@ -2888,7 +2915,7 @@ class l4_g4 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 /*-------------------Begin fixed_place class----------------------*/
@@ -2897,7 +2924,7 @@ class fixed_place extends Royal5utils {
   gameId = 99;
   type = "fixed place";
   // sample1 = 1;
-  
+
   // sample2 = 1;
   labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
   rows = {
@@ -2962,7 +2989,7 @@ class fixed_place extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 /*--------------------End fixed_place class--------------------------------*/
@@ -2976,7 +3003,7 @@ class fixed_place extends Royal5utils {
 class any_plce_one_out_of_first_three extends Royal5utils {
   sample1 = 1;
   gameId = 100;
-  
+
   type = "any place";
   labels = [""];
   rows = {
@@ -3018,7 +3045,7 @@ class any_plce_one_out_of_first_three extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 
 }
 
@@ -3030,7 +3057,7 @@ class any_place_two_out_of_first_three extends Royal5utils {
   gameId = 101;
   type = "any place";
   labels = [""];
-  
+
   rows = {
     row1: [],
   };
@@ -3071,7 +3098,7 @@ class any_place_two_out_of_first_three extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 
 }
 
@@ -3081,7 +3108,7 @@ class any_place_one_out_of_mid_three extends Royal5utils {
   sample1 = 1;
   gameId = 103;
   type = "any place";
-  
+
   labels = [""];
   rows = {
     row1: [],
@@ -3121,7 +3148,7 @@ class any_place_one_out_of_mid_three extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 
 }
 
@@ -3131,7 +3158,7 @@ class any_place_two_out_of_mid_three extends Royal5utils {
   sample1 = 2;
   gameId = 104;
   type = "any place";
-  
+
   labels = [""];
   rows = {
     row1: [],
@@ -3179,7 +3206,7 @@ class any_place_one_out_of_last_three extends Royal5utils {
 
   sample1 = 1
   gameId = 105;
-  
+
   type = "any place";
   labels = [""];
   rows = {
@@ -3220,7 +3247,7 @@ class any_place_one_out_of_last_three extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class any_place_two_out_of_last_last_three extends Royal5utils {
@@ -3266,7 +3293,7 @@ class any_place_two_out_of_last_last_three extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class any_place_one_out_of_first_four extends Royal5utils {
@@ -3274,7 +3301,7 @@ class any_place_one_out_of_first_four extends Royal5utils {
   gameId = 107
   type = "any place";
   labels = [""];
-  
+
   rows = {
     row1: [],
   };
@@ -3313,12 +3340,12 @@ class any_place_one_out_of_first_four extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 class any_place_two_out_of_first_four extends Royal5utils {
   sample1 = 2
   gameId = 108;
-  
+
   type = "any place";
   labels = [""];
   rows = {
@@ -3359,13 +3386,13 @@ class any_place_two_out_of_first_four extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 class any_place_three_out_of_first_four extends Royal5utils {
   sample1 = 3
   gameId = 109
   type = "any place";
-  
+
   labels = [""];
   rows = {
     row1: [],
@@ -3405,13 +3432,13 @@ class any_place_three_out_of_first_four extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 class any_place_one_out_of_last_four extends Royal5utils {
   sample1 = 1
   gameId = 110
   type = "any place";
-  
+
   labels = [""];
   rows = {
     row1: [],
@@ -3451,13 +3478,13 @@ class any_place_one_out_of_last_four extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 class any_place_two_out_of_last_four extends Royal5utils {
   sample1 = 2
   gameId = 111
   type = "any place";
-  
+
   labels = [""];
   rows = {
     row1: [],
@@ -3497,13 +3524,13 @@ class any_place_two_out_of_last_four extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 class any_place_three_out_of_last_four extends Royal5utils {
   sample1 = 3
   gameId = 112
   type = "any place";
-  
+
   labels = [""];
   rows = {
     row1: [],
@@ -3543,7 +3570,7 @@ class any_place_three_out_of_last_four extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 class any_place_one_out_of_five extends Royal5utils {
@@ -3590,7 +3617,7 @@ class any_place_one_out_of_five extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 class any_place_two_out_of_five extends Royal5utils {
   sample1 = 2
@@ -3635,7 +3662,7 @@ class any_place_two_out_of_five extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 class any_place_three_out_of_five extends Royal5utils {
   sample1 = 3
@@ -3680,7 +3707,7 @@ class any_place_three_out_of_five extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
-  
+
 }
 
 /*--------------------End any_place class--------------------------------*/
@@ -3803,7 +3830,7 @@ function ready(className) {
 
   // $('.cart').hide();
   // $('.cart-items').hide();
-  
+
 
   // $(".draw__period").on("change", function () {
   //   let selectedIndex = $(this).prop("selectedIndex");
@@ -4089,13 +4116,14 @@ function ready(className) {
     game.setTrackInfo(trackInfo);
     let betAmt = game.calcBetAmt();
     let totalBets = game.calcTotalBets();
-    trackData = {0:{
-      gameId: savedData.gameId,
-      unitStaked: savedData.unitStaked,
-      totalBets: savedData.totalBets,
-      allSelections: savedData.allSelections,
-      userSelections: savedData.userSelections
-    }
+    trackData = {
+      0: {
+        gameId: savedData.gameId,
+        unitStaked: savedData.unitStaked,
+        totalBets: savedData.totalBets,
+        allSelections: savedData.allSelections,
+        userSelections: savedData.userSelections
+      }
     };
     //next to lines hides existing tracks to match the default track no.
     $(".track-data").children().hide();
@@ -4213,14 +4241,13 @@ function ready(className) {
           <th scope="row">${i + 1}</th>
           <td class="m-group-type">${row[i].innerText}</td>
           <td class="text-truncate text-center"><span style="max-width: 80px" class="m-detail" >${truncateEllipsis(
-            cart[key].userSelections
-          )}</span></td>
+        cart[key].userSelections
+      )}</span></td>
           <td class="m-bet">${cart[key].totalBets}</td>
           <td class="m-units">${cart[key].unitStaked}</td>
           <td>
-              <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${
-                cart[key].totalBetAmt
-              }</span>
+              <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${cart[key].totalBetAmt
+        }</span>
           </td>
         </tr>`;
       i++;
@@ -4571,7 +4598,7 @@ function getDrawNums(url = false, data = false) {
   //   console.log(response);
   // });
 }
-console.log(game.createTrackYield(120, 2, 193800, 2, 1000000));
+console.log(game.createTrackYield('2023-03-08 22:34:00', '202303081295', 120, 2, 193800, 2, 1000000));
 
 // showDrawNums([1,0,5,6,7]);
 
@@ -4843,7 +4870,7 @@ function settings(className, gameId) {
     6: "manual",
   };
   let games = {
-    
+
     joint: {
       "label": labels[0].slice(0, 5),
       "totalBets": 1,
