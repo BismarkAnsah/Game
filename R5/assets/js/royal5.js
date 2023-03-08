@@ -49,6 +49,8 @@ export class Royal5utils {
   multiplyAfterEvery = 1;
   multiplyBy = 1;
   trackJson;
+  draw_periods = "";
+  betId = "";
   savepoint = {
     cart: [],
     data: {
@@ -86,6 +88,13 @@ export class Royal5utils {
     return $(element);
   }
 
+  /**
+   * @param {String} bet_id
+   */
+    setBetID(bet_id) {
+      console.log("==================BET_ID================", bet_id)
+      this.betId = `${bet_id}`;
+    }
 
   /**
    *
@@ -456,6 +465,24 @@ export class Royal5utils {
         .removeClass("visually-hidden");
     }
   }
+
+  generateDrawPeriods(currentBetId = drawData.betId, idDateTime = drawData.drawDatetime) {
+    let draw_periodz = "";
+    for (let i = 0; i < 3; i++) {
+      currentBetId = game.generateNextBetId(
+        currentBetId,
+        idDateTime,
+        intervalMinutes
+      );
+      idDateTime = game.addMinutes(idDateTime, intervalMinutes);
+
+      draw_periodz += `<option value="${currentBetId}">${currentBetId}</option>`;
+      draw_period[i] = currentBetId;
+    }
+    $('select[name="draw__period"]').html(draw_periodz);
+    console.log("========================draw_periods=========================================", draw_period);
+  }
+
   /**
    * creates a json object of the data in track
    * @param {string} firstDrawDate draw date time of the first bet in track. eg '2025-01-01 00:02:55'
@@ -1237,6 +1264,7 @@ export class Royal5utils {
     this.readyData.totalBetAmt = this.calcActualAmt();
     this.readyData.multiplier = this.multiplier;
     this.readyData.totalBets = this.calcTotalBets();
+    this.readyData.betId = this.betId;
     this.readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -1534,6 +1562,7 @@ class a5_g5 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -1542,6 +1571,7 @@ class a5_g5 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+   
 }
 
 class a5_g10 extends Royal5utils {
@@ -1589,6 +1619,7 @@ class a5_g10 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -1632,6 +1663,7 @@ class a5_g20 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -1754,6 +1786,7 @@ class a5_g60 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -1805,6 +1838,7 @@ class a5_g120 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1
@@ -1866,6 +1900,7 @@ class a5_joint extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     // readyData.allSelections = this.allSelections(
     //   ...Object.values(this.rows),
     //   this.sample1,
@@ -1926,6 +1961,7 @@ class a5_manual extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -1944,6 +1980,7 @@ class a5_combo extends Royal5utils {
   // multiplier = 1;
   // unitAmt = 1;
   betAmt = "";
+  
   labels = ["1st", "2nd", "3rd", "4th", "5th"];
   rows = {
     row1: [],
@@ -1988,6 +2025,7 @@ class a5_combo extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -1996,6 +2034,7 @@ class a5_combo extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class f4_joint extends Royal5utils {
@@ -2004,6 +2043,7 @@ class f4_joint extends Royal5utils {
   labels = ["1st", "2nd", "3rd", "4th"];
   // sample1 = 1;
   // sample2 = 1;
+  
   rows = {
     row1: [],
     row2: [],
@@ -2043,6 +2083,7 @@ class f4_joint extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2051,6 +2092,8 @@ class f4_joint extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+
+  
 }
 
 class f4_manual extends Royal5utils {
@@ -2058,6 +2101,7 @@ class f4_manual extends Royal5utils {
   type = "First 4 group Straight(Manual)";
   // sample1 = 1;
   // sample2 = 1;
+  
   rows = {
     row1: [],
     row2: [],
@@ -2095,6 +2139,7 @@ class f4_manual extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2103,6 +2148,7 @@ class f4_manual extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class f4_combo extends Royal5utils {
@@ -2113,6 +2159,7 @@ class f4_combo extends Royal5utils {
   // multiplier = 1;
   // unitAmt = 1;
   betAmt = "";
+  
   labels = ["1st", "2nd", "3rd", "4th"];
   rows = {
     row1: [],
@@ -2155,6 +2202,7 @@ class f4_combo extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2163,12 +2211,14 @@ class f4_combo extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class f4_g24 extends Royal5utils {
   gameId = 13;
   type = "First 4 group 24";
   // sample1 = 1;
+  
   // sample2 = 1;
   sample1 = 4;
   rows = {
@@ -2209,6 +2259,7 @@ class f4_g24 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1
@@ -2216,12 +2267,14 @@ class f4_g24 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class f4_g12 extends Royal5utils {
   gameId = 14;
   type = "First 4 group 12";
   sample1 = 1;
+  
   sample2 = 2;
   labels = ["One Pair", "One No."];
   rows = {
@@ -2251,6 +2304,7 @@ class f4_g12 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2259,6 +2313,7 @@ class f4_g12 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 
   pushToCart(cart) {
     let data = this.getSavedData();
@@ -2278,6 +2333,7 @@ class f4_g6 extends Royal5utils {
   gameId = 15;
   type = "First 4 group 6";
   sample1 = 2;
+  
   labels = ["One Pair"];
   rows = {
     row1: [],
@@ -2316,6 +2372,7 @@ class f4_g6 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1
@@ -2323,6 +2380,7 @@ class f4_g6 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class f4_g4 extends Royal5utils {
@@ -2330,6 +2388,7 @@ class f4_g4 extends Royal5utils {
   type = "First 4 group 4";
   sample1 = 1;
   sample2 = 1;
+  
   labels = ["Three of a Kind", "One No."];
   rows = {
     row1: [],
@@ -2369,6 +2428,7 @@ class f4_g4 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2377,6 +2437,7 @@ class f4_g4 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class l4_joint extends Royal5utils {
@@ -2384,6 +2445,7 @@ class l4_joint extends Royal5utils {
   type = "Last 4 Straight(Joint)";
   labels = ["2nd", "3rd", "4th", "5th"];
   // sample1 = 1;
+  
   // sample2 = 1;
   rows = {
     row1: [],
@@ -2424,6 +2486,7 @@ class l4_joint extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2432,6 +2495,7 @@ class l4_joint extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class l4_manual extends Royal5utils {
@@ -2439,6 +2503,7 @@ class l4_manual extends Royal5utils {
   type = "All 4 group Straight(Manual)";
   // sample1 = 1;
   // sample2 = 1;
+  
   rows = {
     row1: [],
     row2: [],
@@ -2476,6 +2541,7 @@ class l4_manual extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2484,12 +2550,14 @@ class l4_manual extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class l4_combo extends Royal5utils {
   gameId = 19;
   type = "Last 4 Straight(Combo)";
   // sample1 = 1;
+  
   // sample2 = 1;
   // multiplier = 1;
   // unitAmt = 1;
@@ -2536,6 +2604,7 @@ class l4_combo extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2544,12 +2613,14 @@ class l4_combo extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class l4_g24 extends Royal5utils {
   gameId = 20;
   type = "Last 4 group 24";
   // sample1 = 1;
+  
   // sample2 = 1;
   sample1 = 4;
   rows = {
@@ -2590,6 +2661,7 @@ class l4_g24 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2598,12 +2670,14 @@ class l4_g24 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class l4_g12 extends Royal5utils {
   gameId = 21;
   type = "Last 4 group 12";
   sample1 = 1;
+  
   sample2 = 2;
   labels = ["One Pair", "One No."];
   rows = {
@@ -2633,6 +2707,7 @@ class l4_g12 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2641,6 +2716,7 @@ class l4_g12 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 
   pushToCart(cart) {
     let data = this.getSavedData();
@@ -2661,6 +2737,7 @@ class l4_g6 extends Royal5utils {
   type = "Last 4 group 6";
   labels = ["One Pair"];
   sample1 = 2;
+  
   rows = {
     row1: [],
   };
@@ -2698,6 +2775,7 @@ class l4_g6 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1
@@ -2705,6 +2783,7 @@ class l4_g6 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class l4_g4 extends Royal5utils {
@@ -2712,6 +2791,7 @@ class l4_g4 extends Royal5utils {
   type = "Last 4 group 4";
   sample1 = 1;
   sample2 = 1;
+  
   labels = ["Three of a Kind", "One No."];
   rows = {
     row1: [],
@@ -2751,6 +2831,7 @@ class l4_g4 extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = this.allSelections(
       ...Object.values(this.rows),
       this.sample1,
@@ -2759,6 +2840,7 @@ class l4_g4 extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 /*-------------------Begin fixed_place class----------------------*/
@@ -2767,6 +2849,7 @@ class fixed_place extends Royal5utils {
   gameId = 99;
   type = "fixed place";
   // sample1 = 1;
+  
   // sample2 = 1;
   labels = ["1st", "2nd", "3rd", "4th", "5th", "", ""];
   rows = {
@@ -2819,6 +2902,7 @@ class fixed_place extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     const dataSet = [];
     let rowPosition = 1;
 
@@ -2830,6 +2914,7 @@ class fixed_place extends Royal5utils {
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 /*--------------------End fixed_place class--------------------------------*/
@@ -2843,6 +2928,7 @@ class fixed_place extends Royal5utils {
 class any_plce_one_out_of_first_three extends Royal5utils {
   sample1 = 1;
   gameId = 100;
+  
   type = "any place";
   labels = [""];
   rows = {
@@ -2879,10 +2965,12 @@ class any_plce_one_out_of_first_three extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1)
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 
 }
 
@@ -2894,6 +2982,7 @@ class any_place_two_out_of_first_three extends Royal5utils {
   gameId = 101;
   type = "any place";
   labels = [""];
+  
   rows = {
     row1: [],
   };
@@ -2929,10 +3018,12 @@ class any_place_two_out_of_first_three extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 
 }
 
@@ -2942,6 +3033,7 @@ class any_place_one_out_of_mid_three extends Royal5utils {
   sample1 = 1;
   gameId = 103;
   type = "any place";
+  
   labels = [""];
   rows = {
     row1: [],
@@ -2976,10 +3068,12 @@ class any_place_one_out_of_mid_three extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 
 }
 
@@ -2989,6 +3083,7 @@ class any_place_two_out_of_mid_three extends Royal5utils {
   sample1 = 2;
   gameId = 104;
   type = "any place";
+  
   labels = [""];
   rows = {
     row1: [],
@@ -3023,6 +3118,7 @@ class any_place_two_out_of_mid_three extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
@@ -3034,7 +3130,8 @@ class any_place_two_out_of_mid_three extends Royal5utils {
 class any_place_one_out_of_last_three extends Royal5utils {
 
   sample1 = 1
-  gameId = 105
+  gameId = 105;
+  
   type = "any place";
   labels = [""];
   rows = {
@@ -3070,10 +3167,12 @@ class any_place_one_out_of_last_three extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class any_place_two_out_of_last_last_three extends Royal5utils {
@@ -3114,10 +3213,12 @@ class any_place_two_out_of_last_last_three extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class any_place_one_out_of_first_four extends Royal5utils {
@@ -3125,6 +3226,7 @@ class any_place_one_out_of_first_four extends Royal5utils {
   gameId = 107
   type = "any place";
   labels = [""];
+  
   rows = {
     row1: [],
   };
@@ -3158,14 +3260,17 @@ class any_place_one_out_of_first_four extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 class any_place_two_out_of_first_four extends Royal5utils {
   sample1 = 2
-  gameId = 108
+  gameId = 108;
+  
   type = "any place";
   labels = [""];
   rows = {
@@ -3201,15 +3306,18 @@ class any_place_two_out_of_first_four extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 class any_place_three_out_of_first_four extends Royal5utils {
   sample1 = 3
   gameId = 109
   type = "any place";
+  
   labels = [""];
   rows = {
     row1: [],
@@ -3244,15 +3352,18 @@ class any_place_three_out_of_first_four extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 class any_place_one_out_of_last_four extends Royal5utils {
   sample1 = 1
   gameId = 110
   type = "any place";
+  
   labels = [""];
   rows = {
     row1: [],
@@ -3287,15 +3398,18 @@ class any_place_one_out_of_last_four extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 class any_place_two_out_of_last_four extends Royal5utils {
   sample1 = 2
   gameId = 111
   type = "any place";
+  
   labels = [""];
   rows = {
     row1: [],
@@ -3330,15 +3444,18 @@ class any_place_two_out_of_last_four extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 class any_place_three_out_of_last_four extends Royal5utils {
   sample1 = 3
   gameId = 112
   type = "any place";
+  
   labels = [""];
   rows = {
     row1: [],
@@ -3373,10 +3490,12 @@ class any_place_three_out_of_last_four extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 class any_place_one_out_of_five extends Royal5utils {
@@ -3384,6 +3503,7 @@ class any_place_one_out_of_five extends Royal5utils {
   gameId = 113
   type = "any place";
   labels = [""];
+  betId
   rows = {
     row1: [],
   };
@@ -3417,10 +3537,12 @@ class any_place_one_out_of_five extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 class any_place_two_out_of_five extends Royal5utils {
   sample1 = 2
@@ -3460,10 +3582,12 @@ class any_place_two_out_of_five extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 class any_place_three_out_of_five extends Royal5utils {
   sample1 = 3
@@ -3503,10 +3627,12 @@ class any_place_three_out_of_five extends Royal5utils {
     readyData.totalBetAmt = this.calcActualAmt();
     readyData.multiplier = this.multiplier;
     readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
     readyData.allSelections = chunkArray(this.rows.row1, 1);         //this.allSelections(...Object.values(this.rows), this.sample1, this.sample2);
     readyData.userSelections = Object.values(this.rows).join("|");
     return readyData;
   }
+  
 }
 
 /*--------------------End any_place class--------------------------------*/
@@ -3533,11 +3659,13 @@ let game = new a5_joint(settings("a5_joint"));
 hideAllExcept(".game-nav-box", ".game-nav-box.all5");
 let balance = await game.fetchData(balanceUrl) || 500;
 // let balance = 500;
-
+let draw_period = [];
 /** max input length for the track draw*/
 let maxInput = 120;
 
 let drawData = {};
+
+// let 
 let totalRequests = {
   getDrawData: 0
 }
@@ -3627,6 +3755,19 @@ function ready(className) {
 
   // $('.cart').hide();
   // $('.cart-items').hide();
+  function selectedBetID(betPeriod){
+    game.setBetID(betPeriod)
+
+  }
+
+  $(".draw__period").on("change", function () {
+    let selectedIndex = $(this).prop("selectedIndex");
+    // console.log(draw_period[selectedIndex])
+    // game.draw_periods = draw_period[selectedIndex];
+    // selectedBetID(draw_period[selectedIndex])
+    game.setBetID(draw_period[selectedIndex])
+    // console.log("-----------------------------------------------",game.draw_periods)
+  })
 
   game.$(classNames.allBtn).click(function () {
     let data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -4022,27 +4163,55 @@ function ready(className) {
     let track_table = $(document).find(".track-table-top");
     let track_cart;
     let i = 0;
-
     for (const key in cart) {
       console.log(cart[key].userSelections);
       track_cart += `<tr class="track-table-top-items">
           <th scope="row">${i + 1}</th>
           <td class="m-group-type">${row[i].innerText}</td>
           <td class="text-truncate text-center"><span style="max-width: 80px" class="m-detail" >${truncateEllipsis(
-        cart[key].userSelections
-      )}</span></td>
+            cart[key].userSelections
+          )}</span></td>
           <td class="m-bet">${cart[key].totalBets}</td>
           <td class="m-units">${cart[key].unitStaked}</td>
           <td>
-              <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${cart[key].totalBetAmt
-        }</span>
+              <span class="m-currency-symbol">&yen;</span>&nbsp;<span class="m-currency">${
+                cart[key].totalBetAmt
+              }</span>
           </td>
         </tr>`;
-
       i++;
     }
-    $.post("http://192.168.199.126/task/track.php", JSON.stringify(data), callback)
-  })
+    track_table.html(track_cart);
+    let firstMultiplier = +$(".first-multiplier").val();
+    let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
+    let multiplyBy = +$(".multiplyBy").val();
+    let maxInput = +$(".total-draws").val();
+    let bet_amt = +game.sumBetAmtAndBets({ ...cart })[0];
+    let total_bets = +game.sumBetAmtAndBets({ ...cart })[1];
+    console.log("bet_amt", bet_amt);
+    console.log("total_bets", total_bets);
+    game.changeCurrentButton();
+    game.generateSelectOptions(
+      drawData.betId
+    );
+    let trackJson = game.createTrackJson(
+      drawData.nextDrawDatetime,
+      drawData.nextBetId,
+      maxInput,
+      firstMultiplier,
+      multiplyAfterEvery,
+      multiplyBy,
+      bet_amt,
+      total_bets
+    );
+    game.createTrackInterface(trackJson);
+    trackData = { ...cart };
+    game.setTrackJson(trackJson);
+    // $(".track__total__bets").text(total_bets);
+    // // $(".track__total__amt__to_pay").text(bet_amt);
+    showCartArea("track-tab");
+    // console.log("track", track)
+  });
 
   game
     .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
@@ -4188,7 +4357,7 @@ function ready(className) {
   });
 
   game.$(".bet-now").click(function () {
-    game.disableButtons(true, ".cart", "input.bet-amt");
+    game.disableButtons(true, ".cart", "input.bet-amt", ".track");
     let savedData = game.getSavedData();
     console.log(savedData);
     let data = JSON.stringify([savedData]);
@@ -4206,7 +4375,7 @@ function ready(className) {
         cart = [];
       } else {
 
-        game.disableButtons(false, ".cart", ".bet-now");
+        game.disableButtons(false, ".cart", ".bet-now", ".track");
         alert(response.message);
       }
 
@@ -4473,6 +4642,9 @@ function getDrawData(intervalTime) {
           progress(drawData.timeLeft - 3, 60, $("#progressBar"));
           const nextIntervalTime = drawData.timeLeft * 1000;
           getDrawData(nextIntervalTime);
+          game.generateDrawPeriods();
+          game.setBetID(draw_period[0])
+          console.log(game.betId);
           if (game.getTrackJson()) {
             game.changeCurrentButton();
             setTimeout(() => {

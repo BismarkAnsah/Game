@@ -1788,8 +1788,8 @@
                         <div class="row-c">
                             <div class="col-c period-bonus-box">
                                 <div class="period-box">
-                                    <label for="">Period</label>
-                                    <select class="period" name="">
+                                    <label for="draw__period">Period</label>
+                                    <select class="draw__period period" name="draw__period">
                                         <option value="20221221413">20221221413</option>
                                         <option value="20221221414">20221221414</option>
                                         <option value="20221221415">20221221415</option>
