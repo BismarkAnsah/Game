@@ -2487,9 +2487,9 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">
-                                                            Balance <span class="cart__table_balance mask-balance">333333</span><span
-                                                                class="unmasked-balance visually-hidden">******</span>
-                                                            &nbsp;<span class="bi bi-eye btn-mask-balance"></span>
+                                                            Balance <span class="cart__table_balance fw-bold mask-balance">0</span><span
+                                                                class="unmasked-balance fw-bold visually-hidden mt-1"><i class="fa-solid fa-asterisk"></i><i class="fa-solid fa-asterisk"></i><i class="fa-solid fa-asterisk"></i><i class="fa-solid fa-asterisk"></i></span>
+                                                            &nbsp;<span class="fa-solid fa-eye eye btn-mask-balance"></span>
                                                         </th>
                                                     </tr>
                                                 </thead>
