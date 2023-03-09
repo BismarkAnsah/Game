@@ -5163,3 +5163,22 @@ function isOnline() {
 
 // let x = setInterval(function(){console.log("hello world")}, 1000);
 // setTimeout(function(){clearInterval(x);}, 5000);
+
+// function totalBets(arr)
+// {
+//   const loopLength = arr.length-1;
+//   let results = [], row, i, j, k, mergedArrayBelow, arrayBelowLength;
+
+//   for(i = 0; i < loopLength; i++) {
+//     mergedArrayBelow = arr.slice(i+1).flat();
+//     arrayBelowLength = mergedArrayBelow.length;
+//     nextLength = arr[i].length;
+//     for(j = 0; j<nextLength; j++){
+//        for(k = 0; k<arrayBelowLength; k++){
+//         row = [arr[i][j], mergedArrayBelow[k]];
+//         results.push(row);
+//        }
+//     }
+//   }
+//   return results.length;
+// }
