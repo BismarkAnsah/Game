@@ -65,7 +65,7 @@ export let progress = (timeLeft, timetotal, $element) => {
     progressBar.play();
     
 
-  $(".current-px").text(progressBarWidth)
+  // $(".current-px").text(progressBarWidth)
   // Update the displayed time in hours, minutes, and seconds
   // Format the time to add a leading zero if the number is less than 10
   if (timeLeft >= 0) {

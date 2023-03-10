@@ -49,6 +49,7 @@ export class Royal5utils {
   multiplyAfterEvery = 1;
   multiplyBy = 1;
   trackJson;
+  yieldJson;
   draw_periods = "";
   betId = "";
   savepoint = {
@@ -92,14 +93,12 @@ export class Royal5utils {
    * @param {String} bet_id
    */
     setBetID(bet_id) {
-      console.log("==================BET_ID================", bet_id)
       this.betId = `${bet_id}`;
     }
   /**
    * @param {String} bet_id
    */
     getBetID() {
-      console.log("==================BET_ID================", bet_id)
       return this.betId;
     }
 
@@ -136,6 +135,19 @@ export class Royal5utils {
     // Retrieve the total amount to pay from the track element with ID "trackInfo" and class "totalBetAmt".
     let total_amt_to_pay = game.getTrackElement("trackInfo", "totalBetAmt");
 
+
+    // Store the retrieved values in the trackInfo object using descriptive keys.
+    trackInfo["total_draws"] = total_draws;
+    trackInfo["total_amt_bets"] = total_amt_bets;
+    trackInfo["total_amt_to_pay"] = total_amt_to_pay;
+    trackInfo["stop_if_win"] = game.getChasingStatus()[0];
+    trackInfo["stop_if_not_win"] = game.getChasingStatus()[1];
+
+    // Return the trackInfo object.
+    return trackInfo;
+  }
+
+  getChasingStatus(){
     // Check if the "stop if win" checkbox is checked, and set the value of stop_if_win accordingly (1 if checked, 0 if not).
     let stop_if_win;
     $("#stop_if_win").is(":checked") ? (stop_if_win = 1) : (stop_if_win = 0);
@@ -146,16 +158,9 @@ export class Royal5utils {
       ? (stop_if_not_win = 1)
       : (stop_if_not_win = 0);
 
-    // Store the retrieved values in the trackInfo object using descriptive keys.
-    trackInfo["total_draws"] = total_draws;
-    trackInfo["total_amt_bets"] = total_amt_bets;
-    trackInfo["total_amt_to_pay"] = total_amt_to_pay;
-    trackInfo["stop_if_win"] = stop_if_win;
-    trackInfo["stop_if_not_win"] = stop_if_not_win;
-
-    // Return the trackInfo object.
-    return trackInfo;
+    return [stop_if_win, stop_if_not_win];
   }
+
 
   /**
    * Sets the contents of the top track table with the given track information.
@@ -450,23 +455,24 @@ export class Royal5utils {
   /**
    *
    * Changes the current button based on the current bet ID and the server's next bet ID.
+   * @param {String} element html class
    * @memberof Royal5utils
    */
-  changeCurrentButton() {
+  changeCurrentButton(element) {
     let currentBetId = $(document)
-      .find("table tbody.track-data tr.track-entry, table tbody.track-data tr.track__entry_p")
+      .find(`tr.${element}`)
       .attr("value");
     console.log("Changing current button to", currentBetId);
 
     let btn_to_change = $(document).find(
-      "table tbody.track-data tr.track-entry .current:visible, table tbody.track-data tr.track__entry_p .current:visible"
+      `tr.${element} .current`
     );
     // If the current bet ID is not the same as the server's next bet ID, change the current button
     if (currentBetId !== drawData.nextBetId) {
       btn_to_change.addClass("visually-hidden");
       btn_to_change
-        .closest("tr.track-entry")
-        .next("tr.track-entry")
+        .closest(`tr.${element}`)
+        .next(`tr.${element}`)
         .find(".m-btn-orange")
         .slice(0, 1)
         .removeClass("visually-hidden");
@@ -487,7 +493,7 @@ export class Royal5utils {
       draw_period[i] = currentBetId;
     }
     $('select[name="draw__period"]').html(draw_periodz);
-    console.log("========================draw_periods=========================================", draw_period);
+    // console.log("========================draw_periods=========================================", draw_period);
   }
 
   /**
@@ -579,27 +585,91 @@ export class Royal5utils {
   }
 
 
-  createTrackYield(totalDraws, eachMultiplier, bonus, singleBetAmt) {
+  /**
+   * gets all the information in a track yield table.
+   * @param {string} firstDrawDate the first estimated draw date of the first bet in the track table.
+   * @param {string} betId the first bet id of the first bet in the track table.
+   * @param {number} totalDraws the total number of bets to show in the track table.
+   * @param {number} startMultiplier the basic multiplier to start the track with. Default is 1.
+   * @param {number} bonus the bonus based on the "@singleBetAmt".
+   * @param {number} singleBetAmt the amount based on the bet chosen. Don't multiply by the chosen multiplier.
+   * @param {number} minimumYield the minimum yield selected by the user.
+   * @returns a json object representing the minimum yield track.
+   */
+  createTrackYield(firstDrawDate, betId, totalDraws, totalBets, startMultiplier, singleBetAmt, bonus, minimumYield = 50) {
     let yieldData = {};
     yieldData.bets = {};
-    let totalAmount = 0;
-    let previousBetAmt = 0;
+    let previousBetAmt;
     let currentAmt;
-    for (let i = 0; i < totalDraws; i++) {
-      currentAmt = this.fixArithmetic(previousBetAmt + singleBetAmt);
-      yieldData.bets[i] = {
-        multiplier: eachMultiplier,
-        betAmt: this.fixArithmetic(eachMultiplier * singleBetAmt),
-        bonus: bonus,
-        currentAmt: currentAmt,
-        expectedAmt: this.fixArithmetic(currentAmt + singleBetAmt)
-      }
-      previousBetAmt = yieldData.bets[i].currentAmt;
+    let currentDrawDate = firstDrawDate;
+    let estimatedDrawTime = this.getDate(currentDrawDate) + " " + this.getTime(currentDrawDate);
+    let currentBetId = betId;
+    const constantBonus = bonus;
+    const basicBonus = this.fixArithmetic(bonus * startMultiplier);
+    const basicMultiplier = startMultiplier;
+    const basicBetAmt = basicMultiplier * singleBetAmt;
+    const basicCurrentAmt = basicBetAmt;
+    const basicExpectedProfit = constantBonus - basicCurrentAmt//expected profit for the first bet on track.
+    const basicPercentageProfit = this.truncate(this.fixArithmetic(basicExpectedProfit / basicCurrentAmt * 100), 4); //profit percentage for the first bet on track
+
+    /**
+     * treating the first bet in track separately
+     */
+    yieldData.bets[0] = {
+      betId: currentBetId,
+      estimatedDrawTime: estimatedDrawTime,
+      nextDay: this.isNextDay(estimatedDrawTime),
+      current: this.isCurrent(currentBetId),
+      multiplier: basicMultiplier,
+      betAmt: basicBetAmt,
+      bonus: basicBonus,
+      currentAmt: basicCurrentAmt,
+      expectedProfit: basicExpectedProfit,
+      percentageProfit: basicPercentageProfit
     }
 
-    yieldData.yieldInfo = {
-      totalDraws: totalDraws,
-      totalAmount: totalAmount
+    /**
+     * all the other elements in the track starts from here
+     */
+    let nextDrawDate, i = 1;
+    let multiplier, expectedProfit, percentageProfit, currentBonus, previousMultiplier;
+    for (i; i < totalDraws; i++) {
+
+
+      previousBetAmt = yieldData.bets[i - 1]["currentAmt"];
+      previousMultiplier = yieldData.bets[i - 1]["multiplier"];
+      multiplier = this.getYieldMultiplier(minimumYield, constantBonus, previousBetAmt, singleBetAmt);//generates the multiplier for the current bet in the track.
+      multiplier = multiplier < previousMultiplier ? previousMultiplier : multiplier; //makes sure the generated multiplier isn't less than the start multiplier.
+      currentBonus = constantBonus * multiplier;
+      currentAmt = this.fixArithmetic(previousBetAmt + (singleBetAmt * multiplier));
+      expectedProfit = this.fixArithmetic(currentBonus - currentAmt);
+      percentageProfit = this.truncate(this.fixArithmetic(expectedProfit / currentAmt * 100), 4);
+      nextDrawDate = new Date(
+        this.addMinutes(currentDrawDate, intervalMinutes)
+      );
+      currentBetId = this.generateNextBetId(
+        currentBetId,
+        currentDrawDate,
+        intervalMinutes
+      );
+      yieldData.bets[i] = {
+        betId: currentBetId,
+        estimatedDrawTime: estimatedDrawTime,
+        nextDay: this.isNextDay(estimatedDrawTime),
+        current: this.isCurrent(currentBetId),
+        multiplier: multiplier,
+        betAmt: this.fixArithmetic(multiplier * singleBetAmt),
+        bonus: currentBonus,
+        currentAmt: currentAmt,
+        expectedProfit: expectedProfit,
+        percentageProfit: percentageProfit
+      }
+    }
+
+    yieldData.trackInfo = {
+      total_draws: totalDraws,
+      total_amt_bets: totalBets * totalDraws,
+      total_amt_to_pay: previousBetAmt = yieldData.bets[i - 1]["currentAmt"]
     }
 
     return yieldData;
@@ -630,7 +700,6 @@ export class Royal5utils {
    */
   createTrackInterface(trackJson) {
     let totalDraws = trackJson.trackInfo.totalDraws;
-    console.log("trackJson.trackInfo.totalDraws", trackJson);
 
     let output = "";
     let hidden;
@@ -665,8 +734,8 @@ export class Royal5utils {
       </li>
           </ul>
         </td>
-        <td class="d-flex justify-content-center align-content-center mt-2">
-          <div class="col-sm-4">
+        <td class="d-flex justify-content-center align-content-center mt-2" style="border: none;">
+          <div class="col-sm-6">
             <input 
               type="number"
               min="1"
@@ -689,35 +758,34 @@ export class Royal5utils {
     $(".track__total__balance").text(balance.userBalance);
   }
 
-  createProfitTrackInterface(trackJson) {
-    let totalDraws = trackJson.trackInfo.totalDraws;
+  createProfitTrackInterface(yieldData) {
+    let totalDraws = yieldData.trackInfo.total_draws;
 
     let output = "";
     let hidden;
     for (let i = 0; i < totalDraws; i++) {
       output += `
-      <tr data-index="${i}" class="track__entry_p" value="${trackJson["bets"][i].betId}">
-        <td class="trackNo">${trackJson["bets"][i].trackNo}</td>
+      <tr data-index="${i}" class="track__entry_p" value="${yieldData["bets"][i].betId}">
         <td>
-          <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-2">
-            <li class="col-md-2">
+          <ul class="list-unstyled  my-ul-el justify-content-between align-items-center g-1">
+            <li class="col-xs-1" >
               <input
                 data-index="${i}"
                 class="form-check-input slave track-check"
                 type="checkbox"
                 name="track_number"
                 id="track_number"
-                checked hidden disabled
+                checked disabled hidden
               />
             </li>
-          <li class="col-md-7">
-            <input type="number" class="betId_p" id="betID" readonly value="${trackJson["bets"][i].betId}">
+          <li class="col-md-6">
+            <input type="number" class="betId_p" id="betID" readonly value="${yieldData["bets"][i].betId}" >
           </li>
           <li class="col-md-3">`;
-      hidden = trackJson["bets"][i].current ? "" : "visually-hidden";
+      hidden = yieldData["bets"][i].current ? "" : "visually-hidden";
       output += `<button class=" m-btn-orange p-2 mopy current ${hidden}">current</button>`;
       hidden =
-        trackJson["bets"][i].nextDay && !trackJson["bets"][i].current
+        yieldData["bets"][i].nextDay && !yieldData["bets"][i].current
           ? ""
           : "visually-hidden"; // makes sure 'next day' and 'current' don't appear simultaneously.
       output += `<button type="button" class="btn-next-day m-btn-indigo p-2 ${hidden}" data-toggle="button" aria-pressed="false" autocomplete="off">next day</button>`;
@@ -725,28 +793,30 @@ export class Royal5utils {
       </li>
           </ul>
         </td>
-        <td class="d-flex justify-content-center align-content-center mt-2">
-          <div class="col-sm-4">
+        <td class="d-flex justify-content-center align-content-center mt-2" style="border: none;">
+          <div class="col-sm-8">
             <input 
               type="number"
               min="1"
               class="form-control track_multiplier_p"
               data-index="${i}"
-            value="${trackJson["bets"][i].multiplier}"/>
+            value="${yieldData["bets"][i].multiplier}"/>
           </div>
         </td>
-        <td class="betAmt_p">${trackJson["bets"][i].betAmt}</td>
-        <td class="estimatedDrawTime_p">${trackJson["bets"][i].estimatedDrawTime}</td>
+        <td class="betAmt_p">${(yieldData["bets"][i].betAmt).toLocaleString()}</td>
+        <td class="bet__bonus">${(yieldData["bets"][i].bonus).toLocaleString()}</td>
+        <td class="current__betting_amt">${(yieldData["bets"][i].currentAmt).toLocaleString()}</td>
+        <td class="expected__profit_amt">${(yieldData["bets"][i].expectedProfit).toLocaleString()}</td>
+        <td class="expected__profitability">${(yieldData["bets"][i].percentageProfit).toLocaleString()}</td>
+        <td class="estimatedDrawTime_p">${yieldData["bets"][i].estimatedDrawTime}</td>
       </tr>`;
     }
     // $(".track-data").html(output);
-    $(".track-profit-data").html(output);
-    $(".track__total__amt__to_pay_p").text(trackJson.trackInfo.totalBetAmt);
-    $(".track__total__bets_p").text(
-      trackJson.trackInfo.eachTotalBets * totalDraws
-    );
-    $(".track__total__draws_p").text(totalDraws);
-    $(".track__total__balance").text(balance.userBalance);
+    $(".track-profit-data").html( output );
+    $(".track__total__amt__to_pay_p").text( yieldData.trackInfo.total_amt_to_pay );
+    $(".track__total__bets_p").text( yieldData.trackInfo.total_amt_bets );
+    $(".track__total__draws_p").text( totalDraws );
+    $(".track__total__balance").text( balance.userBalance );
   }
 
   /**
@@ -1399,7 +1469,15 @@ export class Royal5utils {
     // trackJsonData.trackInfo.userSelections = this.trackInfo.userSelections;
     this.trackJson = trackJsonData;
   }
-
+  setYieldJson(yieldJsonData) {
+    //yieldJsonData.deleted = []; //this will hold the index of the track data that will be unchecked (deleted).
+    // trackJsonData.trackInfo.gameId = this.trackInfo.gameId;
+    // trackJsonData.trackInfo.unitStaked = this.trackInfo.unitStaked;
+    // trackJsonData.trackInfo.totalBets = this.trackInfo.totalBets;
+    // trackJsonData.trackInfo.allSelections = this.trackInfo.allSelections;
+    // trackJsonData.trackInfo.userSelections = this.trackInfo.userSelections;
+    this.yieldJson = yieldJsonData;
+  }
   /**
    * sets the information about the track. This method is called when user clicks on track.
    * @param {object} trackInfo
@@ -1439,6 +1517,10 @@ export class Royal5utils {
    */
   getTrackJson() {
     return this.trackJson;
+  }
+  
+  getYieldJson() {
+    return this.yieldJson;
   }
 
   /**
@@ -4057,16 +4139,17 @@ function ready(className) {
         userSelections: savedData.userSelections,
       }
     };
+    // yieldData = trackData;
     //next to lines hides existing tracks to match the default track no.
     $(".track-data").children().hide();
     $(".track-data").children().slice(0, defaultTrackDraws).show();
 
-    $(".first-multiplier, .multiplyAfterEvery, .multiplyBy").val(
-      defaultTrackInputs
-    );
-    $(".total-draws").val(defaultTrackDraws);
+    $(".first-multiplier, .profit-first-multiplier .multiplyAfterEvery, .multiplyBy").val( defaultTrackInputs );
+    $(".total-draws, .total-draws-t").val(defaultTrackDraws);
+    $(".input__track_percentage").val(50);
     // console.log(drawData.nextDrawDate)
-    let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
+    let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);//createTrackYield(firstDrawDate, betId, totalDraws, startMultiplier, singleBetAmt, bonus, minimumYield)
+    let yieldData = game.createTrackYield(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, totalBets, 1, betAmt, 1615);
     game.generateSelectOptions(drawData.betId);
     showCartArea('track-tab')
     // setInterval(() => {
@@ -4074,10 +4157,10 @@ function ready(className) {
     game.disableButtons(true, ".track", "input.bet-amt");
     game.setTrackTopTableContents(trackJson);
     trackJson["trackData"] = trackData;
-    // game.setTrackJson(trackJson);
+    game.setYieldJson(yieldData);
     game.setTrackJson(trackJson);
     game.createTrackInterface(trackJson);
-    game.createProfitTrackInterface(trackJson);
+    game.createProfitTrackInterface(yieldData);
     game.resetAllData();
   });
 
@@ -4151,7 +4234,16 @@ function ready(className) {
     let callback = function (resp) {
       // create a callback function that logs the server response to the console
       console.log(resp);
-      alert(resp);
+      let respx = JSON.parse(resp);
+      if (respx.title == "success") {
+        game.fetchData(balanceUrl).then((response) => {
+          response = JSON.parse(response);
+          $(".user-balance").html(response.userBalance);
+        });
+        alert(respx.message);
+      }else{
+        alert(respx.message);
+      }
     };
     $.post(
       "http://192.168.199.126/task/track.php",
@@ -4159,6 +4251,39 @@ function ready(className) {
       callback
     ); // send a POST request to the specified URL with the 'data' object as the request body and the callback function to handle the server response
   });
+
+  $(".track__confirm_profit").on("click", function () {
+    const data = {}; // initialize an empty object called 'data'
+    Object.assign(data, game.yieldJson);// game.yieldJson; // add the result of the 'game.getTrackInfo()' method
+    data["trackData"] = trackData;
+    data["trackInfo"]["stop_if_win"] = game.getChasingStatus()[0];
+    data["trackInfo"]["stop_if_not_win"] = game.getChasingStatus()[1];
+
+    console.log(game.yieldJson)
+    console.log(data)
+    
+    let callback = function (resp) {
+      // create a callback function that logs the server response to the console
+      console.log(resp);
+      let respx = JSON.parse(resp);
+      if (respx.title == "success") {
+        game.fetchData(balanceUrl).then((response) => {
+          response = JSON.parse(response);
+          $(".user-balance").html(response.userBalance);
+        });
+        alert(respx.message);
+      }else{
+        alert(respx.message);
+      }
+    };
+    $.post(
+      "http://192.168.199.126/task/track.php",
+      JSON.stringify(data),
+      callback
+    ); // send a POST request to the specified URL with the 'data' object as the request body and the callback function to handle the server response
+  
+  })
+
 
   $(document).on("click", ".cart-btn-track", function () {
     const row = document.querySelectorAll(".m-cart-row > th");
@@ -4189,12 +4314,13 @@ function ready(className) {
     let firstMultiplier = +$(".first-multiplier").val();
     let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
     let multiplyBy = +$(".multiplyBy").val();
-    let maxInput = +$(".total-draws").val();
+    let maxInput = 10;//+$(".total-draws").val();
     let bet_amt = +game.sumBetAmtAndBets({ ...cart })[0];
     let total_bets = +game.sumBetAmtAndBets({ ...cart })[1];
     console.log("bet_amt", bet_amt);
     console.log("total_bets", total_bets);
-    game.changeCurrentButton();
+    game.changeCurrentButton("track__entry_p");
+    game.changeCurrentButton("track-entry");
     game.generateSelectOptions(
       drawData.betId
     );
@@ -4208,9 +4334,13 @@ function ready(className) {
       bet_amt,
       total_bets
     );
+    let yieldData = game.createTrackYield(drawData.drawDatetime, drawData.nextBetId, maxInput, total_bets, 1, bet_amt, 1615);
+    game.createProfitTrackInterface(yieldData);
+
     game.createTrackInterface(trackJson);
     trackData = { ...cart };
     game.setTrackJson(trackJson);
+    game.setYieldJson(yieldData);
     // $(".track__total__bets").text(total_bets);
     // // $(".track__total__amt__to_pay").text(bet_amt);
     showCartArea("track-tab");
@@ -4259,6 +4389,30 @@ function ready(className) {
       game.setTrackJson(trackJson);
 
       game.createTrackInterface(trackJson);
+      // game.setTrackContents(trackJson);
+    });
+
+  game
+    .$(".total-draws-t, .profit-first-multiplier, .input__track_percentage")
+    .on("input", function () {
+      let thisValue = $(this).val();
+      let totalDraws = $(".total-draws-t").val();
+      let start_multiplier = parseInt($(".profit-first-multiplier").val());
+      let minimum_yield = parseInt($(".input__track_percentage").val());
+      $(this).val(game.onlyNums(thisValue));
+      $(".total-draws-t").val(game.onlyNums(totalDraws, "", maxInput));
+      totalDraws = parseInt($(".total-draws-t").val());
+      $(".track-profit-data").children().hide();
+      $(".track-profit-data").children().slice(0, totalDraws).show();
+      let betAmt = game.getTrackElement("trackInfo", "eachBetAmt");
+      // let betAmt = game.calcBetAmt();
+      // console.log(trackInfo)
+
+      let totalBets = game.getTrackElement("trackInfo", "eachTotalBets");
+      console.log("=======================TOTALBETS=======================", totalBets);
+      let yieldData = game.createTrackYield(drawData.drawDatetime, drawData.nextBetId, totalDraws, totalBets, start_multiplier, betAmt, 1615, minimum_yield);
+      game.createProfitTrackInterface(yieldData);
+      game.setYieldJson(yieldData);
       // game.setTrackContents(trackJson);
     });
 
@@ -4646,17 +4800,20 @@ function getDrawData(intervalTime) {
           const nextIntervalTime = drawData.timeLeft * 1000;
           getDrawData(nextIntervalTime);
           game.generateDrawPeriods();
-          console.log(game.betId);
           if (game.getTrackJson()) {
-            game.changeCurrentButton();
+            game.changeCurrentButton("track__entry_p");
+            game.changeCurrentButton("track-entry");
             setTimeout(() => {
               let firstMultiplier = +$(".first-multiplier").val();
               let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
               let multiplyBy = +$(".multiplyBy").val();
               let maxInput = +$(".total-draws").val();
               let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "eachTotalBets"));
+              let yieldData = game.createTrackYield(drawData.drawDatetime, drawData.nextBetId, +$(".total-draws-t").val(), game.getTrackElement("trackInfo", "eachTotalBets"), 1, game.getTrackElement("trackInfo", "eachBetAmt"), 1615);
+              game.createProfitTrackInterface(yieldData);          
               game.createTrackInterface(trackJson)
               game.setTrackJson(trackJson)
+              game.setYieldJson(yieldData)
               game.generateSelectOptions(drawData.betId);
             }, 1000);
 
@@ -4688,12 +4845,15 @@ function callAllFunctionsHere() {
   let multiplyBy = +$(".multiplyBy").val();
   let maxInput = +$(".total-draws").val();
   if (game.getTrackJson()) {
-    game.changeCurrentButton()
+    game.changeCurrentButton("track__entry_p")
+    game.changeCurrentButton("track-entry")
     setTimeout(() => {
       game.generateSelectOptions(drawData.betId, game.addMinutes(draw
         .datetime, intervalMinutes));
 
       let trackJson = game.createTrackJson(drawData.nextDatetime, draw.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "totalBets"));
+      let yieldData = game.createTrackYield(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
+      game.createProfitTrackInterface(yieldData);  
       game.createTrackInterface(trackJson)
       game.setTrackJson(trackJson)
     }, 1000);

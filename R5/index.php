@@ -2338,7 +2338,7 @@
                                                                 <table class="table table-bordered" aria-describedby="">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th scope="col">Track No.</th>
+                                                                            <!-- <th scope="col">Track No.</th> -->
                                                                             <th scope="col">
                                                                                 <input
                                                                                     class="form-check-input visually-hidden"
@@ -2348,6 +2348,10 @@
                                                                             </th>
                                                                             <th scope="col">Multi.</th>
                                                                             <th scope="col">Bet Amount</th>
+                                                                            <th scope="col">Bonus</th>
+                                                                            <th scope="col">Current Betting Amount</th>
+                                                                            <th scope="col">Expected profit amount</th>
+                                                                            <th scope="col">Expected Profitability (%)</th>
                                                                             <th scope="col">Estimate draw time</th>
 
                                                                             <!-- <th scope="col" >Balance 2000<span class="bi bi-eye"></span>d</th> -->
@@ -2448,7 +2452,7 @@
                                                                 </label>
                                                             </div>
                                                             <button type="button"
-                                                                class="m-btn-orange btn-track track-confirm ms-3">
+                                                                class="m-btn-orange btn-track track__confirm_profit ms-3">
                                                                 Track Confirm
                                                             </button>
                                                         </div>
