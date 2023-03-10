@@ -665,7 +665,7 @@ export class Royal5utils {
       currentDrawDate = nextDrawDate;
     }
 
-    yieldData.yieldInfo = {
+    yieldData.trackInfo = {
       totalDraws: totalDraws,
       totalAmount: previousBetAmt = yieldData.bets[i - 1]["currentAmt"]
     }
@@ -5182,3 +5182,19 @@ function isOnline() {
 //   }
 //   return results.length;
 // }
+
+function total(arr)
+{
+  arr = arr.filter()
+  let r1 = arr[0].length;
+  let r2 = arr[1].length;
+  let r3 = arr[2].length;
+  let r4 = arr[3].length;
+  let r5 = arr[4].length;
+  console.log(r1,r2,r3,r4,r5);
+
+  return (r1*r2*r3*r4*r5) + (r2*r3*r4*r5) + (r3*r4*r5) + (r4*r5);
+  return (r4*r5)*(r3*(r2*(r1+1)+1)+1);
+}
+
+
