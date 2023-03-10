@@ -4259,7 +4259,7 @@ function ready(className) {
     data["trackInfo"]["stop_if_win"] = game.getChasingStatus()[0];
     data["trackInfo"]["stop_if_not_win"] = game.getChasingStatus()[1];
 
-    console.log(game.yieldJson)
+    // console.log(game.yieldJson)
     console.log(data)
     
     let callback = function (resp) {
@@ -4287,8 +4287,6 @@ function ready(className) {
 
   $(document).on("click", ".cart-btn-track", function () {
     const row = document.querySelectorAll(".m-cart-row > th");
-    console.log("cart track", row);
-    console.log("cart track", cart);
     let track_table = $(document).find(".track-table-top");
     let track_cart;
     let i = 0;
@@ -4350,11 +4348,6 @@ function ready(className) {
   game
     .$(".total-draws, .first-multiplier, .multiplyAfterEvery, .multiplyBy")
     .on("input", function () {
-      console.log(
-        "trackJson==========BEFORE========================",
-        game.getTrackJson()
-      );
-
       let thisValue = $(this).val();
       let totalDraws = $(".total-draws").val();
       $(this).val(game.onlyNums(thisValue));
@@ -4565,16 +4558,9 @@ $(document).on("click", ".delete-cart", function () {
   let deleteThisRow = $(this).closest("tr");
 
   let id = $(this).attr("data-id");
-  let itemBet = $(this).closest("tr").find(".cart-item-bets").text();
-  let itemBetAmt = $(this).closest("tr").find(".cart-item-betamt").text();
-  // $(this)
   game.removeFromCart(id);
   let sel_cart_bet_amt = $(".cart-total-bet-amt");
   let sel_cart_total_bet = $(".cart-total-bets");
-  let cart_bet_amt = $(".cart-total-bet-amt").html();
-  let cart_total_bet = $(".cart-total-bets").html();
-  // let final_cart_bet_amt = (parseFloat( cart_bet_amt ) - parseFloat( itemBetAmt ))
-  // let final_cart_bet = (parseFloat( cart_total_bet ) - parseFloat( itemBet ))
   sel_cart_bet_amt.html(game.sumBetAmtAndBets({ ...cart })[0]);
   sel_cart_total_bet.html(game.sumBetAmtAndBets({ ...cart })[1]);
 
@@ -4726,8 +4712,6 @@ function fetchToolTipData() {
   let url = "http://192.168.199.126/task/receiver.php?action=gamerules";
   let callback = async function (resp) {
     tooltipData = await (resp);
-
-    // console.log("tooltipData=================================", tooltipData["1"]);
   };
   return $.get(url, callback);
 }
@@ -4838,29 +4822,7 @@ function getDrawData(intervalTime) {
 
 getDrawData(0);
 
-/**call all your functions here */
-function callAllFunctionsHere() {
-  let firstMultiplier = +$(".first-multiplier").val();
-  let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
-  let multiplyBy = +$(".multiplyBy").val();
-  let maxInput = +$(".total-draws").val();
-  if (game.getTrackJson()) {
-    game.changeCurrentButton("track__entry_p")
-    game.changeCurrentButton("track-entry")
-    setTimeout(() => {
-      game.generateSelectOptions(drawData.betId, game.addMinutes(draw
-        .datetime, intervalMinutes));
 
-      let trackJson = game.createTrackJson(drawData.nextDatetime, draw.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "totalBets"));
-      let yieldData = game.createTrackYield(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);
-      game.createProfitTrackInterface(yieldData);  
-      game.createTrackInterface(trackJson)
-      game.setTrackJson(trackJson)
-    }, 1000);
-  }
-  console.log("===========================", drawData)
-
-}
 // countdown(30)
 // slotjs([0,1,2,3,4,5])
 
