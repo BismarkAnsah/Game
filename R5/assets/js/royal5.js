@@ -4171,7 +4171,7 @@ function ready(className) {
 
     let selectedIndex = $(this).prop("selectedIndex");
     // let getprev = $(this)
-    //   .find("option")
+    //   .find("option")c
     //   .eq(selectedIndex - 1);
 
     let currentSelect;
