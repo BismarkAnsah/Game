@@ -4773,7 +4773,7 @@ function reloadPageAfter(max, randomName) {
 
 function getDrawData(intervalTime) {
   setTimeout(() => {
-    fetch(urls.draws)
+    fetch(urls.drawsMock)
       .then(response => {
         if (response.ok) {
 
@@ -5290,3 +5290,5 @@ function total(arr)
 }
 
 
+let arr = [1,2,3];
+arr.map(x=>[x, x*2])
