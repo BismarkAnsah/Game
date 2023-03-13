@@ -1813,6 +1813,23 @@ class a5_g30 extends Royal5utils {
     cart[key] = data;
     this.appendRow(type, detail, bets, unit, multiplier, betAmt, key);
   }
+  
+  getSavedData() {
+    let readyData = {};
+    readyData.gameId = this.gameId;
+    readyData.unitStaked = this.unitAmt;
+    readyData.totalBetAmt = this.calcActualAmt();
+    readyData.multiplier = this.multiplier;
+    readyData.totalBets = this.calcTotalBets();
+    readyData.betId = this.betId;
+    readyData.allSelections = this.allSelections(
+      ...Object.values(this.rows),
+      this.sample1,
+      this.sample2
+    );
+    readyData.userSelections = Object.values(this.rows).join("|");
+    return readyData;
+  }
 }
 
 class a5_g60 extends Royal5utils {
