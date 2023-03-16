@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+
+        // function generateCombinationsWithRepetitions(arr, length) {
+        //     if (length === 0) {
+        //         return [[]];
+        //     } else {
+        //         const combinations = [];
+        //         for (let i = 0; i < arr.length; i++) {
+        //             const element = arr[i];
+        //             const subCombinations = generateCombinationsWithRepetitions(arr, length - 1);
+        //             for (let j = 0; j < subCombinations.length; j++) {
+        //                 const subCombination = subCombinations[j];
+        //                 combinations.push([element].concat(subCombination));
+        //             }
+        //         }
+        //         return combinations;
+        //     }
+        // }
+
+
+
+        function arrayContained(needles, haystack) {
+            const count1 = {};
+            const count2 = {};
+
+            // count frequency of elements in haystack 
+            for (let i = 0; i < haystack.length; i++) {
+                count1[haystack[i]] = (count1[haystack[i]] || 0) + 1;
+            }
+
+            // count frequency of elements in needles 
+            for (let i = 0; i < needles.length; i++) {
+                count2[needles[i]] = (count2[needles[i]] || 0) + 1;
+            }
+
+            // check if each element in needles appears <= its frequency in haystack 
+            for (const [key, value] of Object.entries(count2)) {
+                if (!(key in count1) || count1[key] < value) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        let sum = (arr) => {
+            return arr.reduce(function (acc, val) {
+                return acc += val;
+            }, 0)
+        }
+        function allPossibleNumbers(lengthDigits, target) {
+            let upTo = 10 ** lengthDigits;
+            let strNum, intArr;
+            let allPossibleNumbers = [];
+            if (target) {
+                for (let i = 0; i < upTo; i++) {
+                    strNum = String(i).padStart(lengthDigits, 0);
+                    intArr = strNum.split('').map(num => +num);
+                    arrayContained(target, intArr) ? allPossibleNumbers.push(intArr) : null;
+                }
+                return allPossibleNumbers;
+            }
+
+            for (let i = 0; i < upTo; i++) {
+                strNum = String(i).padStart(lengthDigits, 0);
+                intArr = strNum.split('').map(num => +num);
+                if (target) {
+                    arrayContained(target, intArr) ? allPossibleNumbers.push(intArr) : null;
+                } else
+                    allPossibleNumbers.push(intArr);
+            }
+            return allPossibleNumbers;
+        }
+
+        let elements = allPossibleNumbers(2)
+        let found = [];
+        //B/S/O/E FIRST AND LAST
+        // elements.forEach(element=>{
+        //     let firstEl = element[0];
+        //     let secondEl = element[1];
+        //     let thirdEl = element[2];
+        //     firstEl <= 4 && secondEl >= 5 && thirdEl <= 4 ? found.push(element):null;
+        // })
+        // console.log(elements)
+        
+        //B/S/O/E sum of all 5
+        // elements.forEach(element=>{
+        //     let elSum = sum(element);
+        //     elSum>=0 && elSum<=22 ? found.push(element) : null;
+        // })
+
+        elements.forEach(element=>{
+            let firstEl = element[0];
+            let secondEl = element[1];
+            firstEl==secondEl ? found.push(element) : null;
+        })
+        console.log(found)
+
+
+        // let elements = generateCombinationsWithRepetitions([0,1,2,3,4,5,6,7,8,9], 5);
+        // console.log(elements)
+        //         let arrayContaineds = (needles, haystack) => {
+        //            return needles.every(needle => { return haystack.includes(needle) })
+        //         }
+
+
+        //         // arrayContained([1,1], [1,3,2]);
+
+
+        let countAll = (needles, elements) => {
+            let counter = 0;
+            let found = []
+            elements.forEach(element => {
+                if (arrayContained(needles, element)) {
+                    ++counter;
+                    found.push(element);
+                }
+            });
+            return found;
+        }
+
+
+        //     let mainBull, subBull; 
+        //     let results;
+        //     let storage = new Set();
+        //    elements.reduce((acc, value)=> {
+        //         mainBull = value.slice(0,3);
+        //         subBull  = value.slice(3)
+        //         if ((sum(mainBull) == 0 || sum(mainBull) % 10 == 0) && (sum(subBull) == 1 || sum(subBull) == 11)) {
+        //              results = countAll(value, elements);
+        //              console.log(results)
+        //              results.forEach(val=>{
+        //                 storage.add(val.join('-'));
+        //              })
+        //         }
+        //         return acc
+        //      }, 0)
+        // const storage = new Set();
+
+        // for (const value of elements) {
+        //     const [mainBull, subBull] = [value.slice(0, 3), value.slice(3)];
+        //     const mainSum = sum(mainBull);
+        //     let subSum = sum(subBull);
+        //     //   let subSumArr = String(subSum).split('')
+        //     //   subSum =  +subSumArr[1] || +subSumArr[0];
+        //     if ((mainSum !== 0 && mainSum % 10 !== 0)) {
+        //         const results = getPermutations(value, 5);
+        //         for (const val of results) {
+        //             storage.add(val.join('-'));
+        //         }
+        //     }
+        // }
+
+        //No Bull
+        function generateValidArraysWithRepeats() {
+            const validArrays = [];
+            for (let i = 0; i <= 9; i++) {
+                for (let j = 0; j <= 9; j++) {
+                    for (let k = 0; k <= 9; k++) {
+                        for (let l = 0; l <= 9; l++) {
+                            for (let m = 0; m <= 9; m++) {
+                                const array = [i, j, k, l, m];
+                                let isValid = true;
+                                for (let x = 0; x < 5 && isValid; x++) {
+                                    for (let y = x + 1; y < 5 && isValid; y++) {
+                                        for (let z = y + 1; z < 5 && isValid; z++) {
+                                            const sum = array[x] + array[y] + array[z];
+                                            if (sum === 0 || sum % 10 === 0) {
+                                                isValid = false;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (isValid) {
+                                    validArrays.push(array);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return validArrays;
+        }
+
+
+
+        // console.log(storage)
+        //     console.log(yop)
+
+
+
+        //       let allNotIn = (needles, elements)=>{
+        //           let counter = 0;
+        //           needles = [2,2];
+        //           let found = []
+        //           elements.forEach(element => {
+
+        //               if(!arrayContained(needles, element)){
+        //                   ++counter;
+        //                   found.push(element);
+        //               }
+        //           });
+        //       }
+        // console.log(found)
+        //    console.log(counter)
+
+
+        //  console.log(found)
+        function getPermutations(arr, n) {
+            const result = new Set();
+
+            // Define a recursive helper function to generate permutations
+            function generate(current, remaining) {
+                // Base case: we've selected enough elements
+                if (current.length === n) {
+                    result.add(current.join('-')); // Use a separator to avoid duplicates
+                    return;
+                }
+
+                // Recursive case: generate permutations for each remaining element
+                for (let i = 0; i < remaining.length; i++) {
+                    const next = current.concat(remaining[i]);
+                    const remainingSubset = remaining.slice(0, i).concat(remaining.slice(i + 1));
+                    generate(next, remainingSubset);
+                }
+            }
+
+            generate([], arr);
+            return Array.from(result, str => str.split('-').map(Number));
+        }
+
+
+
+
+
+        // let test2 = getPermutations([0,2,4], 3)
+        // let test2 = getPermutations([0,1,0], 3)
+        let test2 = getPermutations([0,1,1], 3)
+
+        // console.log(test2);
+
+
+    </script>
+</body>
+
+</html>
