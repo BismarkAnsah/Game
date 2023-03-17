@@ -31,7 +31,40 @@
 <body>
     <div id="Web_1920__1">
 
-        <div class="" style="width: 200px; height:500px; background: #49546d; position: absolute;">dsfsafdsa</div>
+        <div class="" style="width: 200px; height:500px; background: #49546d; position: absolute;">dsfsafdsa
+        <!-- <a name="" id="" class="btn btn-primary" href="#" role="button"></a> -->
+        <button class="md-trigger btn btn-primary" data-modal="modal-16">Blur</button>
+        <div class="md-modal md-effect-16" id="modal-16">
+            <div class="md-content">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                        data-bs-target="#home-tab-pane" type="button" role="tab"
+                                        aria-controls="home-tab-pane" aria-selected="true">
+                                        Home
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="track-tab" data-bs-toggle="tab"
+                                        data-bs-target="#track-tab-pane" type="button" role="tab"
+                                        aria-controls="profile-tab-pane" aria-selected="false">
+                                        Track
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="cart-tab" data-bs-toggle="tab"
+                                        data-bs-target="#cart-tab-pane" type="button" role="tab"
+                                        aria-controls="cart-tab-pane" aria-selected="false">
+                                        Cart
+                                    </button>
+                                </li>
+                            </ul>
+                <button class="md-close">Close me!</button>
+                </div>
+            </div>
+        </div>
+        <div class="md-overlay"></div>
+    </div>
 
         <div class="row-c">
             <ul class="quick-settings-box simple-hover">
@@ -58,7 +91,7 @@
                     <i class="fas fa-eye-slash eye-slash"></i>
                 </li>
 
-                <li>
+                <li class="md-trigger" data-modal="modal-16">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Record</span>
                 </li>
@@ -2622,6 +2655,51 @@
                     </button>
                 </div>
             </div>
+        </div>
+
+    </div>
+    <div class="modal fade" id="m-betModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-keyboard="false">
+
+        <div class="modal-dialog modal-dialog-centered" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="game-type">Royal 5</div>
+                    <div class="modal-draw-number-container mb-3">
+                        Draw:&nbsp;<span class="modal-draw-number-id">No. 20202020-192 ~ No. 20202020-198</span>
+                    </div>
+                    <div class="card">
+                        <div class="row gx-0">
+                            <div class="col-sm-6 me-0">
+                                <div class="card-header">Type</div>
+                                <div class="card-body">All 5 Group 120</div>
+                                <div class="card-header">Total track <span class="m-total-num-track-draws">2</span>
+                                    draws
+                                </div>
+                            </div>
+                            <div class="col-sm-6 ms-0">
+                                <div class="card-header">Detail</div>
+                                <div class="card-body">56789</div>
+                                <div class="card-header">Total Amt: <span class="text-danger">0.0020</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="m-btn-ash p-2" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" class="m-btn-orange button-type p-2">
+                        Save changes
+                    </button>
+                </div>
+            </div>
+            
         </div>
 
     </div>
