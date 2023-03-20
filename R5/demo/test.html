@@ -85,7 +85,7 @@
             return allPossibleNumbers;
         }
 
-        let elements = allPossibleNumbers(2)
+        let elements = allPossibleNumbers(5, [2,2,2,2])
         let found = [];
         //B/S/O/E FIRST AND LAST
         // elements.forEach(element=>{
@@ -94,7 +94,7 @@
         //     let thirdEl = element[2];
         //     firstEl <= 4 && secondEl >= 5 && thirdEl <= 4 ? found.push(element):null;
         // })
-        // console.log(elements)
+        console.log(elements)
         
         //B/S/O/E sum of all 5
         // elements.forEach(element=>{
@@ -102,12 +102,12 @@
         //     elSum>=0 && elSum<=22 ? found.push(element) : null;
         // })
 
-        elements.forEach(element=>{
-            let firstEl = element[0];
-            let secondEl = element[1];
-            firstEl==secondEl ? found.push(element) : null;
-        })
-        console.log(found)
+        // elements.forEach(element=>{
+        //     let firstEl = element[0];
+        //     let secondEl = element[1];
+        //     firstEl>secondEl ? found.push(element) : null;
+        // })
+        // console.log(found)
 
 
         // let elements = generateCombinationsWithRepetitions([0,1,2,3,4,5,6,7,8,9], 5);
@@ -119,7 +119,7 @@
 
         //         // arrayContained([1,1], [1,3,2]);
 
-
+    
         let countAll = (needles, elements) => {
             let counter = 0;
             let found = []
@@ -248,7 +248,7 @@
 
         // let test2 = getPermutations([0,2,4], 3)
         // let test2 = getPermutations([0,1,0], 3)
-        let test2 = getPermutations([0,1,1], 3)
+        // let test2 = getPermutations([1,1,1,5,1],5)
 
         // console.log(test2);
 
