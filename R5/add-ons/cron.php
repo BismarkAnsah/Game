@@ -192,7 +192,7 @@ class Cron
     {
         $currentTime = Date('H:i:s');
         $this->dataToSend["requestTime"] = $currentTime;
-        $aboutToDrawDatetime = $this->getNextDrawTime($currentTime);
+        $aboutToDrawDatetime = $this->getNextDrawTime($currentTime);//gets next draw time based on current time.
         $this->dataToSend["aboutToDrawDatetime"] = $aboutToDrawDatetime;
         $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
         $aboutToDrawHIS = $aboutToDrawData[1];
