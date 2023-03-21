@@ -192,7 +192,7 @@ class Cron
     {
         $currentTime = Date('H:i:s');
         $this->dataToSend["requestTime"] = $currentTime;
-        $aboutToDrawDatetime = $this->getNextDrawTime($currentTime);//gets next draw time based on current time.
+        $aboutToDrawDatetime = $this->getNextDrawTime($currentTime); //gets next draw time based on current time.
         $this->dataToSend["aboutToDrawDatetime"] = $aboutToDrawDatetime;
         $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
         $aboutToDrawHIS = $aboutToDrawData[1];
@@ -277,6 +277,8 @@ class Cron
         $delay = $this->getSecondsUntilNextDraw();
         $this->dataToSend["delay"] = $delay;
         $response["nextRequestTime"] = $this->getSecondsUntilNextDraw();
+
+        //if waiting time is more than 1 minute then send data to client telling when to make the next request.
         if ($delay <= 60) {
             sleep($delay);
             $this->insertDrawDetails();
