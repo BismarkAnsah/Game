@@ -114,13 +114,16 @@ class Cron
     private array $nextDrawData;
     private array $nextTwoDraws;
     private $conn;
-    private const DEFAULT_INTERVAL = 90; //seconds
+    private const DEFAULT_INTERVAL = 300; //seconds
     private const GAP_INTERVAL = 3600; // seconds
     private const TOTAL_RANDOM_NUMBERS = 5;
     private const GAME_START = "00:00:00";
     private const GAME_END = "24:00:00";
     private const GAP_START = "04:59:00"; //1 hour gap
     private const GAP_END = "06:00:00";
+    private const INSERT_TABLES = array(
+        "5d" => "draw_10002", "3d" => "draw_10012", "49x7" => "draw_10017"
+    );
     private array $dataToSend;
 
 
@@ -138,6 +141,52 @@ class Cron
         for ($i = 0; $i < $total; $i++)
             array_push($result, random_int($min, $max));
         return $result;
+    }
+
+    function getRandomNumbers($type)
+    {
+        $randomNumbers = "0,0,0,0,0,0,0,0,0,0,0";
+        switch ($type) {
+            case '5d':
+                $randomNumbers = $this->getRand_5d();
+                break;
+            case '3d':
+                $randomNumbers = $this->getRand_3d();
+                break;
+            case '49x7':
+                $randomNumbers = $this->getRand_49x7();
+                break;
+        }
+        return $randomNumbers;
+    }
+
+    function getRand_5d()
+    {
+        return "5d,5d,5d";
+    }
+    function getRand_fast3()
+    {
+        return "3,3,3";
+    }
+    function getRand_pc28()
+    {
+        return "28,28,28";
+    }
+    function getRand_3d()
+    {
+        return "3d,3d,3d";
+    }
+    function getRand_pk10()
+    {
+        return "pk10, pk10, pk10";
+    }
+    function getRand_11x5()
+    {
+        return "11x5,11x5,11x5";
+    }
+    function getRand_49x7()
+    {
+        return "49x7, 49x7, 49x7";
     }
 
     /**
@@ -196,13 +245,17 @@ class Cron
         $this->dataToSend["aboutToDrawDatetime"] = $aboutToDrawDatetime;
         $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
         $aboutToDrawHIS = $aboutToDrawData[1];
-        $SQL = "SELECT draw_id AS draw_count, draw_time FROM 1k1_5min WHERE draw_time = ? LIMIT 1";
+        $SQL = "SELECT count AS draw_count,  timeset AS draw_time FROM time5x0 WHERE draw_time = ? LIMIT 1";
         $results = $this->conn->query($SQL, [$aboutToDrawHIS]);
         $this->dataToSend["SQL_Results"] = $results;
         $nextDraw = $results[0];
         $nextDraw["draw_time"] = $aboutToDrawDatetime;
         $nextDraw['draw_date'] = Date('Ymd') . str_pad($nextDraw['draw_count'],  4, "0", STR_PAD_LEFT);
-        $nextDraw['draw_numbers'] = $this->generateRandomNumbers();
+        $drawInfo = [];
+        foreach ($this::INSERT_TABLES as $algo => $table) {
+            $drawInfo[$table] = $this->getRandomNumbers($algo);
+        }
+        $nextDraw['drawInfo'] = $drawInfo;
         $this->dataToSend["dataInserted"] = $nextDraw;
         $this->nextDrawData = $nextDraw;
     }
@@ -232,7 +285,7 @@ class Cron
         $SQL = "SELECT COUNT(draw_date) FROM royal5draw WHERE draw_date = ?";
         $dataExists = $this->conn->queryScalar($SQL, [$draw_date]);
         if (!$dataExists) {
-            $SQL = "INSERT INTO royal5draw(draw_count, draw_date, draw_time, draw_number, draw_datetime) VALUES (?, ?, ?, ?, ?)";
+            $SQL = "INSERT INTO royal5draw(draw_date, draw_time, draw_number, draw_count,	date_created, client, get_time) VALUES (?, ?, ?, ?, ?)";
             $draw_time =  $this->nextDrawData['draw_time'];
             $draw_count = $this->nextDrawData['draw_count'];
             $draw_numbers =  implode(',', $this->nextDrawData['draw_numbers']);

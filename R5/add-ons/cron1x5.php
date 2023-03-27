@@ -121,6 +121,9 @@ class Cron
     private const GAME_END = "24:00:00";
     private const GAP_START = "04:59:00"; //1 hour gap
     private const GAP_END = "06:00:00";
+    private const INSERT_TABLES = array (
+        "draw_10005","draw_10007", "draw_10008", "draw_10010", "draw_10011", "draw_10013", "draw_10015"
+    );
     private array $dataToSend;
 
 
@@ -196,7 +199,7 @@ class Cron
         $this->dataToSend["aboutToDrawDatetime"] = $aboutToDrawDatetime;
         $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
         $aboutToDrawHIS = $aboutToDrawData[1];
-        $SQL = "SELECT draw_id AS draw_count, draw_time FROM 1k1_5min WHERE draw_time = ? LIMIT 1";
+        $SQL = "SELECT count AS draw_count,  timeset AS draw_time FROM time1x5 WHERE draw_time = ? LIMIT 1";
         $results = $this->conn->query($SQL, [$aboutToDrawHIS]);
         $this->dataToSend["SQL_Results"] = $results;
         $nextDraw = $results[0];

@@ -66,25 +66,25 @@ function formatTimeElapsed($timeElapsed) {
 // echo gmdate("H:i:s", $time);
 
 
-$data = generateDrawTimes('18:00:00', '24:00:00', 60, 1021);
+$data = generateDrawTimes('00:00:00', '24:00:00', 90);
 $result = array_search(array_pop($data), $data);
 echo "<table>
 <tr>
     <th>ID</th>
     <th>Drawn Time</th>
     </tr>";
-    $SQL = "INSERT INTO royal_5_draws(draw_id, draw_time) VALUES(?,?)";
+    $SQL = "INSERT INTO 1k1_5min(draw_id, draw_time) VALUES(?,?)";
     $conn = new Database();
-//     foreach($data as $key => $value)
-//     {
-//         // $conn->query($SQL, [$key, $value]);
-//         echo"
+    // foreach($data as $key => $value)
+    // {
+    //     $conn->query($SQL, [$key, $value]);
+    //     echo"
    
-//         <tr>
-//             <td style='text-align:center;'>{$key}</td>
-//             <td style='text-align:center;'>{$value}</td>
-//             </tr>";
-//     }
+    //     <tr>
+    //         <td style='text-align:center;'>{$key}</td>
+    //         <td style='text-align:center;'>{$value}</td>
+    //         </tr>";
+    // }
 // echo "</table>";
 
 //  function getSecondsUntilNextDraw()

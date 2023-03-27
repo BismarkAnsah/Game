@@ -32,3 +32,71 @@ date_default_timezone_set("Asia/Shanghai");
 
 //     $res = getDifferenceInSecs("2023-03-22");
 //     echo $res;
+const DEFAULT_INTERVAL = 90; //seconds
+const GAME_START = "00:00:00";
+ const GAME_END = "24:00:00";
+ const GAP_START = "04:59:00"; //1 hour gap
+ const GAP_END = "06:00:00";
+
+    /**
+     * the number of seconds between 12 am today and the @$time provided
+     *
+     * @param string $time the time to calculate the number of seconds up to.
+     * @param string $start where to start calculating difference. default is 12 am today
+     * @return string the difference in seconds
+     */
+    function getSecondsElapsed($time, $start = "today")
+    {
+        $dateTime = DateTime::createFromFormat("H:i:s", $time);
+        $timeElapsed = $dateTime->getTimestamp() - strtotime($start);
+        return $timeElapsed;
+    }
+
+    /**
+     * gets the next draw datetime that comes immediately after the "$time" provided
+     *
+     * @param string  $time the datetime or time to start calculating from.
+     * @return string the next closest draw datetime to the "$time" provided
+     */
+    function getNextDrawTime($gap_start, $gap_end, $defaultInterval, $game_end, $game_start, $time = "now")
+    {
+        $time = Date("H:i:s", strtotime($time));
+        //if the time requested is still between the gap ie if gap hasn't ended.
+        if (($gap_start and $gap_end) and $time >= $gap_start and $time < $gap_end) {
+            return date("Y-m-d") . ' ' . $gap_end;
+        }
+
+        //if the last data has been drawn
+        if ($time >=  $game_end) {
+            $nextDay = strtotime("+$defaultInterval seconds", strtotime($game_end));
+            return date("Y-m-d", $nextDay) . ' ' . $game_start;
+        }
+
+        //round the time up to the nearest draw time
+        $timeElapsed = getSecondsElapsed($time, $game_start);
+        $surplusSeconds = $timeElapsed % $defaultInterval;
+        $nextDrawInSecs = $timeElapsed - $surplusSeconds + $defaultInterval;
+        $nextDrawTimestamp = $nextDrawInSecs + strtotime($game_start);
+        return date("Y-m-d H:i:s", $nextDrawTimestamp);
+    }
+
+        /**
+     * gets the number of seconds between two dates.
+     * this function only works if the difference in dates does not exceed 30 days;
+     *
+     * @param string $time1 the first date time
+     * @param mixed $time2 the second date time. if this isn't provided, current datetime will be used.
+     * @return int the number of seconds between the two dates provided.
+     */
+ function getDifferenceInSecs($time1, $time2 = true)
+    {
+        $start = new DateTime($time1);
+        $end = $time2 === true ? new DateTime() : new DateTime($time2);
+        $diff = $start->diff($end);
+        $diffInSecs = $diff->d * 24 * 60 * 60 + $diff->h * 60 * 60 + $diff->i * 60 + $diff->s;
+        return $diffInSecs;
+    }
+
+    $any = getNextDrawTime(GAP_START, GAP_END, DEFAULT_INTERVAL, GAME_END, GAME_START);
+    $diff = getDifferenceInSecs($any);
+    echo $diff;

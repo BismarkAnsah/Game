@@ -114,13 +114,16 @@ class Cron
     private array $nextDrawData;
     private array $nextTwoDraws;
     private $conn;
-    private const DEFAULT_INTERVAL = 90; //seconds
+    private const DEFAULT_INTERVAL = 180; //seconds
     private const GAP_INTERVAL = 3600; // seconds
     private const TOTAL_RANDOM_NUMBERS = 5;
     private const GAME_START = "00:00:00";
     private const GAME_END = "24:00:00";
     private const GAP_START = "04:59:00"; //1 hour gap
     private const GAP_END = "06:00:00";
+    private const INSERT_TABLES = array (
+        "fast_3"=>"draw_10006","pc_28"=>"draw_10009", "pk_10"=>"draw_10014", "11x5"=>"draw_10016"
+    );
     private array $dataToSend;
 
 
@@ -196,7 +199,7 @@ class Cron
         $this->dataToSend["aboutToDrawDatetime"] = $aboutToDrawDatetime;
         $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
         $aboutToDrawHIS = $aboutToDrawData[1];
-        $SQL = "SELECT draw_id AS draw_count, draw_time FROM 1k1_5min WHERE draw_time = ? LIMIT 1";
+        $SQL = "SELECT count AS draw_count,  timeset AS draw_time FROM time3x0 WHERE draw_time = ? LIMIT 1";
         $results = $this->conn->query($SQL, [$aboutToDrawHIS]);
         $this->dataToSend["SQL_Results"] = $results;
         $nextDraw = $results[0];
