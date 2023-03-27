@@ -122,7 +122,7 @@ class Cron
     private const GAP_START = "04:59:00"; //1 hour gap
     private const GAP_END = "06:00:00";
     private const INSERT_TABLES = array(
-        "5d" => "draw_10002", "3d" => "draw_10012", "49x7" => "draw_10017"
+        "draw_10002"=> "5d" ,  "draw_10012"=>"3d" ,  "draw_10017"=>"49x7" 
     );
     private array $dataToSend;
 
@@ -154,6 +154,18 @@ class Cron
                 $randomNumbers = $this->getRand_3d();
                 break;
             case '49x7':
+                $randomNumbers = $this->getRand_49x7();
+                break;
+            case '11x5':
+                $randomNumbers = $this->getRand_49x7();
+                break;
+            case 'pk_10':
+                $randomNumbers = $this->getRand_49x7();
+                break;
+            case 'fast_3':
+                $randomNumbers = $this->getRand_49x7();
+                break;
+            case 'pc_28':
                 $randomNumbers = $this->getRand_49x7();
                 break;
         }
@@ -245,14 +257,14 @@ class Cron
         $this->dataToSend["aboutToDrawDatetime"] = $aboutToDrawDatetime;
         $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
         $aboutToDrawHIS = $aboutToDrawData[1];
-        $SQL = "SELECT count AS draw_count,  timeset AS draw_time FROM time5x0 WHERE draw_time = ? LIMIT 1";
+        $SQL = "SELECT count AS draw_count,  timeset AS draw_time FROM time5x0 WHERE timeset = ? LIMIT 1";
         $results = $this->conn->query($SQL, [$aboutToDrawHIS]);
         $this->dataToSend["SQL_Results"] = $results;
         $nextDraw = $results[0];
         $nextDraw["draw_time"] = $aboutToDrawDatetime;
         $nextDraw['draw_date'] = Date('Ymd') . str_pad($nextDraw['draw_count'],  4, "0", STR_PAD_LEFT);
         $drawInfo = [];
-        foreach ($this::INSERT_TABLES as $algo => $table) {
+        foreach ($this::INSERT_TABLES as $table=> $algo) {
             $drawInfo[$table] = $this->getRandomNumbers($algo);
         }
         $nextDraw['drawInfo'] = $drawInfo;
@@ -276,23 +288,24 @@ class Cron
 
     /**
      * inserts the current draw details into the database
-     *
+     *@param string $table the table to insert the draw details into
+     *@param string $drawNumbers the random drawn numbers.
      * @return void
      */
-    public function insertDrawDetails()
+    public function insertDrawDetails($table, $drawNumbers)
     {
         $draw_date = $this->nextDrawData['draw_date'];
-        $SQL = "SELECT COUNT(draw_date) FROM royal5draw WHERE draw_date = ?";
+        $date_created = date("Y-m-d");
+        $SQL = "SELECT COUNT(draw_date) FROM $table WHERE draw_date = ?";
         $dataExists = $this->conn->queryScalar($SQL, [$draw_date]);
         if (!$dataExists) {
-            $SQL = "INSERT INTO royal5draw(draw_date, draw_time, draw_number, draw_count,	date_created, client, get_time) VALUES (?, ?, ?, ?, ?)";
+            $SQL = "INSERT INTO $table(draw_date, draw_time, draw_number, draw_count, date_created, get_time) VALUES (?, ?, ?, ?, ?, ?)";
             $draw_time =  $this->nextDrawData['draw_time'];
             $draw_count = $this->nextDrawData['draw_count'];
-            $draw_numbers =  implode(',', $this->nextDrawData['draw_numbers']);
             $draw_datetime = Date('Y-m-d H:i:s');
             // echo json_encode([$draw_id, $draw_date, $draw_numbers, $draw_datetime]);
             // die;
-            $this->conn->query($SQL, [$draw_count, $draw_date, $draw_time, $draw_numbers, $draw_datetime]);
+            $this->conn->query($SQL, [$draw_date, $draw_time, $drawNumbers, $draw_count,  $date_created, $draw_datetime]);
         }
     }
 
@@ -334,7 +347,10 @@ class Cron
         //if waiting time is more than 1 minute then send data to client telling when to make the next request.
         if ($delay <= 60) {
             sleep($delay);
-            $this->insertDrawDetails();
+            foreach($this->nextDrawData['drawInfo'] as $table=>$drawNumbers)
+            {
+                $this->insertDrawDetails($table, $drawNumbers);
+            }
             $response["nextRequestTime"] = $this->getNextTwoDrawsSecs();
         }
         $response["logs"] = $this->dataToSend;
