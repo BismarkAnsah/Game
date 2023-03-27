@@ -7,7 +7,7 @@
                 response = await response.json();
                 console.log(response);
                 let nextRequestTime = response.nextRequestTime? response.nextRequestTime-2: 2;
-                setTimeout(makeRequest, (nextRequestTime)*1000);
+                setTimeout(makeRequest1X0, (nextRequestTime)*1000);
             })
         }
         makeRequest1X0();
@@ -18,7 +18,7 @@
                 response = await response.json();
                 console.log(response);
                 let nextRequestTime = response.nextRequestTime? response.nextRequestTime-2: 2;
-                setTimeout(makeRequest, (nextRequestTime)*1000);
+                setTimeout(makeRequest1X5, (nextRequestTime)*1000);
             })
         }
         makeRequest1X5();
@@ -29,7 +29,7 @@
                 response = await response.json();
                 console.log(response);
                 let nextRequestTime = response.nextRequestTime? response.nextRequestTime-2: 2;
-                setTimeout(makeRequest, (nextRequestTime)*1000);
+                setTimeout(makeRequest3X0, (nextRequestTime)*1000);
             })
         }
         makeRequest3X0();
@@ -40,7 +40,7 @@
                 response = await response.json();
                 console.log(response);
                 let nextRequestTime = response.nextRequestTime? response.nextRequestTime-2: 2;
-                setTimeout(makeRequest, (nextRequestTime)*1000);
+                setTimeout(makeRequest5X0, (nextRequestTime)*1000);
             })
         }
         makeRequest5X0();
