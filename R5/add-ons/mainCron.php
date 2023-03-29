@@ -1,6 +1,4 @@
 <?php
-
-
 date_default_timezone_set("Asia/Shanghai");
 class Database
 {
@@ -116,23 +114,18 @@ class Cron
     private array $nextDrawData;
     private array $nextTwoDraws;
     private $conn;
-    private $timerTable;
-    private int $defaultInterval; //seconds
+    private const DEFAULT_INTERVAL = 90; //seconds
     private const GAP_INTERVAL = 3600; // seconds
     private const TOTAL_RANDOM_NUMBERS = 5;
     private const GAME_START = "00:00:00";
     private const GAME_END = "24:00:00";
     private const GAP_START = "04:59:00"; //1 hour gap
     private const GAP_END = "06:00:00";
-    private array $insertTables;
     private array $dataToSend;
 
 
-    public function __construct($timerTable, $insertTables, $defaultInterval)
+    public function __construct()
     {
-        $this->insertTables = $insertTables;
-        $this->defaultInterval = $defaultInterval;
-        $this->timerTable = $timerTable;
         $this->conn = new Database();
         $this->setNextDrawData();
         // echo $this->getNextTwoDrawsSecs();
@@ -146,103 +139,6 @@ class Cron
             array_push($result, random_int($min, $max));
         return $result;
     }
-
-    function getRandomNumbers($type)
-    {
-        $randomNumbers = "0,0,0,0,0,0,0,0,0,0,0";
-        switch ($type) {
-            case '5d':
-                $randomNumbers = $this->getRand_5d();
-                break;
-            case '3d':
-                $randomNumbers = $this->getRand_3d();
-                break;
-            case '49x7':
-                $randomNumbers = $this->getRand_49x7();
-                break;
-            case '11x5':
-                $randomNumbers = $this->getRand_11x5();
-                break;
-            case 'pk_10':
-                $randomNumbers = $this->getRand_pk10();
-                break;
-            case 'fast_3':
-                $randomNumbers = $this->getRand_fast3();
-                break;
-            case 'pc_28':
-                $randomNumbers = $this->getRand_pc28();
-                break;
-        }
-        return $randomNumbers;
-    }
-
-
-    function getRand_5d()
-    {
-        $number = str_shuffle(rand(00000, 99999));
-        $length = 5;
-        $string = substr(str_repeat(0, $length) . $number, -$length);
-        $this->str_drawNumber = sprintf("%05d", $string);
-        $numArr = str_split($this->str_drawNumber);
-        $drawNumber = implode(",", $numArr);
-        return $drawNumber;
-    }
-
-    function getRand_fast3()
-    {
-        $ArrNumber = array("1", "2", "3", "4", "5", "6");
-        shuffle($ArrNumber);
-        $drawNumber = $ArrNumber[0] . "," . $ArrNumber[1] . "," . $ArrNumber[2];
-        return $drawNumber;
-    }
-
-    function getRand_pc28()
-    {
-        $number = str_shuffle(rand(000, 999));
-        $length = 3;
-        $string = substr(str_repeat(0, $length) . $number, -$length);
-        $this->str_drawNumber = sprintf("%03d", $string);
-        $numArr = str_split($this->str_drawNumber);
-        $drawNumber = implode(",", $numArr);
-        return $drawNumber;
-    }
-
-    function getRand_3d()
-    {
-        $number = str_shuffle(rand(000, 999));
-        $length = 3;
-        $string = substr(str_repeat(0, $length) . $number, -$length);
-        $this->str_drawNumber = sprintf("%03d", $string);
-        $numArr = str_split($this->str_drawNumber);
-        $drawNumber = implode(",", $numArr);
-        return $drawNumber;
-    }
-
-    function getRand_pk10()
-    {
-        $ArrNumber = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
-        shuffle($ArrNumber);
-        $drawNumber = $ArrNumber[0] . "," . $ArrNumber[1] . "," . $ArrNumber[2] . "," . $ArrNumber[3] . "," . $ArrNumber[4] . "," . $ArrNumber[5] . "," . $ArrNumber[6] . "," . $ArrNumber[7] . "," . $ArrNumber[8] . "," . $ArrNumber[9];
-        return $drawNumber;
-    }
-
-    function getRand_11x5()
-    {
-        $ArrNumber = array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11");
-        shuffle($ArrNumber);
-        $drawNumber = $ArrNumber[0] . "," . $ArrNumber[1] . "," . $ArrNumber[2] . "," . $ArrNumber[3] . "," . $ArrNumber[4];
-        return $drawNumber;
-    }
-
-    function getRand_49x7()
-    {
-        $ArrNumber = array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49");
-        shuffle($ArrNumber);
-        $drawNumber = $ArrNumber[0] . "," . $ArrNumber[1] . "," . $ArrNumber[2] . "," . $ArrNumber[3] . "," . $ArrNumber[4] . "," . $ArrNumber[5] . "," . $ArrNumber[6];
-        return $drawNumber;
-    }
-
-
 
     /**
      * the number of seconds between 12 am today and the @$time provided
@@ -274,14 +170,14 @@ class Cron
 
         //if the last data has been drawn
         if ($time >=  $this::GAME_END) {
-            $nextDay = strtotime("+$this->defaultInterval seconds", strtotime($this::GAME_END));
+            $nextDay = strtotime("+$this::DEFAULT_INTERVAL seconds", strtotime($this::GAME_END));
             return date("Y-m-d", $nextDay) . ' ' . $this::GAME_START;
         }
 
         //round the time up to the nearest draw time
         $timeElapsed = $this->getSecondsElapsed($time, $this::GAME_START);
-        $surplusSeconds = $timeElapsed % $this->defaultInterval;
-        $nextDrawInSecs = $timeElapsed - $surplusSeconds + $this->defaultInterval;
+        $surplusSeconds = $timeElapsed % $this::DEFAULT_INTERVAL;
+        $nextDrawInSecs = $timeElapsed - $surplusSeconds + $this::DEFAULT_INTERVAL;
         $nextDrawTimestamp = $nextDrawInSecs + strtotime($this::GAME_START);
         return date("Y-m-d H:i:s", $nextDrawTimestamp);
     }
@@ -300,18 +196,13 @@ class Cron
         $this->dataToSend["aboutToDrawDatetime"] = $aboutToDrawDatetime;
         $aboutToDrawData = explode(" ", $aboutToDrawDatetime);
         $aboutToDrawHIS = $aboutToDrawData[1];
-        $SQL = "SELECT count AS draw_count,  timeset AS draw_time FROM $this->timerTable WHERE timeset = ? LIMIT 1";
+        $SQL = "SELECT draw_id AS draw_count, draw_time FROM 1k1_5min WHERE draw_time = ? LIMIT 1";
         $results = $this->conn->query($SQL, [$aboutToDrawHIS]);
         $this->dataToSend["SQL_Results"] = $results;
         $nextDraw = $results[0];
-        $nextDraw["draw_time"] = explode(' ', $aboutToDrawDatetime)[1];
+        $nextDraw["draw_time"] = $aboutToDrawDatetime;
         $nextDraw['draw_date'] = Date('Ymd') . str_pad($nextDraw['draw_count'],  4, "0", STR_PAD_LEFT);
-        $nextDraw["aboutToDrawTime"] = $aboutToDrawDatetime;
-        $drawInfo = [];
-        foreach ($this->insertTables as $table => $algo) {
-            $drawInfo[$table] = $this->getRandomNumbers($algo);
-        }
-        $nextDraw['drawInfo'] = $drawInfo;
+        $nextDraw['draw_numbers'] = $this->generateRandomNumbers();
         $this->dataToSend["dataInserted"] = $nextDraw;
         $this->nextDrawData = $nextDraw;
     }
@@ -332,32 +223,23 @@ class Cron
 
     /**
      * inserts the current draw details into the database
-     *@param string $table the table to insert the draw details into
-     *@param string $drawNumbers the random drawn numbers.
+     *
      * @return void
      */
-    public function insertDrawDetails($table, $drawNumbers)
+    public function insertDrawDetails()
     {
-        $gameId = explode('_', $table)[1];
-        $command = 'start';
-        $notify = 'hide';
         $draw_date = $this->nextDrawData['draw_date'];
-        $date_created = date("Y-m-d");
-        $SQL = "SELECT COUNT(draw_date) FROM $table WHERE draw_date = ?";
-        $SQL2 = "SELECT COUNT(game_id) FROM games WHERE command = ? AND notify = ? AND game_id = ?";
-        // $SQL = "SELECT COUNT(draw_date) FROM $table WHERE draw_date = ?";
-        $canInsert = $this->conn->queryScalar($SQL2, [$command, $notify, $gameId]);
+        $SQL = "SELECT COUNT(draw_date) FROM royal5draw WHERE draw_date = ?";
         $dataExists = $this->conn->queryScalar($SQL, [$draw_date]);
-        if (!$dataExists && $canInsert) {
-            $SQL = "INSERT INTO $table(draw_date, draw_time, draw_number, draw_count, date_created, get_time) VALUES (?, ?, ?, ?, ?, ?)";
+        if (!$dataExists) {
+            $SQL = "INSERT INTO royal5draw(draw_count, draw_date, draw_time, draw_number, draw_datetime) VALUES (?, ?, ?, ?, ?)";
             $draw_time =  $this->nextDrawData['draw_time'];
             $draw_count = $this->nextDrawData['draw_count'];
+            $draw_numbers =  implode(',', $this->nextDrawData['draw_numbers']);
             $draw_datetime = Date('H:i:s');
             // echo json_encode([$draw_id, $draw_date, $draw_numbers, $draw_datetime]);
             // die;
-            $this->conn->query($SQL, [$draw_date, $draw_time, $drawNumbers, $draw_count,  $date_created, $draw_datetime]);
-        } else {
-            $this->dataToSend["requestStatus"] = "not inserted";
+            $this->conn->query($SQL, [$draw_count, $draw_date, $draw_time, $draw_numbers, $draw_datetime]);
         }
     }
 
@@ -386,7 +268,7 @@ class Cron
      */
     public  function getSecondsUntilNextDraw()
     {
-        return $this->getDifferenceInSecs($this->nextDrawData["aboutToDrawTime"]);
+        return $this->getDifferenceInSecs($this->nextDrawData['draw_time']);
     }
 
 
@@ -399,15 +281,14 @@ class Cron
         //if waiting time is more than 1 minute then send data to client telling when to make the next request.
         if ($delay <= 60) {
             sleep($delay);
-            foreach ($this->nextDrawData['drawInfo'] as $table => $drawNumbers) {
-                $this->insertDrawDetails($table, $drawNumbers);
-            }
+            $this->insertDrawDetails();
             $response["nextRequestTime"] = $this->getNextTwoDrawsSecs();
         }
         $response["logs"] = $this->dataToSend;
-        $response["check"] = $this->nextDrawData['draw_time'];
         echo json_encode($response);
         die;
     }
 }
 
+$cron = new Cron();
+$cron->startCron();
