@@ -4,7 +4,7 @@
 
         function ajax(url, callback = null, method = 'GET', data = null) {
             const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         callback(null, xhr.responseText);
@@ -23,15 +23,14 @@
         }
 
         function makeRequest() {
-            ajax('cron.php', function(err, response) {
+            ajax('cron.php', function (err, response) {
                 console.log(response);
                 let responseObj = JSON.parse(response);
-                let nextRequestTime = responseObj.nextRequestTime? responseObj.nextRequestTime-2: 2;
-                setTimeout(makeRequest, (nextRequestTime)*1000);
+                let nextRequestTime = responseObj.nextRequestTime ? responseObj.nextRequestTime - 2 : 2;
+                setTimeout(makeRequest, (nextRequestTime) * 1000);
             });
         }
 
         makeRequest();
     </script>
 </body>
-

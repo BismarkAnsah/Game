@@ -897,6 +897,24 @@ export class Royal5utils {
     return this.getBetId(nextGenerationDateTime, id);
   }
 
+  getDateTime(date)
+  {
+    date = new Date(date);
+    return (
+      date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(date.getDate()).padStart(2, "0") +
+      " " +
+      String(date.getHours()).padStart(2, "0") +
+      ":" +
+      String(date.getMinutes()).padStart(2, "0") +
+      ":" +
+      String(date.getSeconds()).padStart(2, "0")
+    );
+  }
+
   /**
    * gets date in YYYY-MM-DD format
    * @param {string} date datetime to return date from
@@ -4164,8 +4182,8 @@ function ready(className) {
     $(".first-multiplier, .profit-first-multiplier .multiplyAfterEvery, .multiplyBy").val( defaultTrackInputs );
     $(".total-draws, .total-draws-t").val(defaultTrackDraws);
     $(".input__track_percentage").val(50);
-    // console.log(drawData.nextDrawDate)
-    let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);//createTrackYield(firstDrawDate, betId, totalDraws, startMultiplier, singleBetAmt, bonus, minimumYield)
+    console.log("==============================>",drawData.nextDrawDatetime, drawData.drawDatetime)
+    let trackJson = game.createTrackJson(game.getDate(drawData.nextDrawDatetime) + " " + game.getTime(drawData.nextDrawDatetime), drawData.nextBetId, defaultTrackDraws, 1, 1, 1, betAmt, totalBets);//createTrackYield(firstDrawDate, betId, totalDraws, startMultiplier, singleBetAmt, bonus, minimumYield)
     let yieldData = game.createTrackYield(drawData.drawDatetime, drawData.nextBetId, defaultTrackDraws, totalBets, 1, betAmt, 1615);
     game.generateSelectOptions(drawData.betId);
     showCartArea('track-tab')
@@ -4259,6 +4277,8 @@ function ready(className) {
         });
         alert(respx.message);
       }else{
+        game.trackJson = undefined;
+        $(".track-data").html("")
         alert(respx.message);
       }
     };
@@ -4520,7 +4540,9 @@ function ready(className) {
 --------------------------------------------------------------*/
   game.$(".cart").click(function () {
     console.log(trackData);
+    localStorage.setItem("cart", JSON.stringify(cart));
     game.pushToCart(cart);
+    console.log(cart)
     game.resetAllData();
   });
 
@@ -4736,20 +4758,22 @@ function fetchToolTipData() {
 
 function formatDrawResponse(response) {
 
+  console.log("response==============================>", response)
   response = sliceFromJson(response, -2); //gets the last two  data in the object
   let responseData = response[Object.keys(response)[0]]; // gets the last but one property of the object
   let timeLeft = response[Object.keys(response)[1]]; // gets the time left property
   let drawNumber = responseData.draw_number.split(",").map(el => +el); // gets the draw numbers in an array as integers
+  console.log("draw_datetime==============================>", responseData.draw_time)
   let formattedResponse = {
     responseId: responseData.id,
     betId: responseData.draw_date,
     drawDatetime: responseData.draw_time,
     drawNumber: drawNumber,
     timeLeft: timeLeft,
-    nextBetId: game.generateNextBetId(responseData.draw_date, responseData.draw_datetime, intervalMinutes),
-    nextDrawDatetime: game.addMinutes(responseData.draw_datetime, intervalMinutes)
+    nextBetId: game.generateNextBetId(responseData.draw_date, responseData.draw_time, intervalMinutes),
+    nextDrawDatetime: game.getDateTime(game.addMinutes(responseData.draw_time, intervalMinutes)) 
   }
-
+console.log("formattedResponse==============================>", formattedResponse)
   return formattedResponse;
 }
 
@@ -4809,7 +4833,7 @@ function getDrawData(intervalTime) {
               let multiplyAfterEvery = +$(".multiplyAfterEvery").val();
               let multiplyBy = +$(".multiplyBy").val();
               let maxInput = +$(".total-draws").val();
-              let trackJson = game.createTrackJson(drawData.drawDatetime, drawData.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "eachTotalBets"));
+              let trackJson = game.createTrackJson(drawData.nextDrawDatetime, drawData.nextBetId, maxInput, firstMultiplier, multiplyAfterEvery, multiplyBy, game.getTrackElement("trackInfo", "eachBetAmt"), game.getTrackElement("trackInfo", "eachTotalBets"));
               let yieldData = game.createTrackYield(drawData.drawDatetime, drawData.nextBetId, +$(".total-draws-t").val(), game.getTrackElement("trackInfo", "eachTotalBets"), 1, game.getTrackElement("trackInfo", "eachBetAmt"), 1615);
               game.createProfitTrackInterface(yieldData);          
               game.createTrackInterface(trackJson)
@@ -5128,7 +5152,7 @@ function settings(className, gameId) {
       "interface": 1
     },
 
-    //////All Behaviour Generalized Here///////
+    //All Behaviour Generalized Here///////
     select_1: {
       "label": [],
       "totalBets": 1,
