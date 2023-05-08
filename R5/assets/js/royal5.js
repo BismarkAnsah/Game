@@ -540,7 +540,8 @@ export class Royal5utils {
       nextDay: this.isNextDay(estimatedDrawTime),
       current: this.isCurrent(currentBetId),
     };
-
+console.log("lllllllllllllllllllll", currentBetId, betId)
+console.log("isCurrent", this.isCurrent(currentBetId))
     for (let i = 1; i < totalDraws; i++) {
       nextDrawDate = new Date(
         this.addMinutes(currentDrawDate, intervalMinutes)
@@ -4261,7 +4262,7 @@ function ready(className) {
         data["bets"][i++] = obj; // add the 'obj' to the 'bets' property of 'data' using the counter variable to increment the index of the 'bets' object for each row that has a checked input field with class 'slave'
       }
     }
-    // console.log("trackdaaaaaaaaaaaaaaaaaaaaaaaaaaaaata" ,trackData)
+    console.log("trackdaaaaaaaaaaaaaaaaaaaaaaaaaaaaata" ,trackData)
     data["trackInfo"] = game.getTrackInfo(); // add the result of the 'game.getTrackInfo()' method to the 'trackInfo' property of 'data'
     data["trackData"] = trackData;
 
@@ -4552,8 +4553,40 @@ function ready(className) {
     savedData.betId = $(".draw__period :selected").attr("value");
     console.log(savedData);
     let data = JSON.stringify([savedData]);
-    let req = $.post(urls.betNow, data, function (response) {
-      // response = JSON.parse(response);
+    
+    // let req = $.post(urls.betNow, data, function (response) {
+    //   // response = JSON.parse(response);
+    //   if (response.title == "success") {
+    //     game.fetchData(balanceUrl).then((response) => {
+    //       // response = JSON.parse(response);
+    //       $(".user-balance").html(response.userBalance);
+    //     });
+    //     alert(response.message);
+    //     game.resetAllData();
+    //     cart = [];
+    //   } else {
+
+    //     game.disableButtons(false, ".cart", ".bet-now", ".track");
+    //     alert(response.message);
+    //   }
+
+    //   req.fail(function () {
+    //     alert("failed");
+    //   });
+    // });
+    let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjE5LCJ1c2VybmFtZSI6bnVsbCwibmFtZSI6Im1heCAiLCJlbWFpbCI6InRlc3RAbWF4LmNvbSIsImJhbGFuY2UiOiI0NjY4Ny4zODYwIiwiYWNjb3VudF90eXBlIjoiY3VzdG9tZXIiLCJleHBpcnkiOjE2ODMwMjY3MTd9.Y8A-7qrIge7kd0ZGre2JnqjqgA70O1Enkge8dSyPqtE";
+
+    let req = $.ajax({
+      url: urls.betNow,
+      type: "POST",
+      data: data,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    req.done(function (response) {
       if (response.title == "success") {
         game.fetchData(balanceUrl).then((response) => {
           // response = JSON.parse(response);
@@ -4563,15 +4596,15 @@ function ready(className) {
         game.resetAllData();
         cart = [];
       } else {
-
         game.disableButtons(false, ".cart", ".bet-now", ".track");
         alert(response.message);
       }
-
-      req.fail(function () {
-        alert("failed");
-      });
     });
+
+    req.fail(function () {
+      alert("failed");
+    });
+
   });
 
 
