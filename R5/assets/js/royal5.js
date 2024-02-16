@@ -4130,7 +4130,8 @@ function ready(className) {
     onlyNums ? game.setBetAmt(onlyNums) : game.setBetAmt(game.calcBetAmt());
     let multiplier = game.calcMultiplier();
     let unitAmt = game.calcUnitAmt();
-    // console.log('multi', multiplier);
+    console.log('multi===================>', multiplier);
+    console.log('oldMultiplier===================>', oldMultiplier);
     multiplier = onlyNums ? multiplier : oldMultiplier;
     game.setUnitAmt(unitAmt);
     game.setMultiplier(multiplier);
